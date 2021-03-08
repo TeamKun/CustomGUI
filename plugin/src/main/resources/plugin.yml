@@ -1,0 +1,13 @@
+name: PluginName
+version: @version@
+description: Plugin description here.
+api-version: 1.15
+author: Kotx
+website: https://twitter.com/kotx__
+main: kotx.minecraft.plugins.customgui.PluginEntry
+commands:
+  customgui:
+    description: Base command for custom gui plugin
+    usage: /customgui
+    permission: op
+    permission-message: You don't have permissions to execute this command!
