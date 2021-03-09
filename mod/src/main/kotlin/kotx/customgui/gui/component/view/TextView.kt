@@ -15,6 +15,7 @@ class TextView : View {
     override var startY: Int = 0
     override var endX: Int = 0
     override var endY: Int = 0
+    override val canResize = false
 
     override fun init() {
 

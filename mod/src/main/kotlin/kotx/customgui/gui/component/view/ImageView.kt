@@ -30,6 +30,7 @@ class ImageView : View {
     override var startY: Int = 0
     override var endX: Int = 0
     override var endY: Int = 0
+    override val canResize = true
     var resId = ""
     val resLoc = ResourceLocation(CustomGUIMod.modId, "textures/images/$resId.png")
     var tex: DownloadableTexture? = null

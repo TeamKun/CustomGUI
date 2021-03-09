@@ -10,6 +10,7 @@ interface View {
         get() = endX - startX
     val height: Int
         get() = endY - startY
+    val canResize: Boolean
 
     fun init()
     fun renderPreview(mouseX: Int, mouseY: Int)
