@@ -15,7 +15,6 @@ import org.lwjgl.glfw.GLFW
 import java.awt.Color
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.round
 
 object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComponent {
     private val mod by inject<CustomGUIMod>()
@@ -111,6 +110,12 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
             }
         } else views.forEach { it.renderPage(1f, 1f, 1f) }
 
+        if (drag) {
+            if (lastX != 0 && lastY != 0) dragged(mouseX - lastX, mouseY - lastY)
+            lastX = mouseX
+            lastY = mouseY
+        }
+
         super.render(mouseX, mouseY, partialTicks)
     }
 
@@ -119,6 +124,62 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         val y = mouseY.toInt()
 
         if (isInRange(x, y) && editMode) components.getOrNull(editModeIndex)?.onMouseMove(xPos.toInt(), mouseY.toInt())
+    }
+
+    var lastX = 0
+    var lastY = 0
+    var drag = false
+
+    private fun dragged(moveX: Int, moveY: Int) {
+        if (editMode) views.getOrNull(editingView)?.also {
+            val w = it.endX - it.startX
+            val h = it.endY - it.startY
+            when (editingPos) {
+                -1 -> {
+                    it.startX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + moveX))
+                    it.startY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + moveY))
+                    it.endX = it.startX + w
+                    it.endY = it.startY + h
+                }
+
+                1 -> {
+                    val stX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + moveX))
+                    val stY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + moveY))
+                    val wi = it.endX - stX
+                    val he = it.endY - stY
+                    if (wi > 0) it.startX = stX
+                    if (he > 0) it.startY = stY
+                }
+
+                2 -> {
+                    val stX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + moveX))
+                    val enY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + moveY))
+                    val wi = it.endX - stX
+                    val he = enY - it.startY
+                    if (wi > 0) it.startX = stX
+                    if (he > 0) it.endY = enY
+                }
+
+                3 -> {
+                    val enX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + moveX))
+                    val stY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + moveY))
+                    val wi = enX - it.startX
+                    val he = it.endY - stY
+                    if (wi > 0) it.endX = enX
+                    if (he > 0) it.startY = stY
+                }
+
+                4 -> {
+                    val enX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + moveX))
+                    val enY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + moveY))
+                    val wi = enX - it.startX
+                    val he = enY - it.startY
+                    if (wi > 0) it.endX = enX
+                    if (he > 0) it.endY = enY
+
+                }
+            }
+        }
     }
 
     override fun mouseClicked(p_mouseClicked_1_: Double, p_mouseClicked_3_: Double, p_mouseClicked_5_: Int): Boolean {
@@ -145,58 +206,21 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
             else -> -1
         } else -1
 
-        println(editingPos)
-        println("${v?.startX} ${v?.endX}")
-        println("${v?.startY} ${v?.endY}")
-        println("$x $y")
-
         if (!editMode) {
             views.getOrNull(selectedView)?.onClick(x, y, p_mouseClicked_5_)
         }
+
+        drag = true
+        lastX = 0
+        lastY = 0
 
         return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_)
     }
 
     override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        drag = false
         editingView = -1
         return super.mouseReleased(mouseX, mouseY, button)
-    }
-
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, dragX: Double, dragY: Double): Boolean {
-        if (editMode) views.getOrNull(editingView)?.also {
-            val w = it.endX - it.startX
-            val h = it.endY - it.startY
-            when (editingPos) {
-                -1 -> {
-                    it.startX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + round(dragX).toInt()))
-                    it.startY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + round(dragY).toInt()))
-                    it.endX = it.startX + w
-                    it.endY = it.startY + h
-                }
-
-                1 -> {
-                    it.startX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + round(dragX).toInt()))
-                    it.startY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + round(dragY).toInt()))
-                }
-
-                2 -> {
-                    it.startX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + round(dragX).toInt()))
-                    it.endY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + round(dragY).toInt()))
-                }
-
-                3 -> {
-                    it.endX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + round(dragX).toInt()))
-                    it.startY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + round(dragY).toInt()))
-                }
-
-                4 -> {
-                    it.endX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + round(dragX).toInt()))
-                    it.endY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + round(dragY).toInt()))
-                }
-            }
-        }
-
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY)
     }
 
     fun isInRange(x: Int, y: Int) = x in xCenter - (guiWidth / 2)..xCenter + (guiWidth / 2) && y in yCenter - (guiHeight / 2)..yCenter + (guiHeight / 2)
