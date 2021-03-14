@@ -56,5 +56,5 @@ class CopyCommand : Command("copy") {
         }
     }
 
-    override fun CommandConsumer.tabComplete() = if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
+    override fun CommandConsumer.tabComplete() = if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else if (args.size == 2) listOf("<target>") else emptyList()
 }
