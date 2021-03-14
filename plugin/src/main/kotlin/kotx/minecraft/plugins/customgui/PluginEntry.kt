@@ -58,7 +58,7 @@ class PluginEntry : JavaPlugin(), KoinComponent {
             try {
                 val msg = message.drop(1).dropLast(1).toByteArray().toString(Charsets.UTF_8)
                 val json = msg.asJsonObject()
-                val config = Paths.get("plugins", "CustomGui", "workspaces", "${player.uniqueId}.json").toFile()
+                val config = Paths.get("plugins", "CustomGUI", "workspaces", "${player.uniqueId}.json").toFile()
                 config.parentFile.mkdirs()
                 when (json.getIntOrNull("op")) {
                     0 -> {

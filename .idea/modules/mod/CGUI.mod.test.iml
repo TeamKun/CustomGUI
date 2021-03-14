@@ -11,6 +11,9 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="srgType" value="SRG" />
+    <option name="mappingFile" value="Z:\Work\Code\Project\TeamKun\CGUI\mod\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="snapshot_20200514-1.15.1" />
+    <option name="minecraftVersion" value="1.15.2" />
+    <option name="srgType" value="TSRG" />
   </component>
 </module>
