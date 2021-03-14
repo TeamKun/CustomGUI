@@ -92,8 +92,8 @@ class ShowCommand : Command("show") {
         }
 
         val guiData = targetGui.readText()
-        targetPlayers.forEach { _ ->
-            player?.sendPluginMessage(plugin, "customgui:workspace", object {
+        targetPlayers.forEach { it ->
+            it.sendPluginMessage(plugin, "customgui:workspace", object {
                 val op = 2
                 val data = guiData
                 val fadeIn = fadeInTime
