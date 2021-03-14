@@ -21,6 +21,10 @@ class AddCommand : Command("add") {
         "customgui add TestGUI"
     )
 
+    override fun CommandConsumer.tabComplete(): List<String> {
+        return listOf("<file name>")
+    }
+
     override suspend fun CommandConsumer.execute() {
         if (args.isEmpty()) {
             sendHelp()
