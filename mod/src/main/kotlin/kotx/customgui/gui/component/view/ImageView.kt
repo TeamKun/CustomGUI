@@ -41,12 +41,15 @@ class ImageView : View {
     override fun init() {
         completed = false
         val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
-        CompletableFuture.runAsync {
+        CompletableFuture.runAsync({
             if (resId.isNotBlank() && !completed) runBlocking {
                 if (!cacheFile.exists()) {
                     val response = client.get<HttpStatement>(url) {
                         accept(ContentType.Any)
-                        header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                        header(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36"
+                        )
                         header("Accept-Encoding", "")
                         header("Accept-Language", "ja,en-US;q=0.9,en;q=0.8")
                     }
@@ -56,7 +59,7 @@ class ImageView : View {
 
                 tex = DownloadableTexture(resLoc, cacheFile, url)
             }
-        }
+        }, ServerThreadExecutor)
     }
 
     override fun renderPreview(mouseX: Int, mouseY: Int) {

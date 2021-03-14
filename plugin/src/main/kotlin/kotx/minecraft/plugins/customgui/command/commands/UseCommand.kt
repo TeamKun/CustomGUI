@@ -17,7 +17,7 @@ class UseCommand : Command("use") {
         "customgui use <file>"
     )
     override val examples: List<String> = listOf(
-        "customgui TestGUI"
+        "customgui use TestGUI"
     )
 
 
@@ -37,7 +37,7 @@ class UseCommand : Command("use") {
             return
         }
 
-        val config = Paths.get("plugins", "CustomGui", "workspaces", "${player?.uniqueId}.json").toFile()
+        val config = Paths.get("plugins", "CustomGUI", "workspaces", "${player?.uniqueId}.json").toFile()
         config.parentFile.mkdirs()
         if (!config.exists())
             config.createNewFile()
