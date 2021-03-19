@@ -70,7 +70,7 @@ tasks {
 
     create<Copy>("buildPlugin") {
         from(shadowJar)
-        var dest = file("server/plugins")
+        var dest = file("$rootDir/server/plugins")
         if (File(dest, shadowJar.get().archiveFileName.get()).exists()) dest = File(dest, "update")
         into(dest)
     }

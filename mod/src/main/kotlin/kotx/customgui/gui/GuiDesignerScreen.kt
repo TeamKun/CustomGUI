@@ -61,7 +61,13 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
     override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
         fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        fillAbsolute(xCenter - guiWidth / 2, yCenter - guiHeight / 2, xCenter + guiWidth / 2, yCenter + guiHeight / 2, Color(12, 12, 12, 255))
+        fillAbsolute(
+            xCenter - guiWidth / 2,
+            yCenter - guiHeight / 2,
+            xCenter + guiWidth / 2,
+            yCenter + guiHeight / 2,
+            Color(12, 12, 12, 255)
+        )
 
         if (editMode) {
             components.getOrNull(editModeIndex)?.render(mouseX, mouseY, scaledWidth, scaledHeight)
@@ -153,7 +159,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
                 2 -> {
                     val stX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.startX + moveX))
-                    val enY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + moveY))
+                    val enY = max(-guiHeight / 2, min(guiHeight / 2, it.endY + moveY))
                     val wi = it.endX - stX
                     val he = enY - it.startY
                     if (wi > 0) it.startX = stX
@@ -161,7 +167,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
                 }
 
                 3 -> {
-                    val enX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + moveX))
+                    val enX = max(-guiWidth / 2, min(guiWidth / 2, it.endX + moveX))
                     val stY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.startY + moveY))
                     val wi = enX - it.startX
                     val he = it.endY - stY
@@ -170,13 +176,12 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
                 }
 
                 4 -> {
-                    val enX = max(-guiWidth / 2, min(guiWidth / 2 - it.width, it.endX + moveX))
-                    val enY = max(-guiHeight / 2, min(guiHeight / 2 - it.height, it.endY + moveY))
+                    val enX = max(-guiWidth / 2, min(guiWidth / 2 , it.endX + moveX))
+                    val enY = max(-guiHeight / 2, min(guiHeight / 2 , it.endY + moveY))
                     val wi = enX - it.startX
                     val he = enY - it.startY
                     if (wi > 0) it.endX = enX
                     if (he > 0) it.endY = enY
-
                 }
             }
         }
@@ -186,7 +191,8 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         val x = p_mouseClicked_1_.toInt()
         val y = p_mouseClicked_3_.toInt()
 
-        if (isInRange(x, y) && editMode) components.getOrNull(editModeIndex)?.onMouseClick(p_mouseClicked_1_.toInt(), p_mouseClicked_3_.toInt(), p_mouseClicked_5_)
+        if (isInRange(x, y) && editMode) components.getOrNull(editModeIndex)
+            ?.onMouseClick(p_mouseClicked_1_.toInt(), p_mouseClicked_3_.toInt(), p_mouseClicked_5_)
 
         val i = views.indexOfFirst {
             x in xCenter + it.startX..xCenter + it.endX && y in yCenter + it.startY..yCenter + it.endY
@@ -223,7 +229,8 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         return super.mouseReleased(mouseX, mouseY, button)
     }
 
-    fun isInRange(x: Int, y: Int) = x in xCenter - (guiWidth / 2)..xCenter + (guiWidth / 2) && y in yCenter - (guiHeight / 2)..yCenter + (guiHeight / 2)
+    fun isInRange(x: Int, y: Int) =
+        x in xCenter - (guiWidth / 2)..xCenter + (guiWidth / 2) && y in yCenter - (guiHeight / 2)..yCenter + (guiHeight / 2)
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_DELETE) {

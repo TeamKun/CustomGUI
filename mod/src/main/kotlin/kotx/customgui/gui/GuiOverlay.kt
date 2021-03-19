@@ -1,14 +1,16 @@
 package kotx.customgui.gui
 
+import com.mojang.blaze3d.systems.RenderSystem
 import kotx.customgui.ServerThreadExecutor
-import kotx.customgui.gui.component.view.ImageView
+import kotx.customgui.fillAbsolute
 import kotx.customgui.scaledHeight
 import kotx.customgui.scaledWidth
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.AbstractGui
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
+import java.awt.Color
 import kotlin.math.max
 import kotlin.math.min
 
@@ -20,7 +22,9 @@ object GuiOverlay : AbstractGui() {
     var views = mutableListOf<View>()
 
     @SubscribeEvent
-    fun onRender(event: RenderGameOverlayEvent) {
+    fun onRender(event: TickEvent.RenderTickEvent) {
+        if (Minecraft.getInstance().currentServerData == null || Minecraft.getInstance().currentServerData?.isOnLAN == true) return
+        if (Minecraft.getInstance().currentScreen != null) return
         ServerThreadExecutor.executeQueuedTaskImmediately()
 
         val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
