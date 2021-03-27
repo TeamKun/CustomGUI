@@ -53,7 +53,7 @@ class ColorInputScreen(
                     if (confirmButton.active)
                         r = it.toInt()
                 }
-        })
+            })
         addButton(TextFieldWidget(
             font,
             xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, "緑"
@@ -85,6 +85,24 @@ class ColorInputScreen(
 
     override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
         fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
+        Minecraft.getInstance().fontRenderer.drawString(
+            "R (赤)",
+            xCenter - fieldWidth / 2 - 50,
+            yCenter - fieldHeight / 2 - fieldHeight - 20,
+            Color.WHITE
+        )
+        Minecraft.getInstance().fontRenderer.drawString(
+            "G (緑)",
+            xCenter - fieldWidth / 2 - 50,
+            yCenter - fieldHeight / 2,
+            Color.WHITE
+        )
+        Minecraft.getInstance().fontRenderer.drawString(
+            "B (青)",
+            xCenter - fieldWidth / 2 - 50,
+            yCenter - fieldHeight / 2 + fieldHeight + 20,
+            Color.WHITE
+        )
         Minecraft.getInstance().fontRenderer.drawStringCentered("コマンドを入力", width / 2, 60, Color.WHITE)
         super.render(mouseX, mouseY, partialTicks)
     }
