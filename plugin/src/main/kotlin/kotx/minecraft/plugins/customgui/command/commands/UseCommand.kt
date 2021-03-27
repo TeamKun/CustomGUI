@@ -55,4 +55,6 @@ class UseCommand : Command("use") {
             append("${fileName}を現在のワークスペースにロードしました。").color(ChatColor.GREEN)
         }
     }
+
+    override fun CommandConsumer.tabComplete() = Directories.guis.files.map { it.nameWithoutExtension }
 }

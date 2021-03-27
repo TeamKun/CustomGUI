@@ -9,5 +9,8 @@ commands:
   customgui:
     description: Base command for custom gui plugin
     usage: /customgui
-    permission: op
+    permission: customgui
     permission-message: You don't have permissions to execute this command!
+permissions:
+  customgui:
+    description: 
