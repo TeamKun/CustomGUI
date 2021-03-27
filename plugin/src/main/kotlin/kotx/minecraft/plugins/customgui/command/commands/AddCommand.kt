@@ -22,7 +22,7 @@ class AddCommand : Command("add") {
     )
 
     override fun CommandConsumer.tabComplete(): List<String> {
-        return listOf("<file name>")
+        return if (args.firstOrNull().isNullOrBlank()) listOf("<file name>") else emptyList()
     }
 
     override suspend fun CommandConsumer.execute() {
