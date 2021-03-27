@@ -13,7 +13,7 @@ class RemoveCommand : Command("remove") {
     override val requireOp: Boolean = false
     override val description: String = "指定したファイルを削除します。(自身のGUIのみ)"
     override val usages: List<String> = listOf(
-        "customgui remove <file>"
+        "customgui remove <targetFile>"
     )
     override val examples: List<String> = listOf(
         "customgui remove TestGUI"

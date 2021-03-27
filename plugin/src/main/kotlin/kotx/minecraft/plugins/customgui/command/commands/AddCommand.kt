@@ -15,14 +15,14 @@ class AddCommand : Command("add") {
     override val requireOp: Boolean = false
     override val description: String = "現在のワークスペースをファイルに保存します。"
     override val usages: List<String> = listOf(
-        "customgui add <file>"
+        "customgui add <fileName>"
     )
     override val examples: List<String> = listOf(
         "customgui add TestGUI"
     )
 
     override fun CommandConsumer.tabComplete(): List<String> {
-        return if (args.firstOrNull().isNullOrBlank()) listOf("<file name>") else emptyList()
+        return if (args.firstOrNull().isNullOrBlank()) listOf("<fileName>") else emptyList()
     }
 
     override suspend fun CommandConsumer.execute() {
@@ -40,8 +40,18 @@ class AddCommand : Command("add") {
             return
         }
 
-        if (Directories.guis.files.any { fileName == it.nameWithoutExtension }) {
-            player!!.send {
+        val duplicatedFile = Directories.guis.files.find { fileName == it.nameWithoutExtension }
+        if (duplicatedFile != null) {
+            if (duplicatedFile.parentFile.name != player!!.uniqueId.toString()) {
+                player.send {
+                    append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
+                    append(fileName).color(ChatColor.GRAY).reset()
+                    append("は既に存在しています。他のユーザーのファイルは上書きできません。").color(ChatColor.RED).reset()
+                }
+                return
+            }
+
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append(fileName).color(ChatColor.GRAY).bold(true)
                 append("は既に存在しています。上書きしますか？").bold(false)

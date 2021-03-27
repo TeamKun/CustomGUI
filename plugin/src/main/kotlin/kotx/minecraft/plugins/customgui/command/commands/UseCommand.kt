@@ -12,9 +12,9 @@ import java.nio.file.Paths
 
 class UseCommand : Command("use") {
     override val requireOp: Boolean = false
-    override val description: String = "指定したファイルを編集対象にします。"
+    override val description: String = "指定したファイルをワークスペースに読み込みます。(現在のワークスペースは破棄されます。)"
     override val usages: List<String> = listOf(
-        "customgui use <file>"
+        "customgui use <targetFile>"
     )
     override val examples: List<String> = listOf(
         "customgui use TestGUI"
@@ -32,7 +32,7 @@ class UseCommand : Command("use") {
         if (gui == null) {
             player!!.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append("${fileName}というファイルは存在しません。").color(ChatColor.RED)
+                append("${fileName}は存在しません。").color(ChatColor.RED)
             }
             return
         }
@@ -52,7 +52,7 @@ class UseCommand : Command("use") {
 
         player?.send {
             append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-            append("${fileName}を現在のワークスペースにロードしました。").color(ChatColor.GREEN)
+            append("${fileName}を現在のワークスペースに読み込みました。").color(ChatColor.GREEN)
         }
     }
 
