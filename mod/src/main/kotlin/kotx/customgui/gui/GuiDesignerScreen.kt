@@ -37,7 +37,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
             onClose()
             minecraft?.displayGuiScreen(null)
         })
-        addButton(ExtendedButton(xCenter + 20, scaledHeight - 70, 80, 20, "編集モード") {
+        addButton(ExtendedButton(xCenter + 20, scaledHeight - 70, 80, 20, if (editMode) "編集モード" else "プレビューモード") {
             editMode = !editMode
             it.message = if (editMode) "編集モード" else "プレビューモード"
         })
