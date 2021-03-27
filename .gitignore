@@ -1,6 +1,5 @@
 .gradle/
 build/
-./server
-./mod/run
 /server
-/server/*
+/mod/run
+/plugin/server
