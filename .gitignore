@@ -3,3 +3,4 @@ build/
 ./server
 ./mod/run
 /server
+/server/*
