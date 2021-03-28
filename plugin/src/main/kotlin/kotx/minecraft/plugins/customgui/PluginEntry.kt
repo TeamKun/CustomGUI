@@ -99,7 +99,12 @@ class PluginEntry : JavaPlugin(), KoinComponent {
         else super.onCommand(sender, command, label, args)
     }
 
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): MutableList<String> {
         return handler.handleTabComplete(sender, alias, args).toMutableList()
     }
 }

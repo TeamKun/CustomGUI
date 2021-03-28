@@ -32,7 +32,13 @@ class TextView : View {
         val stX = xCenter + (startX * scaleW).toInt()
         val stY = yCenter + (startY * scaleH).toInt()
 
-        Minecraft.getInstance().fontRenderer.drawString(text, stX, stY, Color(255, 255, 255, (opacity * 255).toInt()), true)
+        Minecraft.getInstance().fontRenderer.drawString(
+            text,
+            stX,
+            stY,
+            Color(255, 255, 255, (opacity * 255).toInt()),
+            true
+        )
     }
 
     override fun onClick(mouseX: Int, mouseY: Int, button: Int) {

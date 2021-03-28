@@ -2,8 +2,6 @@
 
 package kotx.customgui
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotx.customgui.gui.GuiDesignerScreen
@@ -76,7 +74,7 @@ class CustomGUIMod {
                             "rect" -> it.toString().parseToObject<RectView>()
                             else -> null
                         }.also {
-                                it?.init()
+                            it?.init()
                         }
                     }.also {
                         GuiDesignerScreen.views = it.toMutableList()

@@ -142,9 +142,9 @@ data class BitValue internal constructor(val toBits: Long) {
 
     operator fun plus(other: BitValue) = BitValue(toBits + other.toBits)
     operator fun minus(other: BitValue) = BitValue(toBits - other.toBits)
-    operator fun times(mult: Long) = BitValue(mult*toBits)
-    operator fun div(div: Long) = BitValue(toBits/div)
-    operator fun div(div: BitValue) = toBits/div.toBits
+    operator fun times(mult: Long) = BitValue(mult * toBits)
+    operator fun div(div: Long) = BitValue(toBits / div)
+    operator fun div(div: BitValue) = toBits / div.toBits
 }
 
 fun String.asPacket(): ByteArray {

@@ -78,7 +78,14 @@ private val suggestOptions = listOf(
         else
             emptyList()
     },
-    SuggestOption("gamemode", SuggestOptionType.GAMEMODE) { _, _ -> listOf("survival", "creative", "adventure", "spectator") },
+    SuggestOption("gamemode", SuggestOptionType.GAMEMODE) { _, _ ->
+        listOf(
+            "survival",
+            "creative",
+            "adventure",
+            "spectator"
+        )
+    },
     SuggestOption("level", SuggestOptionType.RANGE) { p, _ ->
         p.server.onlinePlayers.map { it.level.toString() }
     },
@@ -181,10 +188,10 @@ fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
         val currentOptionInfo = suggestOptions.find { it.name == currentOptionKey }
 
         println()
-        println("CurrentOption: $currentOption")
-        println("Key: $currentOptionKey")
-        println("Value: $currentOptionValue")
-        println("Info: ${currentOptionInfo?.name}")
+        CurrentOption: $currentOption")
+        Key: $currentOptionKey")
+        Value: $currentOptionValue")
+        Info: ${ currentOptionInfo?.name }")
 
         when {
             currentOption.split("=").size == 1 -> {
@@ -196,15 +203,25 @@ fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
                 }
                 suggestions.addAll(options.map { "${it.name.drop(currentOption.length)}=" })
             }
-            currentOptionInfo != null && currentOptionValue.isNullOrEmpty() -> suggestions.addAll(currentOptionInfo.defaultValues(plugin, null))
-            currentOptionInfo != null && !currentOptionValue.isNullOrEmpty() -> suggestions.addAll(currentOptionInfo.defaultValues(plugin, currentOptionValue).filter { it.startsWith(currentOptionValue, true) }
-                .map { it.drop(currentOptionValue.length) })
+            currentOptionInfo != null && currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
+                currentOptionInfo.defaultValues(
+                    plugin,
+                    null
+                )
+            )
+            currentOptionInfo != null && !currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
+                currentOptionInfo.defaultValues(
+                    plugin,
+                    currentOptionValue
+                ).filter { it.startsWith(currentOptionValue, true) }
+                    .map { it.drop(currentOptionValue.length) })
         }
     } else {
-        suggestions.addAll(plugin.server.onlinePlayers.map { it.name }.filter { it.startsWith(input, true) }.map { it.drop(input.length) })
+        suggestions.addAll(plugin.server.onlinePlayers.map { it.name }.filter { it.startsWith(input, true) }
+            .map { it.drop(input.length) })
     }
 
-    println("Suggestions: $suggestions")
+    Suggestions: $suggestions")
     println()
     return suggestions.map { "$input$it" }.toMutableList()
 }

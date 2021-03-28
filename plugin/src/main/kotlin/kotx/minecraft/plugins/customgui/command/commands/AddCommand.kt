@@ -88,7 +88,8 @@ class AddCommand : Command("add") {
     }
 
     private fun CommandConsumer.saveGui(player: Player, fileName: String) {
-        val playerWorkspace = Paths.get("plugins", "CustomGUI", "workspaces", player.uniqueId.toString() + ".json").toFile()
+        val playerWorkspace =
+            Paths.get("plugins", "CustomGUI", "workspaces", player.uniqueId.toString() + ".json").toFile()
         if (!playerWorkspace.exists()) {
             playerWorkspace.parentFile.mkdirs()
             playerWorkspace.createNewFile()

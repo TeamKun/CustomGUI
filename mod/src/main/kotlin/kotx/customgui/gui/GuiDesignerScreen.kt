@@ -176,8 +176,8 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
                 }
 
                 4 -> {
-                    val enX = max(-guiWidth / 2, min(guiWidth / 2 , it.endX + moveX))
-                    val enY = max(-guiHeight / 2, min(guiHeight / 2 , it.endY + moveY))
+                    val enX = max(-guiWidth / 2, min(guiWidth / 2, it.endX + moveX))
+                    val enY = max(-guiHeight / 2, min(guiHeight / 2, it.endY + moveY))
                     val wi = enX - it.startX
                     val he = enY - it.startY
                     if (wi > 0) it.endX = enX

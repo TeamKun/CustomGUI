@@ -29,7 +29,9 @@ class ListCommand : Command("list") {
             append("GUI一覧: ")
             Directories.guis.files.filter { it.isFile }.forEach {
                 append(it.nameWithoutExtension).color(ChatColor.GREEN).bold(true)
-                append(" (${it.parentFile.name.run { plugin.server.getPlayer(UUID.fromString(this))?.displayName ?: "Unknown" }})").color(ChatColor.DARK_GREEN).bold(false)
+                append(" (${it.parentFile.name.run { plugin.server.getPlayer(UUID.fromString(this))?.displayName ?: "Unknown" }})").color(
+                    ChatColor.DARK_GREEN
+                ).bold(false)
                 append(", ").color(ChatColor.GRAY)
             }
         }

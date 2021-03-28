@@ -102,14 +102,20 @@ class ImageInputScreen(
         val response = runBlocking {
             client.get<HttpStatement>(url) {
                 accept(ContentType.Any)
-                header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                header(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36"
+                )
                 header("Accept-Encoding", "")
                 header("Accept-Language", "ja,en-US;q=0.9,en;q=0.8")
             }
         }
         val bytes = runBlocking { response.receive<InputStream>().readBytes() }
 
-        FileUtils.copyInputStreamToFile(bytes.inputStream(), Paths.get("mods", "CustomGUI", "caches", "$imageId.png").toFile())
+        FileUtils.copyInputStreamToFile(
+            bytes.inputStream(),
+            Paths.get("mods", "CustomGUI", "caches", "$imageId.png").toFile()
+        )
         val img = ImageIO.read(bytes.inputStream())
 
         GuiDesignerScreen.views.add(
@@ -131,7 +137,9 @@ class ImageInputScreen(
                 this.url = this@ImageInputScreen.url
                 this.resId = imageId
             }.apply {
+                Init calling ...")
                 init()
+                Init finish called.")
             }
         )
     }

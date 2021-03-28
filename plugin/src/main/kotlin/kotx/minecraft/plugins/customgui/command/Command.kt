@@ -36,7 +36,9 @@ abstract class Command(
     protected abstract suspend fun CommandConsumer.execute()
     protected open fun CommandConsumer.tabComplete(): List<String> {
         return if (args.firstOrNull()?.isBlank() != true)
-            (children.map { it.name }.filter { it.startsWith(args.first()) } + children.map { it.name to it.name.distanceTo(args.first()) }.sortedByDescending { it.second }.map { it.first })
+            (children.map { it.name }
+                .filter { it.startsWith(args.first()) } + children.map { it.name to it.name.distanceTo(args.first()) }
+                .sortedByDescending { it.second }.map { it.first })
                 .firstOrNull()?.let { listOf(it) } ?: emptyList()
         else
             children.map { it.name }
@@ -48,7 +50,8 @@ abstract class Command(
             val consumer = CommandConsumer(
                 sender, sender as? Player, label + " " + args.joinToString(" "), this@Command, args
             )
-            children.get(args.firstOrNull() ?: "")?.handleExecute(sender, label, args.drop(1).toTypedArray()) ?: consumer.execute()
+            children.get(args.firstOrNull() ?: "")?.handleExecute(sender, label, args.drop(1).toTypedArray())
+                ?: consumer.execute()
         }
         return true
     }
@@ -58,7 +61,8 @@ abstract class Command(
         val consumer = CommandConsumer(
             sender, sender as? Player, label + " " + args.joinToString(" "), this@Command, args
         )
-        return children.get(args.firstOrNull() ?: "")?.handleTabComplete(sender, label, args.drop(1).toTypedArray()) ?: consumer.tabComplete()
+        return children.get(args.firstOrNull() ?: "")?.handleTabComplete(sender, label, args.drop(1).toTypedArray())
+            ?: consumer.tabComplete()
     }
 
     private fun validate(sender: CommandSender): Boolean {
@@ -87,7 +91,8 @@ abstract class Command(
         append("===================================\n").reset().color(ChatColor.GRAY)
         append("/$commandTitle").color(ChatColor.LIGHT_PURPLE).bold(true).append(" の使い方").reset().append("\n")
         if (requireOp)
-            append("※このコマンドは").color(ChatColor.RED).append("管理者").bold(true).append("のみが実行出来ます。").bold(false).append("\n")
+            append("※このコマンドは").color(ChatColor.RED).append("管理者").bold(true).append("のみが実行出来ます。").bold(false)
+                .append("\n")
         append("===================================\n").reset().color(ChatColor.GRAY)
         append("説明: ").reset().bold(true).append(description).reset().color(ChatColor.GRAY)
         if (aliases.isNotEmpty())

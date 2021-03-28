@@ -71,12 +71,14 @@ object ButtonComponent : IComponent {
                 val endX = endPos!!.first
                 val endY = endPos!!.second
 
-                Minecraft.getInstance().displayGuiScreen(CommandInputScreen(
-                    startX,
-                    startY,
-                    endX,
-                    endY
-                ))
+                Minecraft.getInstance().displayGuiScreen(
+                    CommandInputScreen(
+                        startX,
+                        startY,
+                        endX,
+                        endY
+                    )
+                )
             }
         }
     }

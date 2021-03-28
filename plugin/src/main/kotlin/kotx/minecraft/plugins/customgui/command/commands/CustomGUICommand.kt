@@ -6,7 +6,15 @@ import kotx.minecraft.plugins.customgui.extensions.sendHelp
 
 class CustomGUICommand : Command("customgui") {
     override val playerOnly: Boolean = true
-    override val children: List<Command> = listOf(AddCommand(), RemoveCommand(), ListCommand(), ShowCommand(), CopyCommand(), UseCommand(), UpdateCommand())
+    override val children: List<Command> = listOf(
+        AddCommand(),
+        RemoveCommand(),
+        ListCommand(),
+        ShowCommand(),
+        CopyCommand(),
+        UseCommand(),
+        UpdateCommand()
+    )
     override val requireOp: Boolean = false
     override val description: String = "CustomGUIを制御するコマンド"
 
