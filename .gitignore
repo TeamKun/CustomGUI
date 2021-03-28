@@ -1,5 +1,8 @@
 .gradle/
 build/
-/server
 /mod/run
 /plugin/server
+/server/
+/server/dev_world/
+/server/dev_world_nether/
+/server/dev_world_the_end/

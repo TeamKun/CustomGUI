@@ -39,10 +39,10 @@ class ImageView : View {
 
 
     override fun init() {
-        completed = false
         val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
+        completed = false
         CompletableFuture.runAsync({
-            if (resId.isNotBlank() && !completed) runBlocking {
+            runBlocking {
                 if (!cacheFile.exists()) {
                     val response = client.get<HttpStatement>(url) {
                         accept(ContentType.Any)
@@ -58,23 +58,16 @@ class ImageView : View {
                 }
 
                 tex = DownloadableTexture(resLoc, cacheFile, url)
-            }
-        }, ServerThreadExecutor)
-    }
-
-    override fun renderPreview(mouseX: Int, mouseY: Int) {
-
-        if (resId.isNotBlank()) {
-            val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
-            if (!completed && cacheFile.exists() && tex != null) {
                 Minecraft.getInstance().textureManager.loadTexture(
                     resLoc,
                     tex
                 )
                 completed = true
             }
-        }
+        }, ServerThreadExecutor)
+    }
 
+    override fun renderPreview(mouseX: Int, mouseY: Int) {
         val stX = xCenter + startX
         val stY = yCenter + startY
         val enX = xCenter + endX
@@ -91,7 +84,6 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            Minecraft.getInstance().textureManager.bindTexture(resLoc)
             val bufferBuilder = Tessellator.getInstance().buffer
             Minecraft.getInstance().renderManager.textureManager.bindTexture(resLoc)
             RenderSystem.enableBlend()
@@ -110,17 +102,6 @@ class ImageView : View {
     }
 
     override fun renderPage(scaleW: Float, scaleH: Float, opacity: Float) {
-        if (resId.isNotBlank()) {
-            val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
-            if (!completed && cacheFile.exists() && tex != null) {
-                Minecraft.getInstance().textureManager.loadTexture(
-                    resLoc,
-                    tex
-                )
-                completed = true
-            }
-        }
-
         val stX = xCenter + (startX * scaleW).toInt()
         val stY = yCenter + (startY * scaleH).toInt()
         val enX = xCenter + (endX * scaleW).toInt()
@@ -137,7 +118,6 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            Minecraft.getInstance().textureManager.bindTexture(resLoc)
             val bufferBuilder = Tessellator.getInstance().buffer
             Minecraft.getInstance().renderManager.textureManager.bindTexture(resLoc)
             RenderSystem.pushMatrix()
