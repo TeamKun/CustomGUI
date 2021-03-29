@@ -56,5 +56,5 @@ class UseCommand : Command("use") {
         }
     }
 
-    override fun CommandConsumer.tabComplete() = Directories.guis.files.map { it.nameWithoutExtension }
+    override fun CommandConsumer.tabComplete() = if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
 }

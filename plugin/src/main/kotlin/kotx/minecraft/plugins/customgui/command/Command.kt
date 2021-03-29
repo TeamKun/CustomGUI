@@ -3,7 +3,6 @@ package kotx.minecraft.plugins.customgui.command
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotx.minecraft.plugins.customgui.extensions.distanceTo
 import kotx.minecraft.plugins.customgui.extensions.get
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.BaseComponent
@@ -34,14 +33,10 @@ abstract class Command(
     var parent: Command? = null
 
     protected abstract suspend fun CommandConsumer.execute()
-    protected open fun CommandConsumer.tabComplete(): List<String> {
-        return if (args.firstOrNull()?.isBlank() != true)
-            (children.map { it.name }
-                .filter { it.startsWith(args.first()) } + children.map { it.name to it.name.distanceTo(args.first()) }
-                .sortedByDescending { it.second }.map { it.first })
-                .firstOrNull()?.let { listOf(it) } ?: emptyList()
-        else
-            children.map { it.name }
+    protected open fun CommandConsumer.tabComplete(): List<String> = when {
+        args.isEmpty() || args.firstOrNull().isNullOrBlank() -> children.map { it.name }
+        args.size == 1 -> children.map { it.name }.filter { it.startsWith(args.first()) }
+        else -> emptyList()
     }
 
     fun handleExecute(sender: CommandSender, label: String, args: Array<out String>): Boolean {

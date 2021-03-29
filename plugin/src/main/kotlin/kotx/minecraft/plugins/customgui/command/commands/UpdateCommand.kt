@@ -72,4 +72,6 @@ class UpdateCommand : Command("update") {
             append("を保存しました。").bold(false)
         }
     }
+
+    override fun CommandConsumer.tabComplete() = if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
 }

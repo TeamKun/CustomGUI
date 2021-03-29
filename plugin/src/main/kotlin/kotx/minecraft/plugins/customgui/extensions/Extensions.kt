@@ -187,12 +187,6 @@ fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
         val currentOptionValue = currentOption.split("=").getOrNull(1)
         val currentOptionInfo = suggestOptions.find { it.name == currentOptionKey }
 
-        println()
-        CurrentOption: $currentOption")
-        Key: $currentOptionKey")
-        Value: $currentOptionValue")
-        Info: ${ currentOptionInfo?.name }")
-
         when {
             currentOption.split("=").size == 1 -> {
                 val options = suggestOptions.filter { it.name.startsWith(currentOption, true) }
@@ -220,8 +214,5 @@ fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
         suggestions.addAll(plugin.server.onlinePlayers.map { it.name }.filter { it.startsWith(input, true) }
             .map { it.drop(input.length) })
     }
-
-    Suggestions: $suggestions")
-    println()
     return suggestions.map { "$input$it" }.toMutableList()
 }

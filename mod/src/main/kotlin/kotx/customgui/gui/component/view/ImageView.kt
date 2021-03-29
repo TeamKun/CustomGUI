@@ -39,11 +39,9 @@ class ImageView : View {
 
 
     override fun init() {
-        Image loading ...")
         val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
         completed = false
         CompletableFuture.runAsync({
-            Image loading ...(async start)")
             runBlocking {
                 if (!cacheFile.exists()) {
                     val response = client.get<HttpStatement>(url) {
@@ -59,19 +57,14 @@ class ImageView : View {
                     FileUtils.copyInputStreamToFile(response.receive(), cacheFile)
                 }
 
-                before DownloadableTexture ")
                 tex = DownloadableTexture(resLoc, cacheFile)
-                before loadTexture ")
                 Minecraft.getInstance().textureManager.loadTexture(
                     resLoc,
                     tex
                 )
-                before completed = true")
                 completed = true
             }
-            Image loading ...(async finish)")
         }, ServerThreadExecutor)
-        Image loading ...(sync finish)")
     }
 
     override fun renderPreview(mouseX: Int, mouseY: Int) {

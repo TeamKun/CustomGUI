@@ -26,7 +26,7 @@ class ListCommand : Command("list") {
         }
 
         player!!.send {
-            append("GUI一覧: ")
+            append("GUI一覧: (${Directories.guis.files.size})")
             Directories.guis.files.filter { it.isFile }.forEach {
                 append(it.nameWithoutExtension).color(ChatColor.GREEN).bold(true)
                 append(" (${it.parentFile.name.run { plugin.server.getPlayer(UUID.fromString(this))?.displayName ?: "Unknown" }})").color(

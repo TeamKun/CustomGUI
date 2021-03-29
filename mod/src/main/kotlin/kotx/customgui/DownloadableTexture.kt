@@ -19,23 +19,15 @@ class DownloadableTexture(
 
 
     override fun loadTexture(manager: IResourceManager) {
-        first loadTexture ")
         if (textureLocation == null) {
             super.loadTexture(manager)
         }
 
-        before deleteGlTexture ")
         deleteGlTexture()
-        before getGlTextureId ")
         val texId = getGlTextureId()
-        before ByteArrayInputStream ")
         val inputStream = ByteArrayInputStream(cacheFile.inputStream().readBytes())
-        before NativeImage # read ")
         val image = NativeImage.read(inputStream)
-        before prepareImage ")
         TextureUtil.prepareImage(texId, 0, image.width, image.height)
-        before uploadTextureSub ")
         image.uploadTextureSub(0, 0, 0, 0, 0, image.width, image.height, blur, false, false, true)
-        finished loadTexture ")
     }
 }

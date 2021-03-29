@@ -120,7 +120,7 @@ class ShowCommand : Command("show") {
             "<file> <user>",
             "<file> <fadein> <stay> <fadeout>",
             "<file> <user> <fadein> <stay> <fadeout>"
-        )
+        ) + Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
         args.size == 1 -> Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
         args.size == 2 && player!!.isOp -> suggestEntities(args[1], plugin)
 

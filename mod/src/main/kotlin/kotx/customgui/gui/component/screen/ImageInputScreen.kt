@@ -137,9 +137,7 @@ class ImageInputScreen(
                 this.url = this@ImageInputScreen.url
                 this.resId = imageId
             }.apply {
-                Init calling ...")
                 init()
-                Init finish called.")
             }
         )
     }
