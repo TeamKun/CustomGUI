@@ -1,31 +1,32 @@
-package kotx.minecraft.plugins.customgui.command.commands
+package kotx.minecraft.plugins.customgui.command
 
 import kotx.ktools.asPacket
 import kotx.ktools.toJson
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
+import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import kotx.minecraft.plugins.customgui.extensions.send
-import kotx.minecraft.plugins.customgui.extensions.sendHelp
 import kotx.minecraft.plugins.customgui.extensions.suggestEntities
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class ShowCommand : Command("show") {
-    override val requireOp: Boolean = false
+class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIを表示します。 (編集のみ)"
-    override val usages: List<String> = listOf(
-        "customgui show <file> [user]",
-        "customgui show <file> <fadein> <stay> <fadeout>",
-        "customgui show <file> <user> <fadein> <stay> <fadeout>",
+    override val usages: List<Usage> = listOf(
+        Usage("show <file> [user]"),
+        Usage("show <file> <fadein> <stay> <fadeout>"),
+        Usage("show <file> <user> <fadein> <stay> <fadeout>"),
     )
     override val examples: List<String> = listOf(
         "customgui show TestGUI",
         "customgui show TestGUI Kotlinx"
     )
+    override val permission: Permission = Permission.EVERYONE
 
-    override suspend fun CommandConsumer.execute() {
+    override fun CommandConsumer.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -46,7 +47,7 @@ class ShowCommand : Command("show") {
         }
 
         if (targetGui == null) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append(fileName).color(ChatColor.RED).bold(true)
                 append("は見つかりませんでした。").bold(false)
@@ -55,12 +56,12 @@ class ShowCommand : Command("show") {
         }
 
         val targetPlayers = when (args.size) {
-            1, 4 -> listOf(player!!)
-            else -> Bukkit.selectEntities(sender, args[1]).filterIsInstance<Player>()
+            1, 4 -> listOf(player)
+            else -> Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>()
         }
 
         if (targetPlayers.isEmpty()) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append("誰も見せる人が見つかりませんでした。").bold(false)
             }
@@ -102,7 +103,7 @@ class ShowCommand : Command("show") {
             }.toJson().asPacket())
         }
 
-        player!!.send {
+        player.send {
             append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
             append(fileName).color(ChatColor.RED).bold(true)
             append("を").bold(false).color(ChatColor.GRAY)
@@ -115,14 +116,8 @@ class ShowCommand : Command("show") {
     }
 
     override fun CommandConsumer.tabComplete() = when {
-        args.firstOrNull().isNullOrBlank() -> listOf(
-            "<file>",
-            "<file> <user>",
-            "<file> <fadein> <stay> <fadeout>",
-            "<file> <user> <fadein> <stay> <fadeout>"
-        ) + Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
         args.size == 1 -> Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
-        args.size == 2 && player!!.isOp -> suggestEntities(args[1], plugin)
+        args.size == 2 && player.isOp -> suggestEntities(args[1], plugin)
 
         else -> emptyList()
     }

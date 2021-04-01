@@ -1,7 +1,5 @@
 package kotx.minecraft.plugins.customgui.extensions
 
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
 import kotx.minecraft.plugins.customgui.extensions.suggest.SuggestOption
 import kotx.minecraft.plugins.customgui.extensions.suggest.SuggestOptionType
 import org.apache.lucene.search.spell.LevensteinDistance
@@ -23,16 +21,6 @@ fun Material.itemStack(block: ItemStack.() -> Unit) = ItemStack(this, 1).apply(b
 fun ItemStack.itemMeta(block: ItemMeta.() -> Unit): ItemStack {
     itemMeta = itemMeta.apply(block)
     return this
-}
-
-fun CommandConsumer.sendHelp() {
-    sender.spigot().sendMessage(*command.buildHelp())
-}
-
-fun List<Command>.get(name: String) = find { it.name.equals(name, true) || it.aliases.any { it.equals(name, true) } }
-
-fun CommandConsumer.dispatchSubCommand(name: String) {
-    command.children.get(name)?.handleExecute(sender, message, args) ?: sendHelp()
 }
 
 fun Path.allFiles(): List<Path> {

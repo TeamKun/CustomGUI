@@ -1,31 +1,35 @@
-package kotx.minecraft.plugins.customgui.command.commands
+package kotx.minecraft.plugins.customgui.command
 
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
+import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import kotx.minecraft.plugins.customgui.extensions.send
-import kotx.minecraft.plugins.customgui.extensions.sendHelp
 import net.md_5.bungee.api.ChatColor
 import java.util.*
 
 
 class ListCommand : Command("list") {
-    override val requireOp: Boolean = false
     override val description: String = "GUI一覧を表示します。"
-    override val usages: List<String> = listOf(
-        "customgui list"
+    override val usages: List<Usage> = listOf(
+        Usage(
+            "list"
+        )
     )
     override val examples: List<String> = listOf(
         "customgui list"
     )
 
-    override suspend fun CommandConsumer.execute() {
+    override val permission: Permission = Permission.EVERYONE
+
+    override fun CommandConsumer.execute() {
         if (args.isNotEmpty()) {
             sendHelp()
             return
         }
 
-        player!!.send {
+        player.send {
             append("GUI一覧: (${Directories.guis.files.size})")
             Directories.guis.files.filter { it.isFile }.forEach {
                 append(it.nameWithoutExtension).color(ChatColor.GREEN).bold(true)

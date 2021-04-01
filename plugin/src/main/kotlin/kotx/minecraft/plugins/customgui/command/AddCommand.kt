@@ -1,31 +1,31 @@
-package kotx.minecraft.plugins.customgui.command.commands
+package kotx.minecraft.plugins.customgui.command
 
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.plugins.customgui.directory.Directories
 import kotx.minecraft.plugins.customgui.extensions.EventWaiter
 import kotx.minecraft.plugins.customgui.extensions.send
-import kotx.minecraft.plugins.customgui.extensions.sendHelp
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import java.nio.file.Paths
 
 class AddCommand : Command("add") {
-    override val requireOp: Boolean = false
     override val description: String = "現在のワークスペースをファイルに保存します。"
-    override val usages: List<String> = listOf(
-        "customgui add <fileName>"
+    override val usages: List<Usage> = listOf(
+        Usage(
+            "add <fileName>"
+        )
     )
     override val examples: List<String> = listOf(
         "customgui add TestGUI"
     )
 
-    override fun CommandConsumer.tabComplete(): List<String> {
-        return if (args.firstOrNull().isNullOrBlank()) listOf("<fileName>") else emptyList()
-    }
+    override val permission: Permission = Permission.EVERYONE
 
-    override suspend fun CommandConsumer.execute() {
+    override fun CommandConsumer.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -33,7 +33,7 @@ class AddCommand : Command("add") {
 
         val fileName = args.first().replace("[/\\\\.]".toRegex(), "")
         if (fileName.length > 32) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append("ファイル名は32文字を超えてはいけません。").color(ChatColor.RED)
             }
@@ -42,7 +42,7 @@ class AddCommand : Command("add") {
 
         val duplicatedFile = Directories.guis.files.find { fileName == it.nameWithoutExtension }
         if (duplicatedFile != null) {
-            if (duplicatedFile.parentFile.name != player!!.uniqueId.toString()) {
+            if (duplicatedFile.parentFile.name != player.uniqueId.toString()) {
                 player.send {
                     append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                     append(fileName).color(ChatColor.GRAY).reset()
@@ -84,7 +84,7 @@ class AddCommand : Command("add") {
             return
         }
 
-        saveGui(player!!, fileName)
+        saveGui(player, fileName)
     }
 
     private fun CommandConsumer.saveGui(player: Player, fileName: String) {

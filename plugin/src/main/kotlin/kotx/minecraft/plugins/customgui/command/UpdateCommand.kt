@@ -1,25 +1,26 @@
-package kotx.minecraft.plugins.customgui.command.commands
+package kotx.minecraft.plugins.customgui.command
 
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.plugins.customgui.directory.Directories
 import kotx.minecraft.plugins.customgui.extensions.send
-import kotx.minecraft.plugins.customgui.extensions.sendHelp
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.entity.Player
 import java.nio.file.Paths
 
 class UpdateCommand : Command("update") {
-    override val requireOp: Boolean = false
     override val description: String = "addとは違い、指定ファイルを現在のワークスペースで明示的に更新します。"
-    override val usages: List<String> = listOf(
-        "customgui update <targetFile>"
+    override val usages: List<Usage> = listOf(
+        Usage("update <targetFile>")
     )
     override val examples: List<String> = listOf(
         "customgui update TestGUI"
     )
+    override val permission: Permission = Permission.EVERYONE
 
-    override suspend fun CommandConsumer.execute() {
+    override fun CommandConsumer.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -27,7 +28,7 @@ class UpdateCommand : Command("update") {
 
         val fileName = args.first().replace("[/\\\\.]".toRegex(), "")
         if (fileName.length > 32) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append("ファイル名は32文字を超えてはいけません。").color(ChatColor.RED)
             }
@@ -36,7 +37,7 @@ class UpdateCommand : Command("update") {
 
         val duplicatedFile = Directories.guis.files.find { fileName == it.nameWithoutExtension }
         if (duplicatedFile == null) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append(fileName).color(ChatColor.RED).bold(true)
                 append("は見つかりませんでした。").bold(false)

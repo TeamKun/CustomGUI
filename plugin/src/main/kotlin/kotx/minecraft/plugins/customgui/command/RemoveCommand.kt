@@ -1,25 +1,26 @@
-package kotx.minecraft.plugins.customgui.command.commands
+package kotx.minecraft.plugins.customgui.command
 
-import kotx.minecraft.plugins.customgui.command.Command
-import kotx.minecraft.plugins.customgui.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
+import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import kotx.minecraft.plugins.customgui.extensions.send
-import kotx.minecraft.plugins.customgui.extensions.sendHelp
 import net.md_5.bungee.api.ChatColor
 import java.util.*
 
 
 class RemoveCommand : Command("remove") {
-    override val requireOp: Boolean = false
     override val description: String = "指定したファイルを削除します。(自身のGUIのみ)"
-    override val usages: List<String> = listOf(
-        "customgui remove <targetFile>"
+    override val usages: List<Usage> = listOf(
+        Usage("remove <targetFile>")
     )
     override val examples: List<String> = listOf(
         "customgui remove TestGUI"
     )
+    override val permission: Permission = Permission.EVERYONE
 
-    override suspend fun CommandConsumer.execute() {
+    override fun CommandConsumer.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -31,7 +32,7 @@ class RemoveCommand : Command("remove") {
         }
 
         if (target == null) {
-            player!!.send {
+            player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
                 append(fileName).color(ChatColor.RED).bold(true)
                 append("は見つかりませんでした。").bold(false)
@@ -40,7 +41,7 @@ class RemoveCommand : Command("remove") {
         }
 
 
-        if (target.parentFile.name != player!!.uniqueId.toString() && !player.isOp) {
+        if (target.parentFile.name != player.uniqueId.toString() && !player.isOp) {
             val owner = plugin.server.getPlayer(UUID.fromString(target.parentFile.name))
             player.send {
                 append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
@@ -65,7 +66,7 @@ class RemoveCommand : Command("remove") {
 
     override fun CommandConsumer.tabComplete() =
         if (args.size == 1)
-            (if (player!!.isOp) Directories.guis.files else Directories.guis.files.filter { it.name == player.uniqueId.toString() }).map { it.nameWithoutExtension }
+            (if (player.isOp) Directories.guis.files else Directories.guis.files.filter { it.name == player.uniqueId.toString() }).map { it.nameWithoutExtension }
     else
         emptyList()
 }
