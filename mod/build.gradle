@@ -1,29 +1,33 @@
 buildscript {
-    ext.kotlin_version = '1.4.31'
+    ext.kotlin_version = '1.4.32'
+    apply from: "../buildSrc/config.gradle.kts"
     repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        mavenCentral()
+        maven {
+            name "forge"
+            url "http://files.minecraftforge.net/maven/"
+        }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'kotlin'
-apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '1.0'
-group = 'kotx'
-archivesBaseName = 'customgui'
+apply plugin: "kotlin"
+apply plugin: "net.minecraftforge.gradle"
+apply from: "../buildSrc/config.gradle.kts"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+group 'net.toliner.korgelin'
+version = modVersion + '-' + kotlinVersion
+archivesBaseName = "Korgelin-test-1.16.5"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.15.1'
+    mappings = mcp_mappings
+
     runs {
         client {
             workingDirectory project.file('run')
@@ -35,7 +39,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                customgui {
+                KorgelinTest {
                     source sourceSets.main
                 }
             }
@@ -51,25 +55,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                customgui {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'customgui', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                customgui {
+                KorgelinTest {
                     source sourceSets.main
                 }
             }
@@ -78,55 +64,49 @@ minecraft {
 }
 
 configurations {
-    embed
-    compile.extendsFrom(embed)
+    mod
 }
 
 repositories {
-    jcenter()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
-    embed "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    embed "org.koin:koin-core:2.2.2"
-    embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
-    embed "com.fasterxml.jackson.core:jackson-databind:2.12.1"
-    embed "io.ktor:ktor-client-core:1.5.0"
-    embed "io.ktor:ktor-client-okhttp:1.5.0"
+    minecraft "net.minecraftforge:forge:$mc_version-$forge_version"
+    implementation project(":../1.16")
+    mod project(":../1.16")
+    // project dependency do not run task "shadowJar"
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: kotlinVersion
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: kotlinVersion
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: kotlinVersion
+    implementation group: "org.jetbrains", name: "annotations", version: annotationsVersion
+    implementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-core", version: coroutineVersion
+    implementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-jdk8", version: coroutineVersion
+    implementation group: "org.jetbrains.kotlinx", name: "kotlinx-serialization-runtime", version: serializationVersion
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "customgui",
-                "Specification-Vendor"    : "kotx",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${archiveVersion}",
-                "Implementation-Vendor"   : "teamkun",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-}
-
-jar.finalizedBy('reobfJar')
-
-repositories {
-    mavenCentral()
+configurations {
+    runtime.exclude group: "net.toliner.korgelin"
 }
 
 compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
 }
 
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+task installMods(type: Copy, dependsOn: "deinstallMods") {
+    from { configurations.mod }
+    include "**/Korgelin*"
+    into file("run/mods")
+}
+
+task deinstallMods(type: Delete) {
+    delete fileTree(dir: "run/mods", include: "*.jar")
+}
+
+project.afterEvaluate {
+    project.tasks['prepareRuns'].dependsOn(project.tasks['installMods'])
 }
