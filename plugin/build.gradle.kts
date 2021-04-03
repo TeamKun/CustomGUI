@@ -6,14 +6,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-val pluginName: String by extra
-val pluginVersion: String by extra
-val paperVersion: String by extra
-val serverDirectory: String by extra
-val paperUrl: String by extra
-
 group = "kotx"
-version = pluginVersion
+version = "1.5"
 
 repositories {
     mavenCentral()
@@ -35,7 +29,7 @@ dependencies {
     implementation("org.koin:koin-core-ext:2.2.2")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "latest.release")
     implementation("ch.qos.logback", "logback-classic", "latest.release")
-    implementation("com.destroystokyo.paper", "paper-api", paperVersion)
+    implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.1")
     implementation("org.apache.lucene:lucene-suggest:5.3.0")
@@ -64,14 +58,13 @@ tasks {
 
         from(sourceSets.main.get().resources.srcDirs) {
             filter {
-                it.replace("@name@", pluginName)
-                    .replace("@version@", pluginVersion)
+                it.replace("@name@", "CustomGUI").replace("@version@", "1.5")
             }
         }
     }
 
     shadowJar {
-        archiveFileName.set("$pluginName v$pluginVersion.jar")
+        archiveFileName.set("CustomGUI v1.5.jar")
     }
 
     create<Copy>("buildPlugin") {
@@ -88,7 +81,7 @@ tasks {
             paperDir.mkdirs()
 
             val download by registering(Download::class) {
-                src(paperUrl)
+                src("https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/576/downloads/paper-1.16.5-576.jar")
                 dest(paperDir)
             }
             val paper = download.get().outputFiles.first()

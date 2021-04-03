@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -18,9 +18,9 @@ apply plugin: "kotlin"
 apply plugin: "net.minecraftforge.gradle"
 apply from: "../buildSrc/config.gradle.kts"
 
-group 'net.toliner.korgelin'
+group 'kotx.minecraft.mod'
 version = modVersion + '-' + kotlinVersion
-archivesBaseName = "Korgelin-test-1.16.5"
+archivesBaseName = "CustomGUI-1.16.5"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -87,7 +87,7 @@ dependencies {
 }
 
 configurations {
-    runtime.exclude group: "net.toliner.korgelin"
+    runtime.exclude group: "kotx.minecraft.mod"
 }
 
 compileKotlin {

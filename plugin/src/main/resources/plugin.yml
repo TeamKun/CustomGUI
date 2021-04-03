@@ -1,17 +1,7 @@
 name: PluginName
-version: @version@
+version: 1.5
 description: Plugin description here.
 api-version: 1.15
 author: Kotx
 website: https://twitter.com/kotx__
 main: kotx.minecraft.plugins.customgui.PluginEntry
-commands:
-  customgui:
-    description: Base command for custom gui plugin
-    usage: /customgui
-    permission: customgui
-    permission-message: You don't have permissions to execute this command!
-permissions:
-  customgui:
-    description: Execute customgui commands
-    default: true

@@ -4,9 +4,9 @@ CustomGUI System
 
 ## Requirements
 
-Minecraft: 1.15.2  
-Paper: 1.15.2-R0.1-SNAPSHOT  
-Forge: 1.15.2-31.2.0
+Minecraft: 1.16 or above  
+Paper: 1.16.5-R0.1-SNAPSHOT  
+Forge: 1.16.5-31.2.0
 
 ## Get started
 
