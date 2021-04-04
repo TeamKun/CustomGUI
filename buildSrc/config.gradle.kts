@@ -1,6 +1,6 @@
 extra["groupName"] = "kotx.minecraft.mod"
 extra["modVersion"] = "1.5"
-extra["modName"] = "Korgelin"
+extra["modName"] = "CustomGUI"
 extra["kotlinVersion"] = "1.4.32"
 extra["annotationsVersion"] = "17.0.0"
 extra["coroutineVersion"] = "1.4.3"
