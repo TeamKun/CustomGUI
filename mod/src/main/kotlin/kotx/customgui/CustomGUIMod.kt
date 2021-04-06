@@ -155,7 +155,7 @@ class CustomGUIMod {
     fun onKeyPressed(event: InputEvent.KeyInputEvent) {
         if (event.modifiers != GLFW.GLFW_MOD_SHIFT) return
         if (event.key != GLFW.GLFW_KEY_P) return
-        if (Minecraft.getInstance().currentServerData == null || Minecraft.getInstance().currentServerData?.isOnLAN == true) return
+        if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
 
         channel.sendToServer(object {
             val op = 0
@@ -164,6 +164,6 @@ class CustomGUIMod {
             }
         }.toJson())
 
-        Minecraft.getInstance().displayGuiScreen(GuiDesignerScreen)
+        Minecraft.getInstance().screen = GuiDesignerScreen
     }
 }

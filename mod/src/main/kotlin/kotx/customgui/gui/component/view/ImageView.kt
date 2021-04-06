@@ -1,6 +1,7 @@
 package kotx.customgui.gui.component.view
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.systems.RenderSystem
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
@@ -58,7 +59,7 @@ class ImageView : View {
                 }
 
                 tex = DownloadableTexture(resLoc, cacheFile)
-                Minecraft.getInstance().textureManager.loadTexture(
+                Minecraft.getInstance().textureManager.register(
                     resLoc,
                     tex
                 )
@@ -67,7 +68,7 @@ class ImageView : View {
         }, ServerThreadExecutor)
     }
 
-    override fun renderPreview(mouseX: Int, mouseY: Int) {
+    override fun renderPreview(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         val stX = xCenter + startX
         val stY = yCenter + startY
         val enX = xCenter + endX
@@ -84,24 +85,24 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            val bufferBuilder = Tessellator.getInstance().buffer
-            Minecraft.getInstance().renderManager.textureManager.bindTexture(resLoc)
+            val bufferBuilder = Tessellator.getInstance().builder
+            Minecraft.getInstance().textureManager.bind(resLoc)
             RenderSystem.enableBlend()
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
-            bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
-            bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
-            bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
-            bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex()
-            bufferBuilder.finishDrawing()
-            WorldVertexBufferUploader.draw(bufferBuilder)
+            bufferBuilder.vertex(x1, y2, z).uv(u1, v2).endVertex()
+            bufferBuilder.vertex(x2, y2, z).uv(u2, v2).endVertex()
+            bufferBuilder.vertex(x2, y1, z).uv(u2, v1).endVertex()
+            bufferBuilder.vertex(x1, y1, z).uv(u1, v1).endVertex()
+            bufferBuilder.end()
+            WorldVertexBufferUploader.end(bufferBuilder)
         } else {
-            fillAbsolute(stX, stY, enX, enY, Color(255, 255, 255, 50))
+            fillAbsolute(stack, stX, stY, enX, enY, Color(255, 255, 255, 50))
         }
 
-        Minecraft.getInstance().fontRenderer.drawString(url, stX, enY, Color.WHITE, true)
+        Minecraft.getInstance().font.drawString(url, stX, enY, Color.WHITE, true)
     }
 
-    override fun renderPage(scaleW: Float, scaleH: Float, opacity: Float) {
+    override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
         val stX = xCenter + (startX * scaleW).toInt()
         val stY = yCenter + (startY * scaleH).toInt()
         val enX = xCenter + (endX * scaleW).toInt()
@@ -118,21 +119,18 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            val bufferBuilder = Tessellator.getInstance().buffer
-            Minecraft.getInstance().renderManager.textureManager.bindTexture(resLoc)
-            RenderSystem.pushMatrix()
+            val bufferBuilder = Tessellator.getInstance().builder
+            Minecraft.getInstance().textureManager.bind(resLoc)
             RenderSystem.enableBlend()
-            RenderSystem.color4f(1f, 1f, 1f, opacity)
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
-            bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
-            bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
-            bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
-            bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex()
-            bufferBuilder.finishDrawing()
-            WorldVertexBufferUploader.draw(bufferBuilder)
-            RenderSystem.popMatrix()
+            bufferBuilder.vertex(x1, y2, z).uv(u1, v2).endVertex()
+            bufferBuilder.vertex(x2, y2, z).uv(u2, v2).endVertex()
+            bufferBuilder.vertex(x2, y1, z).uv(u2, v1).endVertex()
+            bufferBuilder.vertex(x1, y1, z).uv(u1, v1).endVertex()
+            bufferBuilder.end()
+            WorldVertexBufferUploader.end(bufferBuilder)
         } else {
-            fillAbsolute(stX, stY, enX, enY, Color(255, 255, 255, 50))
+            fillAbsolute(stack, stX, stY, enX, enY, Color(255, 255, 255, 50))
         }
     }
 

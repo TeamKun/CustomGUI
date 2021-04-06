@@ -17,17 +17,16 @@ class DownloadableTexture(
 ) : SimpleTexture(location), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 
-
-    override fun loadTexture(manager: IResourceManager) {
-        if (textureLocation == null) {
-            super.loadTexture(manager)
+    override fun load(manager: IResourceManager) {
+        if (location == null) {
+            super.load(manager)
         }
 
-        deleteGlTexture()
-        val texId = getGlTextureId()
+        releaseId()
+        val texId = getId()
         val inputStream = ByteArrayInputStream(cacheFile.inputStream().readBytes())
         val image = NativeImage.read(inputStream)
         TextureUtil.prepareImage(texId, 0, image.width, image.height)
-        image.uploadTextureSub(0, 0, 0, 0, 0, image.width, image.height, blur, false, false, true)
+        image.upload(0, 0, 0, 0, 0, image.width, image.height, blur, false, false, true)
     }
 }

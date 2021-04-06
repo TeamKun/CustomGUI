@@ -21,4 +21,4 @@ Forge: 1.16.5-31.2.0
 - `/customgui copy <from> <into>` copy <from> to <copy> as your own file.
 - `/customgui list` List all custom guis.
 - `/customgui show <file_name>` the file specified in is displayed as ui.
-- `/customgui use <file_name>` to load file as workspace..
+- `/customgui use <file_name>` to load file as workspace.

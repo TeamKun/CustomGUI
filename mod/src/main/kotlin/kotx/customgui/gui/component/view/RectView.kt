@@ -1,6 +1,7 @@
 package kotx.customgui.gui.component.view
 
 import com.google.gson.Gson
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.drawString
 import kotx.customgui.fillAbsolute
 import kotx.customgui.gui.View
@@ -24,23 +25,23 @@ class RectView : View {
 
     }
 
-    override fun renderPreview(mouseX: Int, mouseY: Int) {
+    override fun renderPreview(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         val stX = xCenter + startX
         val stY = yCenter + startY
         val enX = xCenter + endX
         val enY = yCenter + endY
 
-        fillAbsolute(stX, stY, enX, enY, Color(r, g, b))
-        Minecraft.getInstance().fontRenderer.drawString("R: $r, G: $g, B: $b", stX, enY, Color.WHITE, true)
+        fillAbsolute(stack, stX, stY, enX, enY, Color(r, g, b))
+        Minecraft.getInstance().font.drawString("R: $r, G: $g, B: $b", stX, enY, Color.WHITE, true)
     }
 
-    override fun renderPage(scaleW: Float, scaleH: Float, opacity: Float) {
+    override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
         val stX = xCenter + (startX * scaleW).toInt()
         val stY = yCenter + (startY * scaleH).toInt()
         val enX = xCenter + (endX * scaleW).toInt()
         val enY = yCenter + (endY * scaleH).toInt()
 
-        fillAbsolute(stX, stY, enX, enY, Color(r, g, b, (opacity * 255).toInt()))
+        fillAbsolute(stack, stX, stY, enX, enY, Color(r, g, b, (opacity * 255).toInt()))
     }
 
     override fun onClick(mouseX: Int, mouseY: Int, button: Int) {

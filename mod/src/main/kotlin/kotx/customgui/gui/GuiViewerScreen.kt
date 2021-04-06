@@ -1,5 +1,6 @@
 package kotx.customgui.gui
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.scaledHeight
 import kotx.customgui.scaledWidth
 import kotx.customgui.xCenter
@@ -21,7 +22,7 @@ class GuiViewerScreen(
         super.init()
     }
 
-    override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         opacity = minOf(1f, opacity + 1f / fadeIn)
 //        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
         val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
@@ -31,10 +32,10 @@ class GuiViewerScreen(
 //        fillAbsolute((xCenter - w / 2).toInt(), (yCenter - h / 2).toInt(), (xCenter + w / 2).toInt(), (yCenter + h / 2).toInt(), Color(12, 12, 12, 255))
 
         views.forEach {
-            it.renderPage(scaleW, scaleH, opacity)
+            it.renderPage(stack, scaleW, scaleH, opacity)
         }
 
-        super.render(mouseX, mouseY, partialTicks)
+        super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun mouseClicked(p_mouseClicked_1_: Double, p_mouseClicked_3_: Double, p_mouseClicked_5_: Int): Boolean {

@@ -26,14 +26,14 @@ object GuiOverlay : AbstractGui() {
     @SubscribeEvent
     fun onRender(event: RenderGameOverlayEvent.Post) {
         if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE) return
-        if (Minecraft.getInstance().currentServerData == null || Minecraft.getInstance().currentServerData?.isOnLAN == true) return
-        if (Minecraft.getInstance().currentScreen != null) return
+        if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
+        if (Minecraft.getInstance().screen != null) return
 
         val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
         val scaleH = scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
 
         views.forEach {
-            it.renderPage(scaleW, scaleH, opacity.toFloat())
+            it.renderPage(event.matrixStack, scaleW, scaleH, opacity.toFloat())
         }
     }
 }

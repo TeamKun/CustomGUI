@@ -1,6 +1,7 @@
 package kotx.customgui.gui.component.view
 
 import com.google.gson.Gson
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.drawString
 import kotx.customgui.gui.View
 import kotx.customgui.xCenter
@@ -21,18 +22,18 @@ class TextView : View {
 
     }
 
-    override fun renderPreview(mouseX: Int, mouseY: Int) {
+    override fun renderPreview(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         val stX = xCenter + startX
         val stY = yCenter + startY
 
-        Minecraft.getInstance().fontRenderer.drawString(text, stX, stY, Color.WHITE, true)
+        Minecraft.getInstance().font.drawString(text, stX, stY, Color.WHITE, true)
     }
 
-    override fun renderPage(scaleW: Float, scaleH: Float, opacity: Float) {
+    override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
         val stX = xCenter + (startX * scaleW).toInt()
         val stY = yCenter + (startY * scaleH).toInt()
 
-        Minecraft.getInstance().fontRenderer.drawString(
+        Minecraft.getInstance().font.drawString(
             text,
             stX,
             stY,

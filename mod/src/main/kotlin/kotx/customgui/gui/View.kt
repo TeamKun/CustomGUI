@@ -1,5 +1,7 @@
 package kotx.customgui.gui
 
+import com.mojang.blaze3d.matrix.MatrixStack
+
 interface View {
     val type: String
     var startX: Int
@@ -13,8 +15,8 @@ interface View {
     val canResize: Boolean
 
     fun init()
-    fun renderPreview(mouseX: Int, mouseY: Int)
-    fun renderPage(scaleW: Float, scaleH: Float, opacity: Float)
+    fun renderPreview(stack: MatrixStack, mouseX: Int, mouseY: Int)
+    fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float)
     fun onClick(mouseX: Int, mouseY: Int, button: Int)
     fun parseToJson(): String
 }

@@ -160,3 +160,27 @@ fabric.properties
 run/
 
 .kotlinUpdate
+
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iml
+.idea
+
+# gradle
+build
+
+# other
+eclipse
+run
+
+# Files from Forge MDK
+forge*changelog.txt

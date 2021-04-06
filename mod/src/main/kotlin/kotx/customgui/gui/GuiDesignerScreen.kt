@@ -1,5 +1,6 @@
 package kotx.customgui.gui
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.*
 import kotx.customgui.gui.component.components.ButtonComponent
 import kotx.customgui.gui.component.components.ImageComponent
@@ -33,14 +34,21 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
 
     override fun init() {
-        addButton(ExtendedButton(xCenter - 100, scaledHeight - 70, 80, 20, "閉じる") {
+        addButton(ExtendedButton(xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("閉じる")) {
             onClose()
-            minecraft?.displayGuiScreen(null)
+            minecraft?.screen = null
         })
-        addButton(ExtendedButton(xCenter + 20, scaledHeight - 70, 80, 20, if (editMode) "編集モード" else "プレビューモード") {
-            editMode = !editMode
-            it.message = if (editMode) "編集モード" else "プレビューモード"
-        })
+        addButton(
+            ExtendedButton(
+                xCenter + 20,
+                scaledHeight - 70,
+                80,
+                20,
+                StringTextComponent(if (editMode) "編集モード" else "プレビューモード")
+            ) {
+                editMode = !editMode
+                it.message = StringTextComponent(if (editMode) "編集モード" else "プレビューモード")
+            })
 
         editModeIndex = -1
 
@@ -50,18 +58,26 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         val buttonWidth = w / components.size
         components.forEachIndexed { i, component ->
             val x = buttonWidth * i + displayMargin
-            addButton(ExtendedButton(x + buttonMargin, 30, buttonWidth - (buttonMargin * 2), 20, component.text) {
-                component.init()
-                editModeIndex = i
-            })
+            addButton(
+                ExtendedButton(
+                    x + buttonMargin,
+                    30,
+                    buttonWidth - (buttonMargin * 2),
+                    20,
+                    StringTextComponent(component.text)
+                ) {
+                    component.init()
+                    editModeIndex = i
+                })
         }
 
         super.init()
     }
 
-    override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
         fillAbsolute(
+            stack,
             xCenter - guiWidth / 2,
             yCenter - guiHeight / 2,
             xCenter + guiWidth / 2,
@@ -72,7 +88,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         if (editMode) {
             components.getOrNull(editModeIndex)?.render(mouseX, mouseY, scaledWidth, scaledHeight)
             views.forEachIndexed { i, it ->
-                it.renderPreview(mouseX, mouseY)
+                it.renderPreview(stack, mouseX, mouseY)
                 val startX = xCenter + it.startX
                 val endX = xCenter + it.endX
                 val startY = yCenter + it.startY
@@ -80,41 +96,41 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
                 when {
                     i == editingView -> {
-                        fillAbsolute(startX, startY, endX, startY + 1, Color(120, 0, 0))
-                        fillAbsolute(startX, startY, startX + 1, endY, Color(120, 0, 0))
-                        fillAbsolute(endX - 1, startY, endX, endY, Color(120, 0, 0))
-                        fillAbsolute(startX, endY - 1, endX, endY, Color(120, 0, 0))
+                        fillAbsolute(stack, startX, startY, endX, startY + 1, Color(120, 0, 0))
+                        fillAbsolute(stack, startX, startY, startX + 1, endY, Color(120, 0, 0))
+                        fillAbsolute(stack, endX - 1, startY, endX, endY, Color(120, 0, 0))
+                        fillAbsolute(stack, startX, endY - 1, endX, endY, Color(120, 0, 0))
 
-                        fillCentered(startX + 2, startY + 2, 2, 2, Color.RED)
-                        fillCentered(endX - 2, startY + 2, 2, 2, Color.RED)
-                        fillCentered(startX + 2, endY - 2, 2, 2, Color.RED)
-                        fillCentered(endX - 2, endY - 2, 2, 2, Color.RED)
+                        fillCentered(stack, startX + 2, startY + 2, 2, 2, Color.RED)
+                        fillCentered(stack, endX - 2, startY + 2, 2, 2, Color.RED)
+                        fillCentered(stack, startX + 2, endY - 2, 2, 2, Color.RED)
+                        fillCentered(stack, endX - 2, endY - 2, 2, 2, Color.RED)
                     }
                     i == selectedView -> {
-                        fillAbsolute(startX, startY, endX, startY + 1, Color.GRAY)
-                        fillAbsolute(startX, startY, startX + 1, endY, Color.GRAY)
-                        fillAbsolute(endX - 1, startY, endX, endY, Color.GRAY)
-                        fillAbsolute(startX, endY - 1, endX, endY, Color.GRAY)
+                        fillAbsolute(stack, startX, startY, endX, startY + 1, Color.GRAY)
+                        fillAbsolute(stack, startX, startY, startX + 1, endY, Color.GRAY)
+                        fillAbsolute(stack, endX - 1, startY, endX, endY, Color.GRAY)
+                        fillAbsolute(stack, startX, endY - 1, endX, endY, Color.GRAY)
 
-                        fillCentered(startX + 2, startY + 2, 2, 2, Color.WHITE)
-                        fillCentered(endX - 2, startY + 2, 2, 2, Color.WHITE)
-                        fillCentered(startX + 2, endY - 2, 2, 2, Color.WHITE)
-                        fillCentered(endX - 2, endY - 2, 2, 2, Color.WHITE)
+                        fillCentered(stack, startX + 2, startY + 2, 2, 2, Color.WHITE)
+                        fillCentered(stack, endX - 2, startY + 2, 2, 2, Color.WHITE)
+                        fillCentered(stack, startX + 2, endY - 2, 2, 2, Color.WHITE)
+                        fillCentered(stack, endX - 2, endY - 2, 2, 2, Color.WHITE)
                     }
                     mouseX in startX..endX && mouseY in startY..endY -> {
-                        fillAbsolute(startX, startY, endX, startY + 1, Color.DARK_GRAY)
-                        fillAbsolute(startX, startY, startX + 1, endY, Color.DARK_GRAY)
-                        fillAbsolute(endX - 1, startY, endX, endY, Color.DARK_GRAY)
-                        fillAbsolute(startX, endY - 1, endX, endY, Color.DARK_GRAY)
+                        fillAbsolute(stack, startX, startY, endX, startY + 1, Color.DARK_GRAY)
+                        fillAbsolute(stack, startX, startY, startX + 1, endY, Color.DARK_GRAY)
+                        fillAbsolute(stack, endX - 1, startY, endX, endY, Color.DARK_GRAY)
+                        fillAbsolute(stack, startX, endY - 1, endX, endY, Color.DARK_GRAY)
 
-                        fillCentered(startX + 2, startY + 2, 2, 2, Color.GRAY)
-                        fillCentered(endX - 2, startY + 2, 2, 2, Color.GRAY)
-                        fillCentered(startX + 2, endY - 2, 2, 2, Color.GRAY)
-                        fillCentered(endX - 2, endY - 2, 2, 2, Color.GRAY)
+                        fillCentered(stack, startX + 2, startY + 2, 2, 2, Color.GRAY)
+                        fillCentered(stack, endX - 2, startY + 2, 2, 2, Color.GRAY)
+                        fillCentered(stack, startX + 2, endY - 2, 2, 2, Color.GRAY)
+                        fillCentered(stack, endX - 2, endY - 2, 2, 2, Color.GRAY)
                     }
                 }
             }
-        } else views.forEach { it.renderPage(1f, 1f, 1f) }
+        } else views.forEach { it.renderPage(stack, 1f, 1f, 1f) }
 
         if (drag) {
             if (lastX != 0 && lastY != 0) dragged(mouseX - lastX, mouseY - lastY)
@@ -122,7 +138,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
             lastY = mouseY
         }
 
-        super.render(mouseX, mouseY, partialTicks)
+        super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun mouseMoved(xPos: Double, mouseY: Double) {
@@ -240,10 +256,10 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
             return false
         }
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            if (editModeIndex == -1) minecraft?.displayGuiScreen(null)?.also {
+            if (editModeIndex == -1) {
+                minecraft?.screen = null
                 onClose()
-            }
-            else editModeIndex = -1
+            } else editModeIndex = -1
 
             return false
         }
