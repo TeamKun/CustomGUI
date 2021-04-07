@@ -1,5 +1,6 @@
 package kotx.customgui.gui.component.components
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.drawStringCentered
 import kotx.customgui.fillAbsolute
 import kotx.customgui.gui.GuiDesignerScreen
@@ -17,13 +18,13 @@ object TextComponent : IComponent {
 
     }
 
-    override fun render(mouseX: Int, mouseY: Int, width: Int, height: Int) {
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, width: Int, height: Int) {
         if (GuiDesignerScreen.isInRange(mouseX, mouseY))
             fillAbsolute(
-                mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED
+                stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED
             )
 
-        Minecraft.getInstance().fontRenderer.drawStringCentered("テキストを配置する場所をクリック", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered("テキストを配置する場所をクリック", width / 2, 60, Color.WHITE)
     }
 
     override fun onMouseMove(mouseX: Int, mouseY: Int) {
@@ -31,11 +32,9 @@ object TextComponent : IComponent {
     }
 
     override fun onMouseClick(mouseX: Int, mouseY: Int, button: Int) {
-        Minecraft.getInstance().displayGuiScreen(
-            TextInputScreen(
-                mouseX - xCenter,
-                mouseY - yCenter,
-            )
+        Minecraft.getInstance().screen = TextInputScreen(
+            mouseX - xCenter,
+            mouseY - yCenter,
         )
     }
 

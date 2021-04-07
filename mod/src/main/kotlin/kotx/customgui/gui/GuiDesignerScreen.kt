@@ -86,7 +86,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         )
 
         if (editMode) {
-            components.getOrNull(editModeIndex)?.render(mouseX, mouseY, scaledWidth, scaledHeight)
+            components.getOrNull(editModeIndex)?.render(stack, mouseX, mouseY, scaledWidth, scaledHeight)
             views.forEachIndexed { i, it ->
                 it.renderPreview(stack, mouseX, mouseY)
                 val startX = xCenter + it.startX

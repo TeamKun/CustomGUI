@@ -1,5 +1,6 @@
 package kotx.customgui.gui.component.components
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.drawStringCentered
 import kotx.customgui.fillAbsolute
 import kotx.customgui.gui.GuiDesignerScreen
@@ -23,9 +24,10 @@ object ButtonComponent : IComponent {
         endPos = null
     }
 
-    override fun render(mouseX: Int, mouseY: Int, width: Int, height: Int) {
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, width: Int, height: Int) {
         if (GuiDesignerScreen.isInRange(mouseX, mouseY))
             fillAbsolute(
+                stack,
                 mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, when (step) {
                     SELECT_START -> Color.RED
                     SELECT_END -> Color.BLUE
@@ -39,7 +41,7 @@ object ButtonComponent : IComponent {
             SET_COMMAND -> ""
         }
 
-        Minecraft.getInstance().fontRenderer.drawStringCentered(currentStatusLabel, width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(currentStatusLabel, width / 2, 60, Color.WHITE)
 
         if (startPos != null) {
             val startX = xCenter + startPos!!.first
@@ -47,7 +49,7 @@ object ButtonComponent : IComponent {
             val endX = xCenter + (endPos?.first ?: (mouseX - xCenter))
             val endY = yCenter + (endPos?.second ?: (mouseY - yCenter))
 
-            fillAbsolute(startX, startY, endX, endY, Color(255, 0, 0, 150))
+            fillAbsolute(stack, startX, startY, endX, endY, Color(255, 0, 0, 150))
         }
     }
 
@@ -71,13 +73,11 @@ object ButtonComponent : IComponent {
                 val endX = endPos!!.first
                 val endY = endPos!!.second
 
-                Minecraft.getInstance().displayGuiScreen(
-                    CommandInputScreen(
-                        startX,
-                        startY,
-                        endX,
-                        endY
-                    )
+                Minecraft.getInstance().screen = CommandInputScreen(
+                    startX,
+                    startY,
+                    endX,
+                    endY
                 )
             }
         }

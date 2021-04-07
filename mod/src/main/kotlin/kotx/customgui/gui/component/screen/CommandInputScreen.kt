@@ -1,5 +1,6 @@
 package kotx.customgui.gui.component.screen
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.*
 import kotx.customgui.gui.GuiDesignerScreen
 import kotx.customgui.gui.component.view.ButtonView
@@ -27,13 +28,12 @@ class CommandInputScreen(
         command = ""
         widget = TextFieldWidget(
             font,
-            xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, "コマンドを入力"
+            xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, StringTextComponent("コマンドを入力")
         ).apply {
-            text = ""
+            this.value = ""
 
-            setEnableBackgroundDrawing(true)
             setCanLoseFocus(true)
-            setMaxStringLength(1024)
+            setMaxLength(1024)
 
             setResponder {
                 command = it
@@ -42,34 +42,34 @@ class CommandInputScreen(
 
         addButton(widget!!)
         addButton(ExtendedButton(
-            xCenter - 100, scaledHeight - 70, 80, 20, "確定"
+            xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
             postData()
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
         })
         addButton(ExtendedButton(
-            xCenter + 20, scaledHeight - 70, 80, 20, "キャンセル"
+            xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
         ) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
         })
         super.init()
     }
 
-    override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().fontRenderer.drawStringCentered("コマンドを入力", width / 2, 60, Color.WHITE)
-        super.render(mouseX, mouseY, partialTicks)
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
+        Minecraft.getInstance().font.drawStringCentered("コマンドを入力", width / 2, 60, Color.WHITE)
+        super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             postData()
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             return false
         }
 

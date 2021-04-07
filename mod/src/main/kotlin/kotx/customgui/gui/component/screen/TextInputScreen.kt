@@ -1,5 +1,6 @@
 package kotx.customgui.gui.component.screen
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.*
 import kotx.customgui.gui.GuiDesignerScreen
 import kotx.customgui.gui.component.view.TextView
@@ -25,13 +26,12 @@ class TextInputScreen(
         text = ""
         widget = TextFieldWidget(
             font,
-            xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, "テキストを入力"
+            xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, StringTextComponent("テキストを入力")
         ).apply {
             text = ""
 
-            setEnableBackgroundDrawing(true)
             setCanLoseFocus(true)
-            setMaxStringLength(1024)
+            setMaxLength(1024)
 
             setResponder {
                 this@TextInputScreen.text = it
@@ -40,34 +40,34 @@ class TextInputScreen(
 
         addButton(widget!!)
         addButton(ExtendedButton(
-            xCenter - 100, scaledHeight - 70, 80, 20, "確定"
+            xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
             postData()
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
         })
         addButton(ExtendedButton(
-            xCenter + 20, scaledHeight - 70, 80, 20, "キャンセル"
+            xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
         ) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
         })
         super.init()
     }
 
-    override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().fontRenderer.drawStringCentered("テキストを入力", width / 2, 60, Color.WHITE)
-        super.render(mouseX, mouseY, partialTicks)
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
+        Minecraft.getInstance().font.drawStringCentered("テキストを入力", width / 2, 60, Color.WHITE)
+        super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             postData()
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             return false
         }
 
@@ -79,8 +79,8 @@ class TextInputScreen(
             TextView().apply {
                 this.startX = this@TextInputScreen.startX
                 this.startY = this@TextInputScreen.startY
-                this.endX = this.startX + this@TextInputScreen.text.let { font.getStringWidth(it) }
-                this.endY = this.startY + this@TextInputScreen.text.let { font.getWordWrappedHeight(it, Int.MAX_VALUE) }
+                this.endX = this.startX + this@TextInputScreen.text.let { font.width(it) }
+                this.endY = this.startY + this@TextInputScreen.text.let { font.wordWrapHeight(it, Int.MAX_VALUE) }
                 this.text = this@TextInputScreen.text
             }.apply {
                 init()

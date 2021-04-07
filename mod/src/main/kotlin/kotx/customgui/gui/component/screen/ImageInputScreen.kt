@@ -1,5 +1,6 @@
 package kotx.customgui.gui.component.screen
 
+import com.mojang.blaze3d.matrix.MatrixStack
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
@@ -41,27 +42,30 @@ class ImageInputScreen(
         url = ""
 
         confirmButton = ExtendedButton(
-            xCenter - 100, scaledHeight - 70, 80, 20, "確定"
+            xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             postData()
         }
         addButton(confirmButton)
         addButton(ExtendedButton(
-            xCenter + 20, scaledHeight - 70, 80, 20, "キャンセル"
+            xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
         ) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
         })
 
         widget = TextFieldWidget(
             font,
-            xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, "画像のリンクを入力"
+            xCenter - fieldWidth / 2,
+            yCenter - fieldHeight / 2,
+            fieldWidth,
+            fieldHeight,
+            StringTextComponent("画像のリンクを入力")
         ).apply {
-            text = ""
+            value = ""
 
-            setEnableBackgroundDrawing(true)
             setCanLoseFocus(true)
-            setMaxStringLength(1024)
+            setMaxLength(1024)
 
             setResponder {
                 confirmButton?.active = it.isUrl
@@ -73,21 +77,21 @@ class ImageInputScreen(
         super.init()
     }
 
-    override fun render(mouseX: Int, mouseY: Int, partialTicks: Float) {
-        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().fontRenderer.drawStringCentered("画像のリンクを入力", width / 2, 60, Color.WHITE)
-        super.render(mouseX, mouseY, partialTicks)
+    override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
+        Minecraft.getInstance().font.drawStringCentered("画像のリンクを入力", width / 2, 60, Color.WHITE)
+        super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.displayGuiScreen(GuiDesignerScreen)
+            minecraft?.screen = GuiDesignerScreen
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             if (url.isUrl) {
-                minecraft?.displayGuiScreen(GuiDesignerScreen)
+                minecraft?.screen = GuiDesignerScreen
                 postData()
             }
             return false
