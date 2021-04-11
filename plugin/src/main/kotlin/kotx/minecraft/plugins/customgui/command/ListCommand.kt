@@ -46,7 +46,7 @@ class ListCommand : Command("list") {
             Directories.guis.files
                 .map { f ->
                     Component.text {
-                        append(f.name, Color.GREEN)
+                        append(f.nameWithoutExtension, Color.GREEN)
                         append(" (", Color.WHITE)
                         append(
                             plugin.server.getOfflinePlayer(UUID.fromString(f.parentFile.name)).name
