@@ -18,13 +18,13 @@ import java.awt.Color
 class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIを表示します。 (編集のみ)"
     override val usages: List<Usage> = listOf(
-        Usage("show <file> [user]"),
-        Usage("show <file> <fadein> <stay> <fadeout>"),
-        Usage("show <file> <user> <fadein> <stay> <fadeout>"),
+        Usage("overlay <file> [user]"),
+        Usage("overlay <file> <fadein> <stay> <fadeout>"),
+        Usage("overlay <file> <user> <fadein> <stay> <fadeout>"),
     )
     override val examples: List<String> = listOf(
-        "customgui show TestGUI",
-        "customgui show TestGUI Kotlinx"
+        "customgui overlay TestGUI",
+        "customgui overlay TestGUI Kotlinx"
     )
     override val permission: Permission = Permission.EVERYONE
 
@@ -96,12 +96,12 @@ class OverlayCommand : Command("overlay") {
         }
 
         send {
-            append("${fileName}を")
+            append("${fileName}を", Color.GREEN)
             targetPlayers.mapNotNull { it.playerProfile.name }
                 .map { it.asTextComponent() }
                 .joint(", ".asTextComponent(Color.GRAY))
                 .forEach { append(it) }
-            append("に表示しました。")
+            append("に表示しました。", Color.GREEN)
         }
     }
 

@@ -8,7 +8,7 @@ import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.plugins.customgui.directory.Directories
 import kotx.minecraft.plugins.customgui.extensions.EventWaiter
-import net.md_5.bungee.api.chat.TextComponent
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.entity.Player
 import java.awt.Color
 import java.nio.file.Paths
@@ -55,7 +55,7 @@ class AddCommand : Command("add") {
             EventWaiter.register(AsyncChatEvent::class.java) {
                 if (it.player.uniqueId != player?.uniqueId) return@register false
                 it.isCancelled = true
-                when ((it.message() as? TextComponent)?.text?.toLowerCase()) {
+                when ((it.message() as? TextComponent)?.content()?.toLowerCase()) {
                     "yes", "y" -> if (player != null) saveGui(player!!, fileName)
 
                     else -> sendSuccessMessage("上書きをキャンセルしました。")
