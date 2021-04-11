@@ -1,12 +1,10 @@
 package kotx.minecraft.plugins.customgui.command
 
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import net.md_5.bungee.api.ChatColor
 import java.util.*
 
 
@@ -20,7 +18,7 @@ class RemoveCommand : Command("remove") {
     )
     override val permission: Permission = Permission.EVERYONE
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -32,41 +30,24 @@ class RemoveCommand : Command("remove") {
         }
 
         if (target == null) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append(fileName).color(ChatColor.RED).bold(true)
-                append("は見つかりませんでした。").bold(false)
-            }
+            sendErrorMessage("${fileName}は見つかりませんでした。")
             return
         }
 
 
-        if (target.parentFile.name != player.uniqueId.toString() && !player.isOp) {
-            val owner = plugin.server.getPlayer(UUID.fromString(target.parentFile.name))
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append(fileName).color(ChatColor.RED).bold(true)
-                if (owner != null)
-                    append("は${owner.displayName}が作成したものです。").bold(false)
-                else
-                    append("は他のプレイヤーが作成したものです。").bold(false)
-
-                append("自分自身以外のGUIは削除出来ません。")
-            }
+        if (target.parentFile.name != player!!.uniqueId.toString() && !player!!.isOp) {
+            val owner = plugin.server.getOfflinePlayer(UUID.fromString(target.parentFile.name))
+            sendErrorMessage("${fileName}は${owner.name}が制作した物です。OP以外は他のプレイヤーのGUIを削除できません。")
             return
         }
 
         target.delete()
-        player.send {
-            append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-            append(target.nameWithoutExtension).color(ChatColor.GREEN).bold(true)
-            append("を削除しました。").bold(false)
-        }
+        sendSuccessMessage("${fileName}を削除しました。")
     }
 
-    override fun CommandConsumer.tabComplete() =
+    override fun CommandContext.tabComplete() =
         if (args.size == 1)
-            (if (player.isOp) Directories.guis.files else Directories.guis.files.filter { it.name == player.uniqueId.toString() }).map { it.nameWithoutExtension }
-    else
-        emptyList()
+            (if (player!!.isOp) Directories.guis.files else Directories.guis.files.filter { it.name == player!!.uniqueId.toString() }).map { it.nameWithoutExtension }
+        else
+            emptyList()
 }

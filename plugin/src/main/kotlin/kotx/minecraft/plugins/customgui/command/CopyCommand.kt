@@ -1,12 +1,10 @@
 package kotx.minecraft.plugins.customgui.command
 
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import net.md_5.bungee.api.ChatColor
 
 
 class CopyCommand : Command("copy") {
@@ -22,7 +20,7 @@ class CopyCommand : Command("copy") {
 
     override val permission: Permission = Permission.EVERYONE
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         if (args.size != 2) {
             sendHelp()
             return
@@ -33,33 +31,19 @@ class CopyCommand : Command("copy") {
         val fromFile = Directories.guis.files.find { fromFileName == it.nameWithoutExtension }
 
         if (fromFile == null) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append(toFileName).color(ChatColor.RED).bold(true)
-                append("は見つかりませんでした。").bold(false)
-            }
+            sendErrorMessage("${toFileName}は見つかりませんでした。")
             return
         }
 
         if (Directories.guis.files.any { toFileName == it.nameWithoutExtension }) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append(toFileName).color(ChatColor.RED).bold(true)
-                append("は既に存在しています。").bold(false)
-            }
+            sendErrorMessage("${toFileName}は既に存在しています。")
             return
         }
 
-        Directories.guis.write("${player.uniqueId}/$toFileName.json", fromFile.readText())
-        player.send {
-            append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-            append(fromFileName).color(ChatColor.GREEN).bold(true)
-            append("を").bold(false)
-            append(toFileName).color(ChatColor.GREEN).bold(true)
-            append("にコピーしました。").bold(false)
-        }
+        Directories.guis.write("${player!!.uniqueId}/$toFileName.json", fromFile.readText())
+        sendSuccessMessage("${fromFileName}を${toFileName}にコピーしました")
     }
 
-    override fun CommandConsumer.tabComplete() =
+    override fun CommandContext.tabComplete() =
         if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
 }

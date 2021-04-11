@@ -154,7 +154,7 @@ class CustomGUIMod {
     @SubscribeEvent
     fun onKeyPressed(event: InputEvent.KeyInputEvent) {
         if (event.modifiers != GLFW.GLFW_MOD_SHIFT) return
-        if (event.key != GLFW.GLFW_KEY_P) return
+        if (event.key != GLFW.GLFW_KEY_O) return
         if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
 
         channel.sendToServer(object {
@@ -164,6 +164,6 @@ class CustomGUIMod {
             }
         }.toJson())
 
-        Minecraft.getInstance().screen = GuiDesignerScreen
+        Minecraft.getInstance().setScreen(GuiDesignerScreen)
     }
 }

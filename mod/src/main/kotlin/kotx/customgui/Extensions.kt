@@ -6,23 +6,30 @@ import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.FontRenderer
 import java.awt.Color
 
-fun FontRenderer.drawStringCentered(text: String, x: Int, y: Int, color: Color, shadow: Boolean = false) {
+fun FontRenderer.drawStringCentered(
+    stack: MatrixStack,
+    text: String,
+    x: Int,
+    y: Int,
+    color: Color,
+    shadow: Boolean = false
+) {
     val w = width(text)
     val h = wordWrapHeight(text, Int.MAX_VALUE)
     val xPos = (x - w / 2)
     val yPos = (y - h / 2)
 
     if (shadow)
-        drawString(text, xPos, yPos, color, true)
+        drawShadow(stack, text, xPos.toFloat(), yPos.toFloat(), color.rgb)
     else
-        drawString(text, xPos, yPos, color)
+        draw(stack, text, xPos.toFloat(), yPos.toFloat(), color.rgb)
 }
 
-fun FontRenderer.drawString(text: String, x: Int, y: Int, color: Color, shadow: Boolean = false) {
+fun FontRenderer.drawString(stack: MatrixStack, text: String, x: Int, y: Int, color: Color, shadow: Boolean = false) {
     if (shadow)
-        drawString(text, x, y, color, true)
+        drawShadow(stack, text, x.toFloat(), y.toFloat(), color.rgb)
     else
-        drawString(text, x, y, color)
+        draw(stack, text, x.toFloat(), y.toFloat(), color.rgb)
 }
 
 fun fill(matrixStack: MatrixStack, x: Int, y: Int, width: Int, height: Int, color: Color) {

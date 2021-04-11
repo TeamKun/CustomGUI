@@ -1,10 +1,10 @@
 package kotx.minecraft.plugins.customgui.extensions
 
+import io.papermc.paper.event.player.AsyncChatEvent
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.AsyncPlayerChatEvent
 
 object EventWaiter : Listener {
     private val waitingEvents = mutableMapOf<Class<*>, MutableList<WaitingEvent<in Event>>>()
@@ -13,7 +13,7 @@ object EventWaiter : Listener {
     fun onInventoryClick(event: InventoryClickEvent) = onEvent(event)
 
     @EventHandler
-    fun onChat(event: AsyncPlayerChatEvent) = onEvent(event)
+    fun onChat(event: AsyncChatEvent) = onEvent(event)
 
     private fun onEvent(event: Event) {
         val clazz = event::class.java

@@ -41,7 +41,7 @@ object ButtonComponent : IComponent {
             SET_COMMAND -> ""
         }
 
-        Minecraft.getInstance().font.drawStringCentered(currentStatusLabel, width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(stack, currentStatusLabel, width / 2, 60, Color.WHITE)
 
         if (startPos != null) {
             val startX = xCenter + startPos!!.first
@@ -73,11 +73,13 @@ object ButtonComponent : IComponent {
                 val endX = endPos!!.first
                 val endY = endPos!!.second
 
-                Minecraft.getInstance().screen = CommandInputScreen(
-                    startX,
-                    startY,
-                    endX,
-                    endY
+                Minecraft.getInstance().setScreen(
+                    CommandInputScreen(
+                        startX,
+                        startY,
+                        endX,
+                        endY
+                    )
                 )
             }
         }

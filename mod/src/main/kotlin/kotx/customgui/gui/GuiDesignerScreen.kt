@@ -36,7 +36,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
     override fun init() {
         addButton(ExtendedButton(xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("閉じる")) {
             onClose()
-            minecraft?.screen = null
+            minecraft?.setScreen(null)
         })
         addButton(
             ExtendedButton(
@@ -75,6 +75,9 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
     }
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        buttons.forEach {
+            it.renderButton(stack, mouseX, mouseY, partialTicks)
+        }
         fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
         fillAbsolute(
             stack,
@@ -257,8 +260,8 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         }
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
             if (editModeIndex == -1) {
-                minecraft?.screen = null
                 onClose()
+                minecraft?.setScreen(null)
             } else editModeIndex = -1
 
             return false
@@ -270,7 +273,6 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
     override fun onClose() {
         saveWorkspace()
-        super.onClose()
     }
 
     private fun saveWorkspace() {

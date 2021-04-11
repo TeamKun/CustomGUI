@@ -3,11 +3,9 @@ package kotx.minecraft.plugins.customgui.command
 import kotx.ktools.asPacket
 import kotx.ktools.toJson
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import net.md_5.bungee.api.ChatColor
 import java.nio.file.Paths
 
 class UseCommand : Command("use") {
@@ -20,7 +18,7 @@ class UseCommand : Command("use") {
     )
 
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
@@ -29,10 +27,7 @@ class UseCommand : Command("use") {
         val fileName = args.first().replace("[/\\\\.]".toRegex(), "")
         val gui = Directories.guis.files.find { it.nameWithoutExtension == fileName }
         if (gui == null) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append("${fileName}は存在しません。").color(ChatColor.RED)
-            }
+            sendErrorMessage("${fileName}は存在しません。")
             return
         }
 
@@ -49,11 +44,9 @@ class UseCommand : Command("use") {
             val data = gui.readText()
         }.toJson().asPacket())
 
-        player?.send {
-            append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-            append("${fileName}を現在のワークスペースに読み込みました。").color(ChatColor.GREEN)
-        }
+        sendSuccessMessage("${fileName}を現在のワークスペースに読み込みました。")
     }
 
-    override fun CommandConsumer.tabComplete() = if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
+    override fun CommandContext.tabComplete() =
+        if (args.size == 1) Directories.guis.files.map { it.nameWithoutExtension } else emptyList()
 }

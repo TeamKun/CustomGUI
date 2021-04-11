@@ -45,31 +45,31 @@ class CommandInputScreen(
             xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
             postData()
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
         })
         addButton(ExtendedButton(
             xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
         ) {
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
         })
         super.init()
     }
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().font.drawStringCentered("コマンドを入力", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(stack, "コマンドを入力", width / 2, 60, Color.WHITE)
         super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             postData()
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
             return false
         }
 

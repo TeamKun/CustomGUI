@@ -40,7 +40,7 @@ object RectComponent : IComponent {
             Step.SET_COLOR -> ""
         }
 
-        Minecraft.getInstance().font.drawStringCentered(currentStatusLabel, width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(stack, currentStatusLabel, width / 2, 60, Color.WHITE)
 
         if (startPos != null) {
             val startX = xCenter + startPos!!.first
@@ -72,11 +72,13 @@ object RectComponent : IComponent {
                 val endX = endPos!!.first
                 val endY = endPos!!.second
 
-                Minecraft.getInstance().screen = ColorInputScreen(
-                    startX,
-                    startY,
-                    endX,
-                    endY
+                Minecraft.getInstance().setScreen(
+                    ColorInputScreen(
+                        startX,
+                        startY,
+                        endX,
+                        endY
+                    )
                 )
             }
         }

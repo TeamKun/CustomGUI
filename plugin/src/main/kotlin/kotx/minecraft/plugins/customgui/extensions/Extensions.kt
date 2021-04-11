@@ -2,7 +2,6 @@ package kotx.minecraft.plugins.customgui.extensions
 
 import kotx.minecraft.plugins.customgui.extensions.suggest.SuggestOption
 import kotx.minecraft.plugins.customgui.extensions.suggest.SuggestOptionType
-import org.apache.lucene.search.spell.LevensteinDistance
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -37,8 +36,27 @@ fun File.allFiles(): List<File> {
         listOf(this)
 }
 
-private val distance = LevensteinDistance()
-fun String.distanceTo(to: String) = distance.getDistance(to, this)
+fun <T> List<T>.joint(other: T): List<T> {
+    val res = mutableListOf<T>()
+    forEachIndexed { i, it ->
+        res.add(it)
+        if (i < size - 1)
+            res.add(other)
+    }
+
+    return res.toList()
+}
+
+fun <T> List<T>.joint(other: (T) -> T): List<T> {
+    val res = mutableListOf<T>()
+    forEachIndexed { i, it ->
+        res.add(it)
+        if (i < size - 1)
+            res.add(other(it))
+    }
+
+    return res.toList()
+}
 
 private val suggestOptions = listOf(
     SuggestOption("advancements", SuggestOptionType.TEXT) { _, _ -> listOf("{}") },

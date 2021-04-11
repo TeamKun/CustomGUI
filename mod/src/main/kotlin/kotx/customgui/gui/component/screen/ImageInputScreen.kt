@@ -6,7 +6,9 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotx.customgui.*
 import kotx.customgui.gui.GuiDesignerScreen
 import kotx.customgui.gui.component.view.ImageView
@@ -44,14 +46,14 @@ class ImageInputScreen(
         confirmButton = ExtendedButton(
             xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
             postData()
         }
         addButton(confirmButton)
         addButton(ExtendedButton(
             xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
         ) {
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
         })
 
         widget = TextFieldWidget(
@@ -79,19 +81,19 @@ class ImageInputScreen(
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().font.drawStringCentered("画像のリンクを入力", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(stack, "画像のリンクを入力", width / 2, 60, Color.WHITE)
         super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.screen = GuiDesignerScreen
+            minecraft?.setScreen(GuiDesignerScreen)
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             if (url.isUrl) {
-                minecraft?.screen = GuiDesignerScreen
+                minecraft?.setScreen(GuiDesignerScreen)
                 postData()
             }
             return false

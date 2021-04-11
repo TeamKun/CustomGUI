@@ -24,7 +24,7 @@ object ImageComponent : IComponent {
                 stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED
             )
 
-        Minecraft.getInstance().font.drawStringCentered("画像を配置する場所をクリック", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().font.drawStringCentered(stack, "画像を配置する場所をクリック", width / 2, 60, Color.WHITE)
     }
 
     override fun onMouseMove(mouseX: Int, mouseY: Int) {
@@ -32,9 +32,11 @@ object ImageComponent : IComponent {
     }
 
     override fun onMouseClick(mouseX: Int, mouseY: Int, button: Int) {
-        Minecraft.getInstance().screen = ImageInputScreen(
-            mouseX - xCenter,
-            mouseY - yCenter,
+        Minecraft.getInstance().setScreen(
+            ImageInputScreen(
+                mouseX - xCenter,
+                mouseY - yCenter,
+            )
         )
     }
 

@@ -1,12 +1,15 @@
 package kotx.minecraft.plugins.customgui.command
 
+import kotx.minecraft.libs.flylib.append
+import kotx.minecraft.libs.flylib.appendln
+import kotx.minecraft.libs.flylib.asTextComponent
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
-import net.md_5.bungee.api.ChatColor
+import kotx.minecraft.plugins.customgui.extensions.joint
+import java.awt.Color
 import java.util.*
 
 
@@ -23,21 +26,27 @@ class ListCommand : Command("list") {
 
     override val permission: Permission = Permission.EVERYONE
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         if (args.isNotEmpty()) {
             sendHelp()
             return
         }
 
-        player.send {
-            append("GUI一覧: (${Directories.guis.files.size})")
-            Directories.guis.files.filter { it.isFile }.forEach {
-                append(it.nameWithoutExtension).color(ChatColor.GREEN).bold(true)
-                append(" (${it.parentFile.name.run { plugin.server.getPlayer(UUID.fromString(this))?.displayName ?: "Unknown" }})").color(
-                    ChatColor.DARK_GREEN
-                ).bold(false)
-                append(", ").color(ChatColor.GRAY)
-            }
+        if (Directories.guis.files.isEmpty()) {
+            sendErrorMessage("GUIが一つも登録されていません！")
+            return
+        }
+
+        send {
+            append("GUI一覧: ", Color.GREEN)
+            append("(", Color.WHITE)
+            append(Directories.guis.files.size.toString(), Color.GREEN)
+            appendln(")", Color.WHITE)
+            Directories.guis.files
+                .map { plugin.server.getOfflinePlayer(UUID.fromString(it.parentFile.name)).name ?: "<Unknown Player>" }
+                .map { it.asTextComponent() }
+                .joint(", ".asTextComponent(Color.GRAY))
+                .forEach { append(it) }
         }
     }
 }

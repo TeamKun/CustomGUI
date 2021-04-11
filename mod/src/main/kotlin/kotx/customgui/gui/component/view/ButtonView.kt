@@ -30,7 +30,7 @@ class ButtonView : View {
         val enY = yCenter + endY
 
         fillAbsolute(stack, stX, stY, enX, enY, Color(0, 0, 255, 100))
-        Minecraft.getInstance().font.drawString(command, xCenter + startX, yCenter + endY, Color.WHITE, true)
+        Minecraft.getInstance().font.drawString(stack, command, xCenter + startX, yCenter + endY, Color.WHITE, true)
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {

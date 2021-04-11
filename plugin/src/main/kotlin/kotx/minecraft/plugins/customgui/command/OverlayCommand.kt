@@ -2,16 +2,18 @@ package kotx.minecraft.plugins.customgui.command
 
 import kotx.ktools.asPacket
 import kotx.ktools.toJson
+import kotx.minecraft.libs.flylib.append
+import kotx.minecraft.libs.flylib.asTextComponent
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.send
 import kotx.minecraft.plugins.customgui.directory.Directories
+import kotx.minecraft.plugins.customgui.extensions.joint
 import kotx.minecraft.plugins.customgui.extensions.suggestEntities
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import java.awt.Color
 
 class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIを表示します。 (編集のみ)"
@@ -26,17 +28,14 @@ class OverlayCommand : Command("overlay") {
     )
     override val permission: Permission = Permission.EVERYONE
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         if (args.isEmpty()) {
             sendHelp()
             return
         }
 
         if (args.size > 1 && !player!!.isOp) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append("管理者以外は対象を指定出来ません。").color(ChatColor.RED).bold(false)
-            }
+            sendErrorMessage("管理者以外は対象を指定出来ません。")
 
             return
         }
@@ -47,24 +46,17 @@ class OverlayCommand : Command("overlay") {
         }
 
         if (targetGui == null) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append(fileName).color(ChatColor.RED).bold(true)
-                append("は見つかりませんでした。").bold(false)
-            }
+            sendErrorMessage("${fileName}は見つかりませんでした。")
             return
         }
 
         val targetPlayers = when (args.size) {
-            1, 4 -> listOf(player)
-            else -> Bukkit.selectEntities(player, args[1]).filterIsInstance<Player>()
+            1, 4 -> listOf(player!!)
+            else -> Bukkit.selectEntities(player!!, args[1]).filterIsInstance<Player>()
         }
 
         if (targetPlayers.isEmpty()) {
-            player.send {
-                append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-                append("誰も見せる人が見つかりませんでした。").bold(false)
-            }
+            sendErrorMessage("誰も見せる人が見つかりませんでした。")
             return
         }
 
@@ -103,21 +95,19 @@ class OverlayCommand : Command("overlay") {
             }.toJson().asPacket())
         }
 
-        player.send {
-            append("[CustomGUI] ").color(ChatColor.LIGHT_PURPLE).bold(true)
-            append(fileName).color(ChatColor.RED).bold(true)
-            append("を").bold(false).color(ChatColor.GRAY)
-            targetPlayers.forEach {
-                append(it.displayName).color(ChatColor.GREEN).bold(true)
-                append(" ").color(ChatColor.GRAY)
-            }
+        send {
+            append("${fileName}を")
+            targetPlayers.mapNotNull { it.playerProfile.name }
+                .map { it.asTextComponent() }
+                .joint(", ".asTextComponent(Color.GRAY))
+                .forEach { append(it) }
             append("に表示しました。")
         }
     }
 
-    override fun CommandConsumer.tabComplete() = when {
+    override fun CommandContext.tabComplete() = when {
         args.size == 1 -> Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
-        args.size == 2 && player.isOp -> suggestEntities(args[1], plugin)
+        args.size == 2 && player!!.isOp -> suggestEntities(args[1], plugin)
 
         else -> emptyList()
     }

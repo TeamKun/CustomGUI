@@ -99,7 +99,7 @@ class ImageView : View {
             fillAbsolute(stack, stX, stY, enX, enY, Color(255, 255, 255, 50))
         }
 
-        Minecraft.getInstance().font.drawString(url, stX, enY, Color.WHITE, true)
+        Minecraft.getInstance().font.drawString(stack, url, stX, enY, Color.WHITE, true)
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {

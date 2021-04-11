@@ -33,7 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.1")
     implementation("org.apache.lucene:lucene-suggest:5.3.0")
-    implementation("com.github.TeamKun:FlyLib-Reloaded:1.04")
+    implementation("com.github.TeamKun:flylib-reloaded:0.0.9")
 }
 
 tasks {
@@ -69,14 +69,14 @@ tasks {
 
     create<Copy>("buildPlugin") {
         from(shadowJar)
-        var dest = file("$rootDir/server/plugins")
+        var dest = file("$projectDir/server/plugins")
         if (File(dest, shadowJar.get().archiveFileName.get()).exists()) dest = File(dest, "update")
         into(dest)
     }
 
     create<DefaultTask>("setupWorkspace") {
         doLast {
-            val paperDir = File(rootDir, "server")
+            val paperDir = File(projectDir, "server")
 
             paperDir.mkdirs()
 

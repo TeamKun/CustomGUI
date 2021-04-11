@@ -26,7 +26,7 @@ class TextView : View {
         val stX = xCenter + startX
         val stY = yCenter + startY
 
-        Minecraft.getInstance().font.drawString(text, stX, stY, Color.WHITE, true)
+        Minecraft.getInstance().font.drawString(stack, text, stX, stY, Color.WHITE, true)
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
@@ -34,6 +34,7 @@ class TextView : View {
         val stY = yCenter + (startY * scaleH).toInt()
 
         Minecraft.getInstance().font.drawString(
+            stack,
             text,
             stX,
             stY,
