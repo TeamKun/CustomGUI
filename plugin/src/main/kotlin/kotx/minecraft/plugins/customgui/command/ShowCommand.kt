@@ -27,6 +27,7 @@ class ShowCommand : Command("show") {
         "customgui show TestGUI Kotlinx"
     )
     override val permission: Permission = Permission.EVERYONE
+    override val playerOnly: Boolean = false
 
     override fun CommandContext.execute() {
         if (args.isEmpty()) {
@@ -36,7 +37,6 @@ class ShowCommand : Command("show") {
 
         if ((args.size == 2 || args.size == 5) && !player!!.isOp) {
             sendErrorMessage("管理者以外は対象を指定出来ません。")
-
             return
         }
 

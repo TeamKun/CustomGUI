@@ -17,6 +17,7 @@ class RemoveCommand : Command("remove") {
         "customgui remove TestGUI"
     )
     override val permission: Permission = Permission.EVERYONE
+    override val playerOnly: Boolean = false
 
     override fun CommandContext.execute() {
         if (args.isEmpty()) {
