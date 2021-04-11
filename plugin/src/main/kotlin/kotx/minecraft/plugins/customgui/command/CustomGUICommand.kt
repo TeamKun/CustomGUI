@@ -14,6 +14,7 @@ class CustomGUICommand : Command("customgui") {
         CopyCommand(),
         ListCommand(),
         OverlayCommand(),
+        ShowCommand(),
         RemoveCommand(),
         UpdateCommand(),
         UseCommand()

@@ -6,6 +6,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotx.customgui.gui.GuiDesignerScreen
 import kotx.customgui.gui.GuiOverlay
+import kotx.customgui.gui.GuiViewerScreen
 import kotx.customgui.gui.component.view.ButtonView
 import kotx.customgui.gui.component.view.ImageView
 import kotx.customgui.gui.component.view.RectView
@@ -136,6 +137,66 @@ class CustomGUIMod {
                     }.also {
                         GuiOverlay.views = it.toMutableList()
                     }
+                }
+
+                3 -> {
+                    channel.sendToServer(object {
+                        val op = 1
+                        val data = GuiDesignerScreen.views.map { it.parseToJson() }.filterNot { it.isBlank() }
+                    }.toJson())
+
+                    val fadeIn = json.getIntOrNull("fadeIn")
+                    val stay = json.getIntOrNull("stay")
+                    val fadeOut = json.getIntOrNull("fadeOut")
+
+                    if (fadeIn != null && stay != null && fadeOut != null) {
+                        var current = 0
+                        GuiViewerScreen.views.clear()
+                        GuiViewerScreen.opacity = 0.0
+                        timer.cancel()
+                        timer = Timer()
+                        timer.schedule(timerTask {
+                            when {
+                                current in 0..fadeIn -> {
+                                    if (fadeIn == 0)
+                                        GuiViewerScreen.opacity = 1.0
+                                    else
+                                        GuiViewerScreen.opacity += (1.0 / fadeIn)
+                                }
+
+                                current in (fadeIn + 1)..(fadeIn + stay) -> {
+                                    GuiViewerScreen.opacity = 1.0
+                                }
+
+                                current in (fadeIn + stay + 1)..(fadeIn + stay + fadeOut) -> {
+                                    GuiViewerScreen.opacity -= (1.0 / fadeIn)
+                                }
+
+                                current > fadeIn + stay + fadeOut -> {
+                                    GuiViewerScreen.views.clear()
+                                    Minecraft.getInstance().forceSetScreen(null)
+                                    cancel()
+                                }
+                            }
+                            current++
+                        }, 0, 50)
+                    }
+
+                    data.asJsonArray().jsonArray.map { it.jsonObject }.mapNotNull {
+                        when (it.getStringOrNull("type")?.toLowerCase()) {
+                            "button" -> it.toString().parseToObject<ButtonView>()
+                            "text" -> it.toString().parseToObject<TextView>()
+                            "image" -> it.toString().parseToObject<ImageView>()
+                            "rect" -> it.toString().parseToObject<RectView>()
+                            else -> null
+                        }.also {
+                            it?.init()
+                        }
+                    }.also {
+                        GuiViewerScreen.views = it.toMutableList()
+                    }
+
+                    Minecraft.getInstance().forceSetScreen(GuiViewerScreen)
                 }
 
                 else -> {

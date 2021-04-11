@@ -15,16 +15,16 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.awt.Color
 
-class OverlayCommand : Command("overlay") {
-    override val description: String = "指定したGUIをオーバーレイ形式で表示します。"
+class ShowCommand : Command("show") {
+    override val description: String = "指定したGUIを操作できる形で表示します。"
     override val usages: List<Usage> = listOf(
-        Usage("overlay <file> [user]"),
-        Usage("overlay <file> <fadein> <stay> <fadeout>"),
-        Usage("overlay <file> <user> <fadein> <stay> <fadeout>"),
+        Usage("show <file> [user]"),
+        Usage("show <file> <fadein> <stay> <fadeout>"),
+        Usage("show <file> <user> <fadein> <stay> <fadeout>"),
     )
     override val examples: List<String> = listOf(
-        "customgui overlay TestGUI",
-        "customgui overlay TestGUI Kotlinx"
+        "customgui show TestGUI",
+        "customgui show TestGUI Kotlinx"
     )
     override val permission: Permission = Permission.EVERYONE
 
@@ -87,7 +87,7 @@ class OverlayCommand : Command("overlay") {
         val guiData = targetGui.readText()
         targetPlayers.forEach { it ->
             it.sendPluginMessage(plugin, "customgui:workspace", object {
-                val op = 2
+                val op = 3
                 val data = guiData
                 val fadeIn = fadeInTime
                 val stay = stayTime

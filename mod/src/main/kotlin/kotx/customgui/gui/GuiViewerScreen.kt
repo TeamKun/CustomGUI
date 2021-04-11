@@ -7,34 +7,24 @@ import kotx.customgui.xCenter
 import kotx.customgui.yCenter
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.util.text.StringTextComponent
+import kotlin.math.max
+import kotlin.math.min
 
-class GuiViewerScreen(
-    private val views: MutableList<View>,
-    val fadeIn: Int,
-    val stay: Int,
-    val fadeOut: Int
-) : Screen(StringTextComponent("GUI Viewer")) {
+object GuiViewerScreen : Screen(StringTextComponent("GUI Viewer")) {
 
-    private var opacity = 0f
-
-    override fun init() {
-        opacity = 0f
-        super.init()
-    }
+    var opacity = 1.0
+        set(value) {
+            field = max(0.0, min(1.0, value))
+        }
+    var views = mutableListOf<View>()
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        opacity = minOf(1f, opacity + 1f / fadeIn)
-//        fillAbsolute(0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
         val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
         val scaleH = scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
-//        val w = GuiDesignerScreen.guiWidth * scaleW
-//        val h = GuiDesignerScreen.guiWidth * scaleH
-//        fillAbsolute((xCenter - w / 2).toInt(), (yCenter - h / 2).toInt(), (xCenter + w / 2).toInt(), (yCenter + h / 2).toInt(), Color(12, 12, 12, 255))
 
         views.forEach {
-            it.renderPage(stack, scaleW, scaleH, opacity)
+            it.renderPage(stack, scaleW, scaleH, opacity.toFloat())
         }
-
         super.render(stack, mouseX, mouseY, partialTicks)
     }
 
