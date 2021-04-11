@@ -34,7 +34,7 @@ class ShowCommand : Command("show") {
             return
         }
 
-        if ((args.size == 1 || args.size == 5) && !player!!.isOp) {
+        if ((args.size == 2 || args.size == 5) && !player!!.isOp) {
             sendErrorMessage("管理者以外は対象を指定出来ません。")
 
             return
