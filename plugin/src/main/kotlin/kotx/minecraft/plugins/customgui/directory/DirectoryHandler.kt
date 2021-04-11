@@ -16,6 +16,8 @@ class DirectoryHandler(
         private set
 
     init {
+        if (!baseDir.exists())
+            baseDir.mkdirs()
         Timer().schedule(timerTask {
             files = baseDir.allFiles().toMutableList()
         }, 0, 5000)

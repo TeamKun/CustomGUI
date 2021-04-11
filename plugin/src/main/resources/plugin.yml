@@ -1,7 +1,6 @@
-name: PluginName
+name: CustomGUI
 version: 1.5
-description: Plugin description here.
-api-version: 1.15
+description: An custom gui making tool
 author: Kotx
 website: https://twitter.com/kotx__
 main: kotx.minecraft.plugins.customgui.PluginEntry
