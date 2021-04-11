@@ -1,6 +1,10 @@
 package kotx.minecraft.plugins.customgui
 
 import kotx.ktools.*
+import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.injectFlyLib
 import kotx.minecraft.plugins.customgui.command.CustomGUICommand
 import kotx.minecraft.plugins.customgui.extensions.EventWaiter
@@ -16,6 +20,22 @@ class PluginEntry : JavaPlugin() {
     val flyLib = injectFlyLib {
         commandHandler {
             registerCommand(CustomGUICommand())
+
+            completionContributors = listOf(
+                ChildrenCompletionContributor(),
+                UsageCompletionContributor(usageReplacements = mapOf(
+                    { arg: String ->
+                        arg.startsWith("op:")
+                    } to {
+                        if (sender.isOp)
+                            listOf(it.replaceFirst("op:", ""))
+                        else
+                            emptyList()
+                    }
+                )),
+                OptionCompletionContributor(),
+                BasicCompletionContributor()
+            )
         }
     }
 

@@ -18,9 +18,9 @@ import java.awt.Color
 class ShowCommand : Command("show") {
     override val description: String = "指定したGUIを操作できる形で表示します。"
     override val usages: List<Usage> = listOf(
-        Usage("show <file> [user]"),
+        Usage("show <file> [op:user]"),
         Usage("show <file> <fadein> <stay> <fadeout>"),
-        Usage("show <file> <user> <fadein> <stay> <fadeout>"),
+        Usage("show <file> <op:user> <op:fadein> <op:stay> <op:fadeout>"),
     )
     override val examples: List<String> = listOf(
         "customgui show TestGUI",
@@ -34,7 +34,7 @@ class ShowCommand : Command("show") {
             return
         }
 
-        if (args.size > 1 && !player!!.isOp) {
+        if ((args.size == 1 || args.size == 5) && !player!!.isOp) {
             sendErrorMessage("管理者以外は対象を指定出来ません。")
 
             return
