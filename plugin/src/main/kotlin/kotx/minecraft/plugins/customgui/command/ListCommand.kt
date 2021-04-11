@@ -9,6 +9,7 @@ import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.plugins.customgui.directory.Directories
 import kotx.minecraft.plugins.customgui.extensions.joint
+import net.kyori.adventure.text.Component
 import java.awt.Color
 import java.util.*
 
@@ -43,8 +44,17 @@ class ListCommand : Command("list") {
             append(Directories.guis.files.size.toString(), Color.GREEN)
             appendln(")", Color.WHITE)
             Directories.guis.files
-                .map { plugin.server.getOfflinePlayer(UUID.fromString(it.parentFile.name)).name ?: "<Unknown Player>" }
-                .map { it.asTextComponent() }
+                .map { f ->
+                    Component.text {
+                        append(f.name, Color.GREEN)
+                        append(" (", Color.WHITE)
+                        append(
+                            plugin.server.getOfflinePlayer(UUID.fromString(f.parentFile.name)).name
+                                ?: "<Unknown Player>", Color.RED
+                        )
+                        append(")", Color.WHITE)
+                    }
+                }
                 .joint(", ".asTextComponent(Color.GRAY))
                 .forEach { append(it) }
         }
