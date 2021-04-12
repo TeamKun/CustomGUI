@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "kotx"
-version = "1.5"
+version = "1.7"
 
 repositories {
     mavenCentral()
@@ -15,12 +15,7 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://kotlin.bintray.com/kotlinx/")
-}
-
-allprojects {
-    repositories {
-        maven("https://jitpack.io")
-    }
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -33,7 +28,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.1")
     implementation("org.apache.lucene:lucene-suggest:5.3.0")
-    implementation("com.github.TeamKun:flylib-reloaded:0.0.19")
+    implementation("com.github.TeamKun:flylib-reloaded:0.0.24")
 }
 
 tasks {

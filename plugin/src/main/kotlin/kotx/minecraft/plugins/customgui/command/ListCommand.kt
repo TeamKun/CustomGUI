@@ -7,8 +7,8 @@ import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
+import kotx.minecraft.libs.flylib.joint
 import kotx.minecraft.plugins.customgui.directory.Directories
-import kotx.minecraft.plugins.customgui.extensions.joint
 import net.kyori.adventure.text.Component
 import java.awt.Color
 import java.util.*
@@ -44,20 +44,17 @@ class ListCommand : Command("list") {
             append("(", Color.WHITE)
             append(Directories.guis.files.size.toString(), Color.GREEN)
             appendln(")", Color.WHITE)
-            Directories.guis.files
-                .map { f ->
-                    Component.text {
-                        append(f.nameWithoutExtension, Color.GREEN)
-                        append(" (", Color.WHITE)
-                        append(
-                            plugin.server.getOfflinePlayer(UUID.fromString(f.parentFile.name)).name
-                                ?: "<Unknown Player>", Color.RED
-                        )
-                        append(")", Color.WHITE)
-                    }
+            Directories.guis.files.map { f ->
+                Component.text {
+                    append(f.nameWithoutExtension, Color.GREEN)
+                    append(" (", Color.WHITE)
+                    append(
+                        plugin.server.getOfflinePlayer(UUID.fromString(f.parentFile.name)).name
+                            ?: "<Unknown Player>", Color.RED
+                    )
+                    append(")", Color.WHITE)
                 }
-                .joint(", ".asTextComponent(Color.GRAY))
-                .forEach { append(it) }
+            }.joint(", ".asTextComponent(Color.GRAY)) { append(it) }
         }
     }
 }

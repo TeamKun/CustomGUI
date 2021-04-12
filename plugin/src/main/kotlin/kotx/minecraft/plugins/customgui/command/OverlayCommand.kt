@@ -19,8 +19,8 @@ class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIをオーバーレイ形式で表示します。"
     override val usages: List<Usage> = listOf(
         Usage("overlay <file> [op:user]"),
-        Usage("overlay <file> <fadein> <stay> <fadeout>"),
-        Usage("overlay <file> <op:user> <op:fadein> <op:stay> <op:fadeout>"),
+        Usage("overlay <file> <fadein_tick> <stay_tick> <fadeout_tick>"),
+        Usage("overlay <file> <op:user> <op:fadein_tick> <op:stay_tick> <op:fadeout_tick>"),
     )
     override val examples: List<String> = listOf(
         "customgui overlay TestGUI",
