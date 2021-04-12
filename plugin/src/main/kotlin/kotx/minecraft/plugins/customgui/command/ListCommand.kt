@@ -46,13 +46,13 @@ class ListCommand : Command("list") {
             appendln(")", Color.WHITE)
             Directories.guis.files.map { f ->
                 Component.text {
-                    append(f.nameWithoutExtension, Color.GREEN)
-                    append(" (", Color.WHITE)
-                    append(
+                    it.append(f.nameWithoutExtension, Color.GREEN)
+                    it.append(" (", Color.WHITE)
+                    it.append(
                         plugin.server.getOfflinePlayer(UUID.fromString(f.parentFile.name)).name
                             ?: "<Unknown Player>", Color.RED
                     )
-                    append(")", Color.WHITE)
+                    it.append(")", Color.WHITE)
                 }
             }.joint(", ".asTextComponent(Color.GRAY)) { append(it) }
         }

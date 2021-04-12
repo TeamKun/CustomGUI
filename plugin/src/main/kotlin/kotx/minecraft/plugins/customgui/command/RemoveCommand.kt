@@ -49,7 +49,6 @@ class RemoveCommand : Command("remove") {
     override fun CommandContext.tabComplete() =
         if (args.size == 1)
             (if (player!!.isOp) Directories.guis.files else Directories.guis.files.filter { it.parentFile.name == player!!.uniqueId.toString() }).map { it.nameWithoutExtension }
-                .also { println(it) }
         else
             emptyList()
 }

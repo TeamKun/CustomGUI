@@ -18,9 +18,9 @@ import java.awt.Color
 class ShowCommand : Command("show") {
     override val description: String = "指定したGUIを操作できる形で表示します。"
     override val usages: List<Usage> = listOf(
-        Usage("show <file> [op:user]"),
-        Usage("show <file> <fadein> <stay> <fadeout>"),
-        Usage("show <file> <op:user> <op:fadein> <op:stay> <op:fadeout>"),
+        Usage("show <file> [op:user] [--aspect]"),
+        Usage("show <file> <fadein> <stay> <fadeout> [--aspect]"),
+        Usage("show <file> <op:user> <op:fadein> <op:stay> <op:fadeout> [--aspect]"),
     )
     override val examples: List<String> = listOf(
         "customgui show TestGUI",
@@ -84,6 +84,8 @@ class ShowCommand : Command("show") {
             else -> 0
         }
 
+        val isAspectMode = args.getOptions("--")["--aspect"] != null
+
         val guiData = targetGui.readText()
         targetPlayers.forEach { it ->
             it.sendPluginMessage(plugin, "customgui:workspace", object {
@@ -92,6 +94,7 @@ class ShowCommand : Command("show") {
                 val fadeIn = fadeInTime
                 val stay = stayTime
                 val fadeOut = fadeOutTime
+                val isAspect = isAspectMode
             }.toJson().asPacket())
         }
 

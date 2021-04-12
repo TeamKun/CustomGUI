@@ -16,7 +16,7 @@ apply plugin: "kotlinx-serialization"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+version = '1.7'
 group = 'kotx.minecraft.mod'
 archivesBaseName = 'CustomGUI'
 
@@ -106,13 +106,13 @@ compileKotlin {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "customgui",
-            "Specification-Vendor": "kotx",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${archiveVersion}",
-            "Implementation-Vendor" :"kotx",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : "customgui",
+                "Specification-Vendor"    : "kotx",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${archiveVersion}",
+                "Implementation-Vendor"   : "kotx",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 

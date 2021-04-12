@@ -6,6 +6,7 @@ import kotx.minecraft.libs.flylib.append
 import kotx.minecraft.libs.flylib.asTextComponent
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
+import kotx.minecraft.libs.flylib.command.internal.Option
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.plugins.customgui.directory.Directories
@@ -18,9 +19,18 @@ import java.awt.Color
 class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIをオーバーレイ形式で表示します。"
     override val usages: List<Usage> = listOf(
-        Usage("overlay <file> [op:user]"),
-        Usage("overlay <file> <fadein_tick> <stay_tick> <fadeout_tick>"),
-        Usage("overlay <file> <op:user> <op:fadein_tick> <op:stay_tick> <op:fadeout_tick>"),
+        Usage(
+            "overlay <file> [op:user]",
+            options = listOf(Option("aspect"))
+        ),
+        Usage(
+            "overlay <file> <fadein_tick> <stay_tick> <fadeout_tick>",
+            options = listOf(Option("aspect"))
+        ),
+        Usage(
+            "overlay <file> <op:user> <op:fadein_tick> <op:stay_tick> <op:fadeout_tick>",
+            options = listOf(Option("aspect"))
+        ),
     )
     override val examples: List<String> = listOf(
         "customgui overlay TestGUI",
@@ -84,6 +94,8 @@ class OverlayCommand : Command("overlay") {
             else -> 0
         }
 
+        val isAspectMode = args.getOptions("--")["--aspect"] != null
+
         val guiData = targetGui.readText()
         targetPlayers.forEach {
             it.sendPluginMessage(plugin, "customgui:workspace", object {
@@ -92,6 +104,7 @@ class OverlayCommand : Command("overlay") {
                 val fadeIn = fadeInTime
                 val stay = stayTime
                 val fadeOut = fadeOutTime
+                val isAspect = isAspectMode
             }.toJson().asPacket())
         }
 

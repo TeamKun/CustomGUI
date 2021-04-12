@@ -28,7 +28,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.1")
     implementation("org.apache.lucene:lucene-suggest:5.3.0")
-    implementation("com.github.TeamKun:flylib-reloaded:0.0.24")
+    implementation("com.github.TeamKun:flylib-reloaded:0.0.27")
 }
 
 tasks {
