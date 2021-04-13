@@ -17,6 +17,7 @@ object GuiOverlay : AbstractGui() {
             field = max(0.0, min(1.0, value))
         }
     var views = mutableListOf<View>()
+    var isAspectMode = false
 
     @SubscribeEvent
     fun onRenderTick(event: TickEvent.RenderTickEvent) {
@@ -29,11 +30,16 @@ object GuiOverlay : AbstractGui() {
         if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
         if (Minecraft.getInstance().screen != null) return
 
-        val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
-        val scaleH = scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
+        val scaleW = if (isAspectMode) 1f else scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
+        val scaleH = if (isAspectMode) 1f else scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
 
         views.forEach {
-            it.renderPage(event.matrixStack, scaleW, scaleH, opacity.toFloat())
+            it.renderPage(
+                event.matrixStack,
+                scaleW,
+                scaleH,
+                opacity.toFloat()
+            )
         }
     }
 }

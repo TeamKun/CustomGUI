@@ -17,13 +17,19 @@ object GuiViewerScreen : Screen(StringTextComponent("GUI Viewer")) {
             field = max(0.0, min(1.0, value))
         }
     var views = mutableListOf<View>()
+    var isAspectMode = false
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
-        val scaleH = scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
+        val scaleW = if (isAspectMode) 1f else scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
+        val scaleH = if (isAspectMode) 1f else scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
 
         views.forEach {
-            it.renderPage(stack, scaleW, scaleH, opacity.toFloat())
+            it.renderPage(
+                stack,
+                scaleW,
+                scaleH,
+                opacity.toFloat()
+            )
         }
         super.render(stack, mouseX, mouseY, partialTicks)
     }
@@ -31,8 +37,8 @@ object GuiViewerScreen : Screen(StringTextComponent("GUI Viewer")) {
     override fun mouseClicked(p_mouseClicked_1_: Double, p_mouseClicked_3_: Double, p_mouseClicked_5_: Int): Boolean {
         val x = p_mouseClicked_1_.toInt()
         val y = p_mouseClicked_3_.toInt()
-        val scaleW = scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
-        val scaleH = scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
+        val scaleW = if (isAspectMode) 1f else scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
+        val scaleH = if (isAspectMode) 1f else scaledHeight.toFloat() / GuiDesignerScreen.guiHeight
 
         views.filter {
             val stX = xCenter + (it.startX * scaleW).toInt()
