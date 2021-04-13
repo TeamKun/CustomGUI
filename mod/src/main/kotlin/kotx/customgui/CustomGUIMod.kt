@@ -91,11 +91,13 @@ class CustomGUIMod {
                     val fadeIn = json.getIntOrNull("fadeIn")
                     val stay = json.getIntOrNull("stay")
                     val fadeOut = json.getIntOrNull("fadeOut")
+                    val isAspect = json.getBooleanOrNull("aspect")
 
-                    if (fadeIn != null && stay != null && fadeOut != null) {
+                    if (fadeIn != null && stay != null && fadeOut != null && isAspect != null) {
                         var current = 0
                         GuiOverlay.views.clear()
                         GuiOverlay.opacity = 0.0
+                        GuiOverlay.isAspectMode = isAspect
                         timer.cancel()
                         timer = Timer()
                         timer.schedule(timerTask {
@@ -148,11 +150,14 @@ class CustomGUIMod {
                     val fadeIn = json.getIntOrNull("fadeIn")
                     val stay = json.getIntOrNull("stay")
                     val fadeOut = json.getIntOrNull("fadeOut")
+                    val isAspect = json.getBooleanOrNull("aspect")
 
-                    if (fadeIn != null && stay != null && fadeOut != null) {
+                    if (fadeIn != null && stay != null && fadeOut != null && isAspect != null) {
                         var current = 0
                         GuiViewerScreen.views.clear()
                         GuiViewerScreen.opacity = 0.0
+                        GuiViewerScreen.isAspectMode = isAspect
+
                         timer.cancel()
                         timer = Timer()
                         timer.schedule(timerTask {
