@@ -30,17 +30,17 @@ class ShowCommand : Command("show") {
     override val playerOnly: Boolean = false
 
     override fun CommandContext.execute() {
-        if (args.isEmpty()) {
+        if (argsWithoutOptions.isEmpty()) {
             sendHelp()
             return
         }
 
-        if ((args.size == 2 || args.size == 5) && !player!!.isOp) {
+        if ((argsWithoutOptions.size == 2 || argsWithoutOptions.size == 5) && !player!!.isOp) {
             sendErrorMessage("管理者以外は対象を指定出来ません。")
             return
         }
 
-        val fileName = args.first().replace("[/\\\\.]".toRegex(), "")
+        val fileName = argsWithoutOptions.first().replace("[/\\\\.]".toRegex(), "")
         val targetGui = Directories.guis.files.find {
             fileName == it.nameWithoutExtension
         }
@@ -50,9 +50,9 @@ class ShowCommand : Command("show") {
             return
         }
 
-        val targetPlayers = when (args.size) {
+        val targetPlayers = when (argsWithoutOptions.size) {
             1, 4 -> listOf(player!!)
-            else -> Bukkit.selectEntities(player!!, args[1]).filterIsInstance<Player>()
+            else -> Bukkit.selectEntities(player!!, argsWithoutOptions[1]).filterIsInstance<Player>()
         }
 
         if (targetPlayers.isEmpty()) {
@@ -60,31 +60,31 @@ class ShowCommand : Command("show") {
             return
         }
 
-        val fadeInTime = when (args.size) {
+        val fadeInTime = when (argsWithoutOptions.size) {
             in 0..2 -> 0
-            4 -> args[1].toIntOrNull() ?: 0
-            5 -> args[2].toIntOrNull() ?: 0
+            4 -> argsWithoutOptions[1].toIntOrNull() ?: 0
+            5 -> argsWithoutOptions[2].toIntOrNull() ?: 0
 
             else -> 0
         }
 
-        val stayTime = when (args.size) {
+        val stayTime = when (argsWithoutOptions.size) {
             in 0..2 -> Int.MAX_VALUE
-            4 -> args[2].toIntOrNull() ?: 100
-            5 -> args[3].toIntOrNull() ?: 100
+            4 -> argsWithoutOptions[2].toIntOrNull() ?: 100
+            5 -> argsWithoutOptions[3].toIntOrNull() ?: 100
 
             else -> 0
         }
 
-        val fadeOutTime = when (args.size) {
+        val fadeOutTime = when (argsWithoutOptions.size) {
             in 0..2 -> Int.MAX_VALUE
-            4 -> args[3].toIntOrNull() ?: 100
-            5 -> args[4].toIntOrNull() ?: 100
+            4 -> argsWithoutOptions[3].toIntOrNull() ?: 100
+            5 -> argsWithoutOptions[4].toIntOrNull() ?: 100
 
             else -> 0
         }
 
-        val isAspectMode = args.getOptions("--")["--aspect"] != null
+        val isAspectMode = options["aspect"] != null
 
         val guiData = targetGui.readText()
         targetPlayers.forEach { it ->
@@ -109,8 +109,8 @@ class ShowCommand : Command("show") {
     }
 
     override fun CommandContext.tabComplete() = when {
-        args.size == 1 -> Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
-        args.size == 2 && player!!.isOp -> suggestEntities(args[1], plugin)
+        argsWithoutOptions.size == 1 -> Directories.guis.files.filter { it.isFile }.map { it.nameWithoutExtension }
+        argsWithoutOptions.size == 2 && player!!.isOp -> suggestEntities(argsWithoutOptions[1], plugin)
 
         else -> emptyList()
     }
