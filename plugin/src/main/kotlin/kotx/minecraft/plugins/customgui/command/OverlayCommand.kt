@@ -60,13 +60,13 @@ class OverlayCommand : Command("overlay") {
 
         val guiData = targetGui.readText()
         val fixMode = if (args.size >= 3) args[2].toLowerCase() == "fix" else false
-        val fadeinTick = if (args.size >= 4) args[3].toIntOrNull() else Int.MAX_VALUE
+        val fadeinTick = if (args.size >= 4) args[3].toIntOrNull() else 0
         val stayTick = if (args.size >= 5) args[4].toIntOrNull() else Int.MAX_VALUE
-        val fadeoutTick = if (args.size >= 6) args[5].toIntOrNull() else Int.MAX_VALUE
+        val fadeoutTick = if (args.size >= 6) args[5].toIntOrNull() else 0
 
         targetUsers.forEach {
             it.sendPluginMessage(plugin, "customgui:workspace", object {
-                val op = 3
+                val op = 2
                 val data = guiData
                 val fadeIn = fadeinTick
                 val stay = stayTick

@@ -95,6 +95,11 @@ class CustomGUIMod {
 
                     if (fadeIn != null && stay != null && fadeOut != null && isAspect != null) {
                         var current = 0
+                        if (Minecraft.getInstance().screen == GuiViewerScreen)
+                            Minecraft.getInstance().setScreen(null)
+
+                        GuiViewerScreen.views.clear()
+                        GuiViewerScreen.opacity = 0.0
                         GuiOverlay.views.clear()
                         GuiOverlay.opacity = 0.0
                         GuiOverlay.isAspectMode = isAspect
@@ -154,6 +159,9 @@ class CustomGUIMod {
 
                     if (fadeIn != null && stay != null && fadeOut != null && isAspect != null) {
                         var current = 0
+                        GuiOverlay.views.clear()
+                        GuiOverlay.opacity = 0.0
+
                         GuiViewerScreen.views.clear()
                         GuiViewerScreen.opacity = 0.0
                         GuiViewerScreen.isAspectMode = isAspect
