@@ -26,7 +26,7 @@ class ListCommand : Command("list") {
     )
 
     override val permission: Permission = Permission.EVERYONE
-    override val playerOnly: Boolean = false
+
 
     override fun CommandContext.execute() {
         if (args.isNotEmpty()) {

@@ -187,7 +187,6 @@ fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
                 this
         }
 
-        //a=b
         val currentOption = option.split(",").last()
         val currentOptionKey = currentOption.split("=").getOrNull(0)
         val currentOptionValue = currentOption.split("=").getOrNull(1)

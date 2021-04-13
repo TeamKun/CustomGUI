@@ -5,10 +5,6 @@ import java.io.File
 import java.util.*
 import kotlin.concurrent.timerTask
 
-/**
- * TabCompleteでずっとFile#allFilesを使うと鯖が重くなる可能性がある為5秒に一回、もしくはファイル操作時のみ更新するように
- */
-
 class DirectoryHandler(
     private val baseDir: File
 ) {

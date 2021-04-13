@@ -37,7 +37,7 @@ class OverlayCommand : Command("overlay") {
         "customgui overlay TestGUI Kotlinx"
     )
     override val permission: Permission = Permission.EVERYONE
-    override val playerOnly: Boolean = false
+
 
     override fun CommandContext.execute() {
         if (argsWithoutOptions.isEmpty()) {

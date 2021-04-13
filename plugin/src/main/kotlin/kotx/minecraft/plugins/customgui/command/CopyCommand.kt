@@ -19,7 +19,7 @@ class CopyCommand : Command("copy") {
     )
 
     override val permission: Permission = Permission.EVERYONE
-    override val playerOnly: Boolean = false
+
 
     override fun CommandContext.execute() {
         if (args.size != 2) {
