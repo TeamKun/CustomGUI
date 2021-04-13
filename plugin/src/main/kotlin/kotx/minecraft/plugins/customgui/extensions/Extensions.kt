@@ -36,28 +36,6 @@ fun File.allFiles(): List<File> {
         listOf(this)
 }
 
-fun <T> List<T>.joint(other: T): List<T> {
-    val res = mutableListOf<T>()
-    forEachIndexed { i, it ->
-        res.add(it)
-        if (i < size - 1)
-            res.add(other)
-    }
-
-    return res.toList()
-}
-
-fun <T> List<T>.joint(other: (T) -> T): List<T> {
-    val res = mutableListOf<T>()
-    forEachIndexed { i, it ->
-        res.add(it)
-        if (i < size - 1)
-            res.add(other(it))
-    }
-
-    return res.toList()
-}
-
 private val suggestOptions = listOf(
     SuggestOption("advancements", SuggestOptionType.TEXT) { _, _ -> listOf("{}") },
     SuggestOption("distance", SuggestOptionType.RANGE) { _, s ->
