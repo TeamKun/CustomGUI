@@ -20,22 +20,14 @@ class PluginEntry : JavaPlugin() {
     val flyLib = injectFlyLib {
         commandHandler {
             registerCommand(CustomGUICommand())
-
-            completionContributors = listOf(
-                ChildrenCompletionContributor(),
-                UsageCompletionContributor(usageReplacements = mapOf(
-                    { arg: String ->
-                        arg.startsWith("op:")
-                    } to {
-                        if (sender.isOp)
-                            listOf(it.replaceFirst("op:", ""))
-                        else
-                            emptyList()
-                    }
-                )),
-                OptionCompletionContributor(),
-                BasicCompletionContributor()
-            )
+            commandCompletion {
+                registerContributor(
+                    ChildrenCompletionContributor(),
+                    OptionCompletionContributor(),
+                    UsageCompletionContributor(),
+                    BasicCompletionContributor()
+                )
+            }
         }
     }
 
