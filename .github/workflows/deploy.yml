@@ -18,8 +18,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      - name: Add permission
+        run: chmod +x ./mod/gradlew && chmod +x ./plugin/gradlew
 
       - name: Gradle ci for mod
         run: ./mod/gradlew shadow
