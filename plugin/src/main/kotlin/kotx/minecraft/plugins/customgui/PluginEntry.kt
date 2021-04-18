@@ -1,15 +1,12 @@
 package kotx.minecraft.plugins.customgui
 
 import kotx.ktools.*
-import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
-import kotx.minecraft.libs.flylib.injectFlyLib
-import kotx.minecraft.plugins.customgui.command.CustomGUICommand
-import kotx.minecraft.plugins.customgui.extensions.EventWaiter
-import org.bukkit.plugin.java.JavaPlugin
-import java.nio.file.Paths
+import kotx.minecraft.libs.flylib.*
+import kotx.minecraft.libs.flylib.command.complete.providers.*
+import kotx.minecraft.plugins.customgui.command.*
+import kotx.minecraft.plugins.customgui.extensions.*
+import org.bukkit.plugin.java.*
+import java.nio.file.*
 
 class PluginEntry : JavaPlugin() {
     companion object {
@@ -17,11 +14,11 @@ class PluginEntry : JavaPlugin() {
         private const val VERSION = "0.1"
     }
 
-    val flyLib = injectFlyLib {
-        commandHandler {
-            registerCommand(CustomGUICommand())
-            commandCompletion {
-                registerContributor(
+    val flyLib = flyLib {
+        command {
+            register(CustomGUICommand())
+            completion {
+                register(
                     ChildrenCompletionContributor(),
                     OptionCompletionContributor(),
                     UsageCompletionContributor(),
@@ -32,6 +29,7 @@ class PluginEntry : JavaPlugin() {
     }
 
     override fun onEnable() {
+        flyLib.initialize()
         setupListeners()
         setupMessengers()
         logger.info("$NAME v$VERSION started!")
