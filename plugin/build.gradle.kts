@@ -109,6 +109,7 @@ tasks {
                     .replace("level-type=default", "level-type=flat")
                     .replace("motd=A Minecraft Server", "motd=Kotx Development Server")
                     .replace("max-tick-time=60000", "max-tick-time=-1")
+                    .replace("enable-command-block=false", "enable-command-block=true")
                     .replace("view-distance=10", "view-distance=16"), Charsets.UTF_8
             )
             val runBat = File(paperDir, "run.bat")
