@@ -16,7 +16,7 @@ apply plugin: "kotlinx-serialization"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 
-version = '1.8'
+version = '1.10'
 group = 'kotx.minecraft.mod'
 archivesBaseName = 'CustomGUI'
 
