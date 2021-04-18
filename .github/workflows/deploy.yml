@@ -1,0 +1,37 @@
+name: Create Release
+on:
+  push:
+    tags:
+      - '*.*'
+    branches:
+      - master
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: JDK11 Setup
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Gradle ci for mod
+        run: ./mod/gradlew shadow
+
+      - name: Gradle ci for plugin
+        run: ./plugin/gradlew shadow
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: "./output/**"
+          name: CustomGUI
