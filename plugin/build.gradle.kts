@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "kotx"
-version = "1.7"
+version = "1.8"
 
 repositories {
     mavenCentral()
@@ -53,20 +53,27 @@ tasks {
 
         from(sourceSets.main.get().resources.srcDirs) {
             filter {
-                it.replace("@name@", "CustomGUI").replace("@version@", "1.5")
+                it.replace("@name@", "CustomGUI").replace("@version@", version.toString())
             }
         }
     }
 
     shadowJar {
-        archiveFileName.set("CustomGUI v1.5.jar")
+        archiveFileName.set("customgui-plugin-${project.version}.jar")
     }
 
     create<Copy>("buildPlugin") {
         from(shadowJar)
-        var dest = file("$projectDir/server/plugins")
-        if (File(dest, shadowJar.get().archiveFileName.get()).exists()) dest = File(dest, "update")
-        into(dest)
+        val dir = file("$projectDir/server/plugins")
+        dir.mkdirs()
+        into(dir)
+    }
+
+    create<Copy>("shadow") {
+        from(shadowJar)
+        val dir = file("$projectDir/../output/")
+        dir.mkdirs()
+        into(dir)
     }
 
     create<DefaultTask>("setupWorkspace") {

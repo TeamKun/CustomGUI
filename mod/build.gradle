@@ -16,7 +16,7 @@ apply plugin: "kotlinx-serialization"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 
-version = '1.7'
+version = '1.8'
 group = 'kotx.minecraft.mod'
 archivesBaseName = 'CustomGUI'
 
@@ -116,7 +116,19 @@ jar {
         ])
     }
 
+    archivesBaseName = "customgui-mod"
+
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+task shadow {
+    dependsOn(jar)
+    doLast {
+        copy {
+            from jar
+            into new File("${projectDir}/../output")
+        }
+    }
 }
 
 jar.finalizedBy('reobfJar')
