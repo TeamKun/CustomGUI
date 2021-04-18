@@ -25,10 +25,10 @@ jobs:
         run: chmod +x ./mod/gradlew && chmod +x ./plugin/gradlew
 
       - name: Gradle ci for mod
-        run: ./mod/gradlew shadow
+        run: ./mod/gradlew -p ./mod shadow
 
       - name: Gradle ci for plugin
-        run: ./plugin/gradlew shadow
+        run: ./plugin/gradlew -p ./plugin shadow
 
       - name: Release
         uses: softprops/action-gh-release@v1
