@@ -6,22 +6,43 @@ import kotx.minecraft.libs.flylib.append
 import kotx.minecraft.libs.flylib.asTextComponent
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
+import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.joint
 import kotx.minecraft.plugins.customgui.directory.Directories
-import kotx.minecraft.plugins.customgui.extensions.suggestEntities
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.awt.Color
+import java.util.*
 
 class OverlayCommand : Command("overlay") {
     override val description: String = "指定したGUIをオーバーレイ形式で表示します。"
 
     override val usages: List<Usage> = listOf(
-        Usage("overlay <file> [user]"),
-        Usage("overlay <file> <user> <flex/fix>"),
-        Usage("overlay <file> <user> <flex/fix> <fadein_tick> <stay_tick> <fadeout_tick>"),
+        Usage(
+            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+        ),
+        Usage(
+            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Entity("user"),
+            permission = Permission.OP
+        ),
+        Usage(
+            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Entity("user"),
+            Argument.Selection("mode", "flex", "fix"),
+            permission = Permission.OP
+        ),
+        Usage(
+            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Entity("user"),
+            Argument.Selection("mode", "flex", "fix"),
+            Argument.Integer("fadein_tick"),
+            Argument.Integer("stay_tick"),
+            Argument.Integer("fadeout_tick"),
+            permission = Permission.OP
+        ),
     )
     override val examples: List<String> = listOf(
         "customgui overlay testgui",
@@ -29,14 +50,8 @@ class OverlayCommand : Command("overlay") {
         "customgui overlay testgui roadhog_kun fix",
         "customgui overlay testgui roadhog_kun fix 40 100 40",
     )
-    override val permission: Permission = Permission.EVERYONE
 
     override fun CommandContext.execute() {
-        if (args.isEmpty()) {
-            sendHelp()
-            return
-        }
-
         val targetGui = Directories.guis.files.find { it.nameWithoutExtension == args.first() }
         val targetUsers = (if (args.size >= 2)
             Bukkit.selectEntities(sender, args[1])
@@ -59,7 +74,7 @@ class OverlayCommand : Command("overlay") {
         }
 
         val guiData = targetGui.readText()
-        val fixMode = if (args.size >= 3) args[2].toLowerCase() == "fix" else false
+        val fixMode = if (args.size >= 3) args[2].lowercase(Locale.getDefault()) == "fix" else false
         val fadeinTick = if (args.size >= 4) args[3].toIntOrNull() else 0
         val stayTick = if (args.size >= 5) args[4].toIntOrNull() else Int.MAX_VALUE
         val fadeoutTick = if (args.size >= 6) args[5].toIntOrNull() else 0
@@ -82,12 +97,5 @@ class OverlayCommand : Command("overlay") {
                 .forEach { append(it) }
             append("に表示しました。", Color.GREEN)
         }
-    }
-
-    override fun CommandContext.tabComplete() = when (args.size) {
-        1 -> Directories.guis.files.map { it.nameWithoutExtension }
-        2 -> suggestEntities(args[1], plugin)
-
-        else -> emptyList()
     }
 }
