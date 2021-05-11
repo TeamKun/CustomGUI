@@ -52,6 +52,11 @@ class OverlayCommand : Command("overlay") {
     )
 
     override fun CommandContext.execute() {
+        if (args.isEmpty()) {
+            sendHelp()
+            return
+        }
+
         val targetGui = Directories.guis.files.find { it.nameWithoutExtension == args.first() }
         val targetUsers = (if (args.size >= 2)
             Bukkit.selectEntities(sender, args[1])
