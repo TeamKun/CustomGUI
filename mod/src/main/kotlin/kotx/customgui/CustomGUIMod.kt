@@ -13,10 +13,15 @@ import kotx.customgui.gui.component.view.RectView
 import kotx.customgui.gui.component.view.TextView
 import kotx.ktools.*
 import net.minecraft.client.Minecraft
+import net.minecraft.client.settings.KeyBinding
+import net.minecraft.client.util.InputMappings
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.InputEvent
+import net.minecraftforge.client.settings.KeyConflictContext
+import net.minecraftforge.client.settings.KeyModifier
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.network.NetworkRegistry
 import net.minecraftforge.fml.network.simple.SimpleChannel
@@ -34,6 +39,13 @@ class CustomGUIMod {
     companion object {
         const val modId = "customgui"
         const val modName = "customgui"
+        val keyBinding = KeyBinding(
+            "Open Custom GUI Editor",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputMappings.getInputByCode(GLFW.GLFW_KEY_P, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_P)),
+            "customgui"
+        )
     }
 
     val channel: SimpleChannel = NetworkRegistry.ChannelBuilder.named(ResourceLocation("customgui", "workspace"))
@@ -68,7 +80,7 @@ class CustomGUIMod {
             when (json.getIntOrNull("op") ?: -1) {
                 0 -> {
                     data.asJsonArray().jsonArray.map { it.jsonObject }.mapNotNull {
-                        when (it.getStringOrNull("type")?.toLowerCase()) {
+                        when (it.getStringOrNull("type")?.lowercase(Locale.getDefault())) {
                             "button" -> it.toString().parseToObject<ButtonView>()
                             "text" -> it.toString().parseToObject<TextView>()
                             "image" -> it.toString().parseToObject<ImageView>()
@@ -95,8 +107,8 @@ class CustomGUIMod {
 
                     if (fadeIn != null && stay != null && fadeOut != null && isAspect != null) {
                         var current = 0
-                        if (Minecraft.getInstance().screen == GuiViewerScreen)
-                            Minecraft.getInstance().setScreen(null)
+                        if (Minecraft.getInstance().currentScreen == GuiViewerScreen)
+                            Minecraft.getInstance().displayGuiScreen(null)
 
                         GuiViewerScreen.views.clear()
                         GuiViewerScreen.opacity = 0.0
@@ -132,7 +144,7 @@ class CustomGUIMod {
                     }
 
                     data.asJsonArray().jsonArray.map { it.jsonObject }.mapNotNull {
-                        when (it.getStringOrNull("type")?.toLowerCase()) {
+                        when (it.getStringOrNull("type")?.lowercase(Locale.getDefault())) {
                             "button" -> it.toString().parseToObject<ButtonView>()
                             "text" -> it.toString().parseToObject<TextView>()
                             "image" -> it.toString().parseToObject<ImageView>()
@@ -187,7 +199,7 @@ class CustomGUIMod {
 
                                 current > fadeIn + stay + fadeOut -> {
                                     GuiViewerScreen.views.clear()
-                                    Minecraft.getInstance().forceSetScreen(null)
+                                    Minecraft.getInstance().displayGuiScreen(null)
                                     cancel()
                                 }
                             }
@@ -196,7 +208,7 @@ class CustomGUIMod {
                     }
 
                     data.asJsonArray().jsonArray.map { it.jsonObject }.mapNotNull {
-                        when (it.getStringOrNull("type")?.toLowerCase()) {
+                        when (it.getStringOrNull("type")?.lowercase(Locale.getDefault())) {
                             "button" -> it.toString().parseToObject<ButtonView>()
                             "text" -> it.toString().parseToObject<TextView>()
                             "image" -> it.toString().parseToObject<ImageView>()
@@ -209,7 +221,7 @@ class CustomGUIMod {
                         GuiViewerScreen.views = it.toMutableList()
                     }
 
-                    Minecraft.getInstance().forceSetScreen(GuiViewerScreen)
+                    Minecraft.getInstance().displayGuiScreen(GuiViewerScreen)
                 }
 
                 else -> {
@@ -222,14 +234,15 @@ class CustomGUIMod {
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(GuiOverlay)
+
+        ClientRegistry.registerKeyBinding(
+            keyBinding
+        )
     }
 
-
     @SubscribeEvent
-    fun onKeyPressed(event: InputEvent.KeyInputEvent) {
-        if (event.modifiers != GLFW.GLFW_MOD_SHIFT) return
-        if (event.key != GLFW.GLFW_KEY_O) return
-        if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
+    fun onKeyboard(event: InputEvent.KeyInputEvent) {
+        if (!keyBinding.isPressed) return
 
         channel.sendToServer(object {
             val op = 0
@@ -238,6 +251,6 @@ class CustomGUIMod {
             }
         }.toJson())
 
-        Minecraft.getInstance().setScreen(GuiDesignerScreen)
+        Minecraft.getInstance().displayGuiScreen(GuiDesignerScreen)
     }
 }
