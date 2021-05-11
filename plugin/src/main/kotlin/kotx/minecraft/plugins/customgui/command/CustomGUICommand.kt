@@ -1,7 +1,8 @@
 package kotx.minecraft.plugins.customgui.command
 
-import kotx.minecraft.libs.flylib.command.*
-import kotx.minecraft.libs.flylib.command.internal.*
+import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandContext
+import kotx.minecraft.libs.flylib.command.internal.Permission
 
 class CustomGUICommand : Command("customgui") {
     override val description: String = "CustomGUIを制御するコマンド"
@@ -15,7 +16,7 @@ class CustomGUICommand : Command("customgui") {
         ShowCommand(),
         RemoveCommand(),
         UpdateCommand(),
-        UseCommand()
+        UseCommand(),
     )
 
     override fun CommandContext.execute() {
