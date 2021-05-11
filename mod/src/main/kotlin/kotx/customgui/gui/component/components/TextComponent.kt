@@ -24,7 +24,7 @@ object TextComponent : IComponent {
                 stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED
             )
 
-        Minecraft.getInstance().font.drawStringCentered(stack, "テキストを配置する場所をクリック", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().fontRenderer.drawStringCentered(stack, "テキストを配置する場所をクリック", width / 2, 60, Color.WHITE)
     }
 
     override fun onMouseMove(mouseX: Int, mouseY: Int) {
@@ -32,7 +32,7 @@ object TextComponent : IComponent {
     }
 
     override fun onMouseClick(mouseX: Int, mouseY: Int, button: Int) {
-        Minecraft.getInstance().setScreen(
+        Minecraft.getInstance().displayGuiScreen(
             TextInputScreen(
                 mouseX - xCenter,
                 mouseY - yCenter,

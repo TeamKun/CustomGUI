@@ -30,7 +30,14 @@ class ButtonView : View {
         val enY = yCenter + endY
 
         fillAbsolute(stack, stX, stY, enX, enY, Color(0, 0, 255, 100))
-        Minecraft.getInstance().font.drawString(stack, command, xCenter + startX, yCenter + endY, Color.WHITE, true)
+        Minecraft.getInstance().fontRenderer.drawString(
+            stack,
+            command,
+            xCenter + startX,
+            yCenter + endY,
+            Color.WHITE,
+            true
+        )
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
@@ -39,7 +46,7 @@ class ButtonView : View {
 
     override fun onClick(mouseX: Int, mouseY: Int, button: Int) {
         val mc = Minecraft.getInstance()
-        mc.player?.chat(command)
+        mc.player?.sendChatMessage(command)
     }
 
     override fun parseToJson(): String = Gson().toJson(this)

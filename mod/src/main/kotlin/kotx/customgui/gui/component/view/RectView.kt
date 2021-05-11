@@ -32,7 +32,7 @@ class RectView : View {
         val enY = yCenter + endY
 
         fillAbsolute(stack, stX, stY, enX, enY, Color(r, g, b))
-        Minecraft.getInstance().font.drawString(stack, "R: $r, G: $g, B: $b", stX, enY, Color.WHITE, true)
+        Minecraft.getInstance().fontRenderer.drawString(stack, "R: $r, G: $g, B: $b", stX, enY, Color.WHITE, true)
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {

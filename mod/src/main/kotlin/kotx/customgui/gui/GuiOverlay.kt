@@ -27,8 +27,8 @@ object GuiOverlay : AbstractGui() {
     @SubscribeEvent
     fun onRender(event: RenderGameOverlayEvent.Post) {
         if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE) return
-        if (Minecraft.getInstance().currentServer == null || Minecraft.getInstance().currentServer?.isLan == true) return
-        if (Minecraft.getInstance().screen != null) return
+        if (Minecraft.getInstance().currentServerData == null || Minecraft.getInstance().currentServerData?.isOnLAN == true) return
+        if (Minecraft.getInstance().currentScreen != null) return
 
         val scaleW = if (isAspectMode) 1f else scaledWidth.toFloat() / GuiDesignerScreen.guiWidth
         val scaleH = if (isAspectMode) 1f else scaledHeight.toFloat() / GuiDesignerScreen.guiHeight

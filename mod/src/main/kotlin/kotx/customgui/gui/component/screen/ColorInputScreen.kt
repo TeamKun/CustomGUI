@@ -31,7 +31,7 @@ class ColorInputScreen(
             xCenter - 100, scaledHeight - 70, 80, 20, StringTextComponent("確定")
         ) {
             postData()
-            minecraft?.setScreen(GuiDesignerScreen)
+            minecraft?.displayGuiScreen(GuiDesignerScreen)
         }
         confirmButton.active = false
 
@@ -40,7 +40,7 @@ class ColorInputScreen(
             ExtendedButton(
                 xCenter + 20, scaledHeight - 70, 80, 20, StringTextComponent("キャンセル")
             ) {
-                minecraft?.setScreen(GuiDesignerScreen)
+                minecraft?.displayGuiScreen(GuiDesignerScreen)
             })
 
         addButton(
@@ -52,7 +52,7 @@ class ColorInputScreen(
                 fieldHeight,
                 StringTextComponent("赤")
             ).apply {
-                setMaxLength(3)
+                setMaxStringLength(3)
                 setResponder {
                     confirmButton.active = it.toIntOrNull() != null && it.toIntOrNull() in 0..255
                     if (confirmButton.active)
@@ -63,8 +63,8 @@ class ColorInputScreen(
             font,
             xCenter - fieldWidth / 2, yCenter - fieldHeight / 2, fieldWidth, fieldHeight, StringTextComponent("緑")
         ).apply {
-            setMaxLength(3)
-            setFilter {
+            setMaxStringLength(3)
+            setValidator {
                 it.toIntOrNull() in 0..255
             }
             setResponder {
@@ -81,7 +81,7 @@ class ColorInputScreen(
             fieldHeight,
             StringTextComponent("青")
         ).apply {
-            setMaxLength(3)
+            setMaxStringLength(3)
             setResponder {
                 confirmButton.active = it.toIntOrNull() != null && it.toIntOrNull() in 0..255
                 if (confirmButton.active)
@@ -94,40 +94,40 @@ class ColorInputScreen(
 
     override fun render(stack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         fillAbsolute(stack, 0, 0, scaledWidth, scaledHeight, Color(0, 0, 0, 100))
-        Minecraft.getInstance().font.drawString(
+        Minecraft.getInstance().fontRenderer.drawString(
             stack,
             "R (赤)",
             xCenter - fieldWidth / 2 - 50,
             yCenter - fieldHeight / 2 - fieldHeight - 20,
             Color.WHITE
         )
-        Minecraft.getInstance().font.drawString(
+        Minecraft.getInstance().fontRenderer.drawString(
             stack,
             "G (緑)",
             xCenter - fieldWidth / 2 - 50,
             yCenter - fieldHeight / 2,
             Color.WHITE
         )
-        Minecraft.getInstance().font.drawString(
+        Minecraft.getInstance().fontRenderer.drawString(
             stack,
             "B (青)",
             xCenter - fieldWidth / 2 - 50,
             yCenter - fieldHeight / 2 + fieldHeight + 20,
             Color.WHITE
         )
-        Minecraft.getInstance().font.drawStringCentered(stack, "コマンドを入力", width / 2, 60, Color.WHITE)
+        Minecraft.getInstance().fontRenderer.drawStringCentered(stack, "コマンドを入力", width / 2, 60, Color.WHITE)
         super.render(stack, mouseX, mouseY, partialTicks)
     }
 
     override fun keyPressed(p_keyPressed_1_: Int, p_keyPressed_2_: Int, p_keyPressed_3_: Int): Boolean {
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft?.setScreen(GuiDesignerScreen)
+            minecraft?.displayGuiScreen(GuiDesignerScreen)
             return false
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER) {
             postData()
-            minecraft?.setScreen(GuiDesignerScreen)
+            minecraft?.displayGuiScreen(GuiDesignerScreen)
             return false
         }
 

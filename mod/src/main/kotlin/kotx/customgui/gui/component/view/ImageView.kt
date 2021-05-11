@@ -59,7 +59,7 @@ class ImageView : View {
                 }
 
                 tex = DownloadableTexture(resLoc, cacheFile)
-                Minecraft.getInstance().textureManager.register(
+                Minecraft.getInstance().textureManager.loadTexture(
                     resLoc,
                     tex
                 )
@@ -85,21 +85,21 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            val bufferBuilder = Tessellator.getInstance().builder
-            Minecraft.getInstance().textureManager.bind(resLoc)
+            val bufferBuilder = Tessellator.getInstance().buffer
+            Minecraft.getInstance().textureManager.bindTexture(resLoc)
             RenderSystem.enableBlend()
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
-            bufferBuilder.vertex(x1, y2, z).uv(u1, v2).endVertex()
-            bufferBuilder.vertex(x2, y2, z).uv(u2, v2).endVertex()
-            bufferBuilder.vertex(x2, y1, z).uv(u2, v1).endVertex()
-            bufferBuilder.vertex(x1, y1, z).uv(u1, v1).endVertex()
-            bufferBuilder.end()
-            WorldVertexBufferUploader.end(bufferBuilder)
+            bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
+            bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
+            bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
+            bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex()
+            bufferBuilder.finishDrawing()
+            WorldVertexBufferUploader.draw(bufferBuilder)
         } else {
             fillAbsolute(stack, stX, stY, enX, enY, Color(255, 255, 255, 50))
         }
 
-        Minecraft.getInstance().font.drawString(stack, url, stX, enY, Color.WHITE, true)
+        Minecraft.getInstance().fontRenderer.drawString(stack, url, stX, enY, Color.WHITE, true)
     }
 
     override fun renderPage(stack: MatrixStack, scaleW: Float, scaleH: Float, opacity: Float) {
@@ -119,16 +119,16 @@ class ImageView : View {
         val v2 = 1.0f
 
         if (completed) {
-            val bufferBuilder = Tessellator.getInstance().builder
-            Minecraft.getInstance().textureManager.bind(resLoc)
+            val bufferBuilder = Tessellator.getInstance().buffer
+            Minecraft.getInstance().textureManager.bindTexture(resLoc)
             RenderSystem.enableBlend()
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
-            bufferBuilder.vertex(x1, y2, z).uv(u1, v2).endVertex()
-            bufferBuilder.vertex(x2, y2, z).uv(u2, v2).endVertex()
-            bufferBuilder.vertex(x2, y1, z).uv(u2, v1).endVertex()
-            bufferBuilder.vertex(x1, y1, z).uv(u1, v1).endVertex()
-            bufferBuilder.end()
-            WorldVertexBufferUploader.end(bufferBuilder)
+            bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
+            bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
+            bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
+            bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex()
+            bufferBuilder.finishDrawing()
+            WorldVertexBufferUploader.draw(bufferBuilder)
         } else {
             fillAbsolute(stack, stX, stY, enX, enY, Color(255, 255, 255, 50))
         }
