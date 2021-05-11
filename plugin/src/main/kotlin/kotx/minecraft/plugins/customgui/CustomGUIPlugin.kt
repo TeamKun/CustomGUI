@@ -1,42 +1,28 @@
 package kotx.minecraft.plugins.customgui
 
 import kotx.ktools.*
-import kotx.minecraft.libs.flylib.*
-import kotx.minecraft.libs.flylib.command.complete.providers.*
-import kotx.minecraft.plugins.customgui.command.*
-import kotx.minecraft.plugins.customgui.extensions.*
-import org.bukkit.plugin.java.*
-import java.nio.file.*
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.flyLib
+import kotx.minecraft.plugins.customgui.command.CustomGUICommand
+import kotx.minecraft.plugins.customgui.extensions.EventWaiter
+import org.bukkit.plugin.java.JavaPlugin
+import java.nio.file.Paths
 
-class PluginEntry : JavaPlugin() {
-    companion object {
-        private const val NAME = "Custom GUI"
-        private const val VERSION = "0.1"
-    }
+class CustomGUIPlugin : JavaPlugin() {
+    override fun onEnable() {
 
-    val flyLib = flyLib {
-        command {
-            register(CustomGUICommand())
-            completion {
-                register(
-                    ChildrenCompletionContributor(),
-                    OptionCompletionContributor(),
-                    UsageCompletionContributor(),
-                    BasicCompletionContributor()
-                )
+        flyLib {
+            command {
+                register(CustomGUICommand())
+
+                defaultConfiguration {
+                    permission(Permission.EVERYONE)
+                }
             }
         }
-    }
 
-    override fun onEnable() {
-        flyLib.initialize()
         setupListeners()
         setupMessengers()
-        logger.info("$NAME v$VERSION started!")
-    }
-
-    override fun onDisable() {
-        logger.info("Bye!")
     }
 
     private fun setupListeners() {
