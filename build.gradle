@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0"
+    }
+}
+
+group = "net.kunmc.lab.customgui"
+version = "2.0.0"
+
+subprojects {
+    apply plugin: "java"
+
+    group = project.group
+    version = project.version
+
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+}
