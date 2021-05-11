@@ -7,6 +7,7 @@ import kotx.minecraft.libs.flylib.asTextComponent
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Argument
+import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.joint
 import kotx.minecraft.plugins.customgui.directory.Directories
@@ -25,11 +26,13 @@ class ShowCommand : Command("show") {
         Usage(
             Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
             Argument.Entity("user"),
+            permission = Permission.OP,
         ),
         Usage(
             Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
+            permission = Permission.OP,
         ),
         Usage(
             Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
@@ -38,6 +41,7 @@ class ShowCommand : Command("show") {
             Argument.Integer("fadein_tick"),
             Argument.Integer("stay_tick"),
             Argument.Integer("fadeout_tick"),
+            permission = Permission.OP,
         ),
     )
     override val examples: List<String> = listOf(
