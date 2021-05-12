@@ -21,21 +21,29 @@ class OverlayCommand : Command("overlay") {
 
     override val usages: List<Usage> = listOf(
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
             permission = Permission.OP
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
             permission = Permission.OP
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
             Argument.Integer("fadein_tick"),

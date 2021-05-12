@@ -21,27 +21,35 @@ class ShowCommand : Command("show") {
 
     override val usages: List<Usage> = listOf(
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
-            permission = Permission.OP,
+            permission = Permission.OP
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
-            permission = Permission.OP,
+            permission = Permission.OP
         ),
         Usage(
-            Argument.Text("file") { Directories.guis.files.map { it.nameWithoutExtension } },
+            Argument.Text("file") {
+                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
+            },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
             Argument.Integer("fadein_tick"),
             Argument.Integer("stay_tick"),
             Argument.Integer("fadeout_tick"),
-            permission = Permission.OP,
+            permission = Permission.OP
         ),
     )
     override val examples: List<String> = listOf(
