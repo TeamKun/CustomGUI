@@ -92,7 +92,7 @@ compileKotlin {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "chat-control",
+                "Specification-Title"     : "customgui",
                 "Specification-Vendor"    : "kotx__, kun_lab",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
