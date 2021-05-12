@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.WorldVertexBufferUploader
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.ResourceLocation
 import org.apache.commons.io.FileUtils
+import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
@@ -43,8 +44,8 @@ class ImageView : View {
         val cacheFile = Paths.get("mods", "CustomGUI", "caches", "$resId.png").toFile()
         completed = false
         CompletableFuture.runAsync({
-            runBlocking {
-                if (!cacheFile.exists()) {
+            if (!cacheFile.exists()) {
+                runBlocking {
                     val response = client.get<HttpStatement>(url) {
                         accept(ContentType.Any)
                         header(
@@ -57,14 +58,14 @@ class ImageView : View {
 
                     FileUtils.copyInputStreamToFile(response.receive(), cacheFile)
                 }
-
-                tex = DownloadableTexture(resLoc, cacheFile)
-                Minecraft.getInstance().textureManager.loadTexture(
-                    resLoc,
-                    tex
-                )
-                completed = true
             }
+
+            tex = DownloadableTexture(resLoc, cacheFile)
+            Minecraft.getInstance().textureManager.loadTexture(
+                resLoc,
+                tex
+            )
+            completed = true
         }, ServerThreadExecutor)
     }
 
@@ -88,7 +89,9 @@ class ImageView : View {
             val bufferBuilder = Tessellator.getInstance().buffer
             Minecraft.getInstance().textureManager.bindTexture(resLoc)
             RenderSystem.enableBlend()
-            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+            RenderSystem.alphaFunc(516, 0.01f)
+            RenderSystem.color4f(1f, 1f, 1f, 1f)
             bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
             bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
             bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
@@ -122,6 +125,9 @@ class ImageView : View {
             val bufferBuilder = Tessellator.getInstance().buffer
             Minecraft.getInstance().textureManager.bindTexture(resLoc)
             RenderSystem.enableBlend()
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+            RenderSystem.alphaFunc(516, 0.01f)
+            RenderSystem.color4f(1f, 1f, 1f, opacity)
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
             bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
             bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
