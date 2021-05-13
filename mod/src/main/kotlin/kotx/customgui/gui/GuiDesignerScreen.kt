@@ -232,7 +232,11 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         } else -1
 
         if (!editMode) {
-            views.getOrNull(selectedView)?.onClick(x, y, p_mouseClicked_5_)
+            views.filter {
+                x in xCenter + it.startX..xCenter + it.endX && y in yCenter + it.startY..yCenter + it.endY
+            }.forEach {
+                it.onClick(x, y, p_mouseClicked_5_)
+            }
         }
 
         drag = true
