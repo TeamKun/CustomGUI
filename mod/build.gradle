@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.5.0'
+    ext.kotlin_version = '1.5.10'
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         mavenCentral()
@@ -70,9 +70,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
-    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.0"
-    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.0"
-    embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.0"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.10"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.10"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.10"
 
     embed "io.insert-koin:koin-core:3.0.1-beta-2"
     embed "io.insert-koin:koin-core-ext:3.0.1-beta-2"

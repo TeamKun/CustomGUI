@@ -3,8 +3,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "com.github.johnrengelman.shadow"
     id "de.undercouch.download" version "4.1.1"
-    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.10'
 }
 
 repositories {
@@ -24,9 +24,9 @@ repositories {
 dependencies {
     compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
 
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.0"
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.0"
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.0"
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.10"
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.10"
+    implementation group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.10"
 
     implementation "io.insert-koin:koin-core:2.2.2"
     implementation "io.insert-koin:koin-core-ext:2.2.2"

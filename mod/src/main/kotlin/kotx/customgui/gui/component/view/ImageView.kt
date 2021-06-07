@@ -1,27 +1,26 @@
 package kotx.customgui.gui.component.view
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.mojang.blaze3d.matrix.MatrixStack
-import com.mojang.blaze3d.systems.RenderSystem
+import com.fasterxml.jackson.annotation.*
+import com.mojang.blaze3d.matrix.*
+import com.mojang.blaze3d.systems.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotx.customgui.*
-import kotx.customgui.gui.View
-import kotx.ktools.toJson
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.renderer.WorldVertexBufferUploader
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.util.ResourceLocation
-import org.apache.commons.io.FileUtils
-import org.lwjgl.opengl.GL11
-import java.awt.Color
-import java.nio.file.Paths
-import java.util.concurrent.CompletableFuture
+import kotx.customgui.gui.*
+import kotx.ktools.*
+import net.minecraft.client.*
+import net.minecraft.client.renderer.*
+import net.minecraft.client.renderer.vertex.*
+import net.minecraft.util.*
+import org.apache.commons.io.*
+import org.lwjgl.opengl.*
+import java.awt.*
+import java.nio.file.*
+import java.util.concurrent.*
 
 
 @JsonIgnoreProperties("resLoc", "tex", "width", "height", "completed", "client")
@@ -92,6 +91,7 @@ class ImageView : View {
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
             RenderSystem.alphaFunc(516, 0.01f)
             RenderSystem.color4f(1f, 1f, 1f, 1f)
+            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
             bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
             bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
             bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex()
