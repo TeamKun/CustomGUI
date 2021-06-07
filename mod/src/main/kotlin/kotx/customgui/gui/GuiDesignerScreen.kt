@@ -209,7 +209,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         if (isInRange(x, y) && editMode) components.getOrNull(editModeIndex)
             ?.onMouseClick(p_mouseClicked_1_.toInt(), p_mouseClicked_3_.toInt(), p_mouseClicked_5_)
 
-        val i = views.reversed().indexOfFirst {
+        val i = views.indexOfLast {
             x in xCenter + it.startX..xCenter + it.endX && y in yCenter + it.startY..yCenter + it.endY
         }
 
