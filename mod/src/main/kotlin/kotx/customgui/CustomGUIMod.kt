@@ -2,37 +2,31 @@
 
 package kotx.customgui
 
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotx.customgui.gui.GuiDesignerScreen
-import kotx.customgui.gui.GuiOverlay
-import kotx.customgui.gui.GuiViewerScreen
-import kotx.customgui.gui.component.view.ButtonView
-import kotx.customgui.gui.component.view.ImageView
-import kotx.customgui.gui.component.view.RectView
-import kotx.customgui.gui.component.view.TextView
+import kotlinx.serialization.json.*
+import kotx.customgui.gui.*
+import kotx.customgui.gui.component.view.*
 import kotx.ktools.*
-import net.minecraft.client.Minecraft
-import net.minecraft.client.settings.KeyBinding
-import net.minecraft.client.util.InputMappings
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.event.InputEvent
-import net.minecraftforge.client.settings.KeyConflictContext
-import net.minecraftforge.client.settings.KeyModifier
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.eventbus.api.SubscribeEvent
-import net.minecraftforge.fml.client.registry.ClientRegistry
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.network.NetworkRegistry
-import net.minecraftforge.fml.network.simple.SimpleChannel
-import org.apache.commons.lang3.ArrayUtils
+import net.minecraft.client.*
+import net.minecraft.client.settings.*
+import net.minecraft.client.util.*
+import net.minecraft.util.*
+import net.minecraftforge.client.event.*
+import net.minecraftforge.client.settings.*
+import net.minecraftforge.common.*
+import net.minecraftforge.eventbus.api.*
+import net.minecraftforge.fml.client.registry.*
+import net.minecraftforge.fml.common.*
+import net.minecraftforge.fml.network.*
+import net.minecraftforge.fml.network.simple.*
+import org.apache.commons.lang3.*
 import org.apache.commons.lang3.StringUtils
-import org.koin.core.context.startKoin
-import org.koin.dsl.module
-import org.lwjgl.glfw.GLFW
-import java.nio.charset.StandardCharsets
+import org.koin.core.context.*
+import org.koin.dsl.*
+import org.lwjgl.glfw.*
+import java.nio.charset.*
 import java.util.*
-import kotlin.concurrent.timerTask
+import java.util.Timer
+import kotlin.concurrent.*
 
 @Mod(CustomGUIMod.modId)
 class CustomGUIMod {
@@ -200,6 +194,8 @@ class CustomGUIMod {
                                 current > fadeIn + stay + fadeOut -> {
                                     GuiViewerScreen.views.clear()
                                     Minecraft.getInstance().displayGuiScreen(null)
+                                    Minecraft.getInstance().currentScreen = null
+                                    Minecraft.getInstance().isGameFocused = true
                                     cancel()
                                 }
                             }

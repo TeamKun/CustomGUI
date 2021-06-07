@@ -1,32 +1,29 @@
 package kotx.customgui.gui.component.screen
 
-import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.matrix.*
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotx.customgui.*
-import kotx.customgui.gui.GuiDesignerScreen
-import kotx.customgui.gui.component.view.ImageView
-import kotx.ktools.isUrl
-import kotx.ktools.randomUUID
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.util.text.StringTextComponent
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton
-import org.apache.commons.io.FileUtils
-import org.lwjgl.glfw.GLFW
+import kotx.customgui.gui.*
+import kotx.customgui.gui.component.view.*
+import kotx.ktools.*
+import net.minecraft.client.*
+import net.minecraft.client.gui.screen.*
+import net.minecraft.client.gui.widget.*
+import net.minecraft.util.text.*
+import net.minecraftforge.fml.client.gui.widget.*
+import org.apache.commons.io.*
+import org.lwjgl.glfw.*
 import java.awt.Color
-import java.io.InputStream
-import java.nio.file.Paths
-import javax.imageio.ImageIO
-import kotlin.coroutines.CoroutineContext
-import kotlin.math.max
+import java.io.*
+import java.nio.file.*
+import javax.imageio.*
+import kotlin.coroutines.*
+import kotlin.math.*
 
 class ImageInputScreen(
     private val startX: Int,
@@ -130,12 +127,12 @@ class ImageInputScreen(
                 this.startY = this@ImageInputScreen.startY
 
                 var stretchX = 1f
-                if (GuiDesignerScreen.guiWidth < img.width)
-                    stretchX = img.width.toFloat() / GuiDesignerScreen.guiWidth
+                if (GuiDesignerScreen.guiWidth + startX < img.width)
+                    stretchX = (img.width.toFloat() + startX) / GuiDesignerScreen.guiWidth
 
                 var stretchY = 1f
-                if (GuiDesignerScreen.guiHeight < img.height)
-                    stretchY = img.height.toFloat() / GuiDesignerScreen.guiHeight
+                if (GuiDesignerScreen.guiHeight + startY < img.height)
+                    stretchY = (img.height.toFloat() + startY) / GuiDesignerScreen.guiHeight
 
                 val stretch = max(stretchX, stretchY)
                 this.endX = this.startX + (img.width / stretch).toInt()
