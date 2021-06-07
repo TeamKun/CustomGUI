@@ -101,47 +101,49 @@ class ImageInputScreen(
 
     private val client = HttpClient(OkHttp)
     private fun postData() {
-        val imageId = randomUUID()
-        val response = runBlocking {
-            client.get<HttpStatement>(url) {
-                accept(ContentType.Any)
-                header(
-                    "User-Agent",
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36"
-                )
-                header("Accept-Encoding", "")
-                header("Accept-Language", "ja,en-US;q=0.9,en;q=0.8")
+        launch {
+            val imageId = randomUUID()
+            val response = runBlocking {
+                client.get<HttpStatement>(url) {
+                    accept(ContentType.Any)
+                    header(
+                        "User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36"
+                    )
+                    header("Accept-Encoding", "")
+                    header("Accept-Language", "ja,en-US;q=0.9,en;q=0.8")
+                }
             }
+            val bytes = response.receive<InputStream>().readBytes()
+
+            FileUtils.copyInputStreamToFile(
+                bytes.inputStream(),
+                Paths.get("mods", "CustomGUI", "caches", "$imageId.png").toFile()
+            )
+            val img = ImageIO.read(bytes.inputStream())
+
+            GuiDesignerScreen.views.add(
+                ImageView().apply {
+                    this.startX = this@ImageInputScreen.startX
+                    this.startY = this@ImageInputScreen.startY
+
+                    var stretchX = 1f
+                    if (GuiDesignerScreen.guiWidth < img.width + startX)
+                        stretchX = (img.width.toFloat() + startX) / GuiDesignerScreen.guiWidth
+
+                    var stretchY = 1f
+                    if (GuiDesignerScreen.guiHeight < img.height + startY)
+                        stretchY = (img.height.toFloat() + startY) / GuiDesignerScreen.guiHeight
+
+                    val stretch = max(stretchX, stretchY)
+                    this.endX = this.startX + (img.width / stretch).toInt()
+                    this.endY = this.startY + (img.height / stretch).toInt()
+                    this.url = this@ImageInputScreen.url
+                    this.resId = imageId
+                }.apply {
+                    init()
+                }
+            )
         }
-        val bytes = runBlocking { response.receive<InputStream>().readBytes() }
-
-        FileUtils.copyInputStreamToFile(
-            bytes.inputStream(),
-            Paths.get("mods", "CustomGUI", "caches", "$imageId.png").toFile()
-        )
-        val img = ImageIO.read(bytes.inputStream())
-
-        GuiDesignerScreen.views.add(
-            ImageView().apply {
-                this.startX = this@ImageInputScreen.startX
-                this.startY = this@ImageInputScreen.startY
-
-                var stretchX = 1f
-                if (GuiDesignerScreen.guiWidth + startX < img.width)
-                    stretchX = (img.width.toFloat() + startX) / GuiDesignerScreen.guiWidth
-
-                var stretchY = 1f
-                if (GuiDesignerScreen.guiHeight + startY < img.height)
-                    stretchY = (img.height.toFloat() + startY) / GuiDesignerScreen.guiHeight
-
-                val stretch = max(stretchX, stretchY)
-                this.endX = this.startX + (img.width / stretch).toInt()
-                this.endY = this.startY + (img.height / stretch).toInt()
-                this.url = this@ImageInputScreen.url
-                this.resId = imageId
-            }.apply {
-                init()
-            }
-        )
     }
 }

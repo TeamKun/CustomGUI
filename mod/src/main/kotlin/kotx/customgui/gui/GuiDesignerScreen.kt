@@ -1,21 +1,17 @@
 package kotx.customgui.gui
 
-import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.matrix.*
 import kotx.customgui.*
-import kotx.customgui.gui.component.components.ButtonComponent
-import kotx.customgui.gui.component.components.ImageComponent
-import kotx.customgui.gui.component.components.RectComponent
+import kotx.customgui.gui.component.components.*
 import kotx.customgui.gui.component.components.TextComponent
-import kotx.ktools.toJson
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.util.text.StringTextComponent
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.lwjgl.glfw.GLFW
+import kotx.ktools.*
+import net.minecraft.client.gui.screen.*
+import net.minecraft.util.text.*
+import net.minecraftforge.fml.client.gui.widget.*
+import org.koin.core.component.*
+import org.lwjgl.glfw.*
 import java.awt.Color
-import kotlin.math.max
-import kotlin.math.min
+import kotlin.math.*
 
 object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComponent {
     private val mod by inject<CustomGUIMod>()
@@ -213,7 +209,7 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         if (isInRange(x, y) && editMode) components.getOrNull(editModeIndex)
             ?.onMouseClick(p_mouseClicked_1_.toInt(), p_mouseClicked_3_.toInt(), p_mouseClicked_5_)
 
-        val i = views.indexOfFirst {
+        val i = views.reversed().indexOfFirst {
             x in xCenter + it.startX..xCenter + it.endX && y in yCenter + it.startY..yCenter + it.endY
         }
 
