@@ -1,13 +1,11 @@
 package kotx.customgui.gui.component.view
 
-import com.google.gson.Gson
-import com.mojang.blaze3d.matrix.MatrixStack
-import kotx.customgui.drawString
-import kotx.customgui.gui.View
-import kotx.customgui.xCenter
-import kotx.customgui.yCenter
-import net.minecraft.client.Minecraft
-import java.awt.Color
+import com.google.gson.*
+import com.mojang.blaze3d.matrix.*
+import kotx.customgui.*
+import kotx.customgui.gui.*
+import net.minecraft.client.*
+import java.awt.*
 
 class TextView : View {
     var text: String = ""

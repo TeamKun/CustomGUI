@@ -194,7 +194,6 @@ class CustomGUIMod {
                                 current > fadeIn + stay + fadeOut -> {
                                     GuiViewerScreen.views.clear()
                                     Minecraft.getInstance().displayGuiScreen(null)
-                                    Minecraft.getInstance().currentScreen = null
                                     Minecraft.getInstance().isGameFocused = true
                                     cancel()
                                 }
