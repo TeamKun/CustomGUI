@@ -6,7 +6,7 @@ CustomGUI System
 
 Minecraft: 1.16 or above  
 Paper: 1.16.5-R0.1-SNAPSHOT  
-Forge: 1.16.5-31.2.0
+Forge: 1.16.5-36.1.0
 
 ## Get started
 
