@@ -45,7 +45,7 @@ class CustomGUIMod {
     val channel: SimpleChannel = NetworkRegistry.ChannelBuilder.named(ResourceLocation("customgui", "workspace"))
         .clientAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
         .serverAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
-        .networkProtocolVersion { "1145141919810364364893931" }
+        .networkProtocolVersion { NetworkRegistry.ACCEPTVANILLA }
         .simpleChannel()
 
     var timer = Timer()

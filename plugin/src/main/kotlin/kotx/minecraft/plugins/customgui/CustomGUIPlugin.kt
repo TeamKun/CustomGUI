@@ -1,12 +1,12 @@
 package kotx.minecraft.plugins.customgui
 
 import kotx.ktools.*
-import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.flyLib
-import kotx.minecraft.plugins.customgui.command.CustomGUICommand
-import kotx.minecraft.plugins.customgui.extensions.EventWaiter
-import org.bukkit.plugin.java.JavaPlugin
-import java.nio.file.Paths
+import kotx.minecraft.libs.flylib.*
+import kotx.minecraft.libs.flylib.command.internal.*
+import kotx.minecraft.plugins.customgui.command.*
+import kotx.minecraft.plugins.customgui.extensions.*
+import org.bukkit.plugin.java.*
+import java.nio.file.*
 
 class CustomGUIPlugin : JavaPlugin() {
     override fun onEnable() {
