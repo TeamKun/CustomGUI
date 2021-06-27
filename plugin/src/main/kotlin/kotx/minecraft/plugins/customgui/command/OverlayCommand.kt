@@ -1,18 +1,12 @@
 package kotx.minecraft.plugins.customgui.command
 
-import kotx.ktools.asPacket
-import kotx.ktools.toJson
-import kotx.minecraft.libs.flylib.append
-import kotx.minecraft.libs.flylib.asTextComponent
-import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandContext
-import kotx.minecraft.libs.flylib.command.internal.Argument
-import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.joint
-import kotx.minecraft.plugins.customgui.directory.Directories
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
+import kotx.ktools.*
+import kotx.minecraft.libs.flylib.*
+import kotx.minecraft.libs.flylib.command.*
+import kotx.minecraft.libs.flylib.command.internal.*
+import kotx.minecraft.plugins.customgui.directory.*
+import org.bukkit.*
+import org.bukkit.entity.*
 import java.awt.Color
 import java.util.*
 
@@ -24,21 +18,8 @@ class OverlayCommand : Command("overlay") {
             Argument.Text("file") {
                 Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
             },
-        ),
-        Usage(
-            Argument.Text("file") {
-                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
-            },
-            Argument.Entity("user"),
-            permission = Permission.OP
-        ),
-        Usage(
-            Argument.Text("file") {
-                Directories.guis.files.map { it.nameWithoutExtension }.filter { it.startsWith(args.lastOrNull() ?: "") }
-            },
             Argument.Entity("user"),
             Argument.Selection("mode", "flex", "fix"),
-            permission = Permission.OP
         ),
         Usage(
             Argument.Text("file") {
@@ -49,12 +30,9 @@ class OverlayCommand : Command("overlay") {
             Argument.Integer("fadein_tick"),
             Argument.Integer("stay_tick"),
             Argument.Integer("fadeout_tick"),
-            permission = Permission.OP
         ),
     )
     override val examples: List<String> = listOf(
-        "customgui overlay testgui",
-        "customgui overlay testgui roadhog_kun",
         "customgui overlay testgui roadhog_kun fix",
         "customgui overlay testgui roadhog_kun fix 40 100 40",
     )

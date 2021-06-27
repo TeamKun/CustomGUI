@@ -53,7 +53,7 @@ processResources {
 tasks.build.dependsOn tasks.shadowJar
 
 shadowJar {
-    archiveName("${parent.project.name}-plugin-${parent.project.version}.jar")
+    archiveName("0-${parent.project.name}-plugin-${parent.project.version}.jar")
 }
 
 task shadow {
