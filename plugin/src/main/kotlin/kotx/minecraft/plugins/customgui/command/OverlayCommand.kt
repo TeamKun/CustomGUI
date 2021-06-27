@@ -38,7 +38,7 @@ class OverlayCommand : Command("overlay") {
     )
 
     override fun CommandContext.execute() {
-        if (args.isEmpty()) {
+        if (args.size < 3) {
             sendHelp()
             return
         }
