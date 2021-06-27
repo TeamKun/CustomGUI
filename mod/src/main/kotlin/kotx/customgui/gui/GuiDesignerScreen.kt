@@ -217,13 +217,17 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
         editingView = i
 
         fun Int.isAround(target: Int, range: Int) = target in (this - range / 2)..(this + range / 2)
+
+
+        fun distance(fromX: Int, fromY: Int, toX: Int, toY: Int) = sqrt((abs(toX - fromX) + abs(toY - fromY)).toDouble())
+
         val v = views.getOrNull(editingView)
 
         editingPos = if (v != null && v.canResize) when {
-            (xCenter + v.startX).isAround(x, 4) && (yCenter + v.startY).isAround(y, 4) -> 1
-            (xCenter + v.startX).isAround(x, 4) && (yCenter + v.endY).isAround(y, 4) -> 2
-            (xCenter + v.endX).isAround(x, 4) && (yCenter + v.startY).isAround(y, 4) -> 3
-            (xCenter + v.endX).isAround(x, 4) && (yCenter + v.endY).isAround(y, 4) -> 4
+            (xCenter + v.startX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10) -> 1
+            (xCenter + v.startX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10) -> 2
+            (xCenter + v.endX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10) -> 3
+            (xCenter + v.endX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10) -> 4
             else -> -1
         } else -1
 

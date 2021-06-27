@@ -81,6 +81,8 @@ class ShowCommand : Command("show") {
             }.toJson().asPacket())
         }
 
+        if (targetUsers.size == 1 && targetUsers.first().uniqueId == player!!.uniqueId) return
+
         send {
             append("${targetGui.nameWithoutExtension}を", Color.GREEN)
             targetUsers.mapNotNull { it.playerProfile.name?.asTextComponent() }
