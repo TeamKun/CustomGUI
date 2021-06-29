@@ -25,7 +25,7 @@ object EditorGUI : GUI() {
 
             when (holder.type) {
                 ViewType.TEXT -> (parser as TextViewHolderParser).encode(holder as TextViewHolder)
-                ViewType.RECT -> (parser as TextViewHolderParser).encode(holder as TextViewHolder)
+                ViewType.RECT -> (parser as RectViewHolderParser).encode(holder as RectViewHolder)
                 ViewType.BUTTON -> (parser as TextViewHolderParser).encode(holder as TextViewHolder)
                 ViewType.IMAGE -> (parser as TextViewHolderParser).encode(holder as TextViewHolder)
                 else -> null
