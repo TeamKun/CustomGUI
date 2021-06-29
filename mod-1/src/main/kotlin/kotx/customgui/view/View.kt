@@ -8,7 +8,7 @@ interface View {
     val x2: Int
     val y2: Int
 
-    val renderer: ViewRenderer
+    val renderer: ViewRenderer<out View>
 
     val width: Int
         get() = max(x1, x2) - min(x1, x2)
