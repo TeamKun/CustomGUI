@@ -9,6 +9,7 @@ object EditorGUI : GUI() {
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         holders.sortedBy { it.index }.forEach {
             it.view.renderer.renderPreview(
+                stack,
                 it.view.x1,
                 it.view.y1,
                 it.view.x2,
