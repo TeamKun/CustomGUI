@@ -47,7 +47,7 @@ open class GUI {
             Screen.fill(stack, minX, minY, maxX, maxY, color.rgb)
         }
 
-        fun string(stack: MatrixStack, text: String, x: Int, y: Int, color: Color) {
+        fun text(stack: MatrixStack, text: String, x: Int, y: Int, color: Color) {
             Minecraft.getInstance().fontRenderer.drawString(stack, text, x.toFloat(), y.toFloat(), color.rgb)
         }
 

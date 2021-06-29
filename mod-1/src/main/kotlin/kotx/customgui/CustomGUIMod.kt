@@ -1,7 +1,6 @@
 package kotx.customgui
 
 import kotx.customgui.gateway.*
-import kotx.customgui.view.holder.parsers.*
 import net.minecraft.client.settings.*
 import net.minecraft.client.util.*
 import net.minecraftforge.client.event.*
@@ -19,20 +18,13 @@ class CustomGUIMod {
         const val MOD_ID = "customgui"
         val LOGGER = LoggerFactory.getLogger("CustomGUI")!!
         val openEditorKeyBind = KeyBinding(
-            "CustomGUI編集UIを表示",
+            "Open CustomGUI Editor",
             KeyConflictContext.IN_GAME,
             KeyModifier.CONTROL,
             InputMappings.getInputByCode(GLFW.GLFW_KEY_P, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_P)),
             MOD_ID
         )
         val gatewayClient = GatewayClient()
-
-        private val parsers = listOf(
-            TextViewHolderParser(),
-            RectViewHolderParser(),
-        )
-
-        fun getParser(type: Int) = parsers.find { it.type.value == type }
     }
 
     init {
