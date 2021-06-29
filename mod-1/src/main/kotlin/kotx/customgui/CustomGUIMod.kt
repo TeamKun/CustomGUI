@@ -1,6 +1,7 @@
 package kotx.customgui
 
 import kotx.customgui.gateway.*
+import kotx.customgui.view.*
 import net.minecraft.client.settings.*
 import net.minecraft.client.util.*
 import net.minecraftforge.client.event.*
@@ -25,6 +26,7 @@ class CustomGUIMod {
             MOD_ID
         )
         val gatewayClient = GatewayClient()
+        val viewHandler = ViewHandler()
     }
 
     init {
