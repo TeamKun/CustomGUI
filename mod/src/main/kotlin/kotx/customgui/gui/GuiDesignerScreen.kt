@@ -223,13 +223,31 @@ object GuiDesignerScreen : Screen(StringTextComponent("GUI Designer")), KoinComp
 
         val v = views.getOrNull(editingView)
 
-        editingPos = if (v != null && v.canResize) when {
-            (xCenter + v.startX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10) -> 1
-            (xCenter + v.startX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10) -> 2
-            (xCenter + v.endX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10) -> 3
-            (xCenter + v.endX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10) -> 4
-            else -> -1
-        } else -1
+        val edits = mutableListOf<Int>()
+
+        if (v != null && (xCenter + v.startX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10)) edits.add(1)
+        if (v != null && (xCenter + v.startX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10)) edits.add(1)
+        if (v != null && (xCenter + v.endX).isAround(x, 10) && (yCenter + v.startY).isAround(y, 10)) edits.add(1)
+        if (v != null && (xCenter + v.endX).isAround(x, 10) && (yCenter + v.endY).isAround(y, 10)) edits.add(1)
+
+        editingPos = edits.maxByOrNull {
+            val px = when (it) {
+                1 -> v!!.startX
+                2 -> v!!.startX
+                3 -> v!!.endX
+                4 -> v!!.endX
+                else -> v!!.startX
+            }
+            val py = when (it) {
+                1 -> v.startY
+                2 -> v.endY
+                3 -> v.startY
+                4 -> v.endY
+                else -> v.startY
+            }
+
+            distance(x, y, px, py)
+        } ?: -1
 
         if (!editMode) {
             views.filter {
