@@ -3,8 +3,15 @@ package kotx.customgui.gui
 import com.mojang.blaze3d.matrix.*
 import kotx.customgui.util.*
 import net.minecraft.client.gui.screen.*
+import net.minecraft.client.gui.widget.button.*
 
 class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
+
+    override fun init() {
+        gui.initialize()
+        super.init()
+    }
+
     override fun render(matrixStack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
         gui.draw(matrixStack, mouseX, mouseY)
 
@@ -54,5 +61,13 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
         gui.onKeyRelease(keyCode, modifiers)
 
         return super.keyReleased(keyCode, scanCode, modifiers)
+    }
+
+    fun button(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit) {
+        addButton(Button(
+            x, y, width, height, text.component()
+        ) {
+            it.onClick()
+        })
     }
 }
