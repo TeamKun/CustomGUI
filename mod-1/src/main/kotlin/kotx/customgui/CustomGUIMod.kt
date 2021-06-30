@@ -1,6 +1,8 @@
 package kotx.customgui
 
 import kotx.customgui.gateway.*
+import kotx.customgui.gui.*
+import kotx.customgui.gui.guis.*
 import kotx.customgui.view.*
 import net.minecraft.client.settings.*
 import net.minecraft.client.util.*
@@ -22,7 +24,7 @@ class CustomGUIMod {
             "Open CustomGUI Editor",
             KeyConflictContext.IN_GAME,
             KeyModifier.CONTROL,
-            InputMappings.getInputByCode(GLFW.GLFW_KEY_P, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_P)),
+            InputMappings.getInputByCode(GLFW.GLFW_KEY_O, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_O)),
             MOD_ID
         )
         val gatewayClient = GatewayClient()
@@ -33,12 +35,11 @@ class CustomGUIMod {
         MinecraftForge.EVENT_BUS.register(this)
 
         ClientRegistry.registerKeyBinding(openEditorKeyBind)
-
-        gatewayClient.connect()
     }
 
     @SubscribeEvent
     fun onKeyboard(event: InputEvent.KeyInputEvent) {
-
+        if (openEditorKeyBind.isPressed)
+            GUI.display(EditorGUI)
     }
 }
