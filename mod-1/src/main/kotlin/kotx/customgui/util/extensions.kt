@@ -1,9 +1,17 @@
 package kotx.customgui.util
 
 import kotlinx.serialization.json.*
+import net.minecraft.client.*
+import net.minecraft.client.gui.*
 import net.minecraft.util.text.*
 import java.time.*
 import java.time.format.*
+
+val mc: Minecraft
+    get() = Minecraft.getInstance()
+
+val fontRenderer: FontRenderer
+    get() = mc.fontRenderer
 
 fun String.component() = StringTextComponent(this)
 
