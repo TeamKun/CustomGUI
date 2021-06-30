@@ -20,7 +20,7 @@ class GatewayClient {
         .networkProtocolVersion { NetworkRegistry.ACCEPTVANILLA }
         .simpleChannel()
 
-    fun connect() {
+    init {
         val encoder: BiConsumer<JsonObject, PacketBuffer> = BiConsumer { json, buffer ->
             buffer.writeBytes(json.toString().toByteArray(Charsets.UTF_8))
             buffer.writeByte(0)
@@ -41,8 +41,6 @@ class GatewayClient {
         }
 
         channel.registerMessage(0, JsonObject::class.java, encoder, decoder, consumer)
-
-        send(OpCode.LOAD_GUI, json {})
     }
 
     private val handlers = listOf(
