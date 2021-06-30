@@ -7,7 +7,14 @@ import kotx.customgui.view.views.*
 import java.awt.*
 
 class TextViewParser : ViewParser<TextView> {
-    override fun encode(view: TextView): JsonObject = json { }
+    override fun encode(view: TextView): JsonObject = json {
+        "text" to view.text
+        "color" to view.color.rgb
+        "x1" to view.x1
+        "y1" to view.y1
+        "x2" to view.x2
+        "y2" to view.y2
+    }
 
     override fun decode(json: JsonObject): TextView = TextView(
         json.getString("text"),

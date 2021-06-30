@@ -11,11 +11,15 @@ class TextViewHolderParser : ViewHolderParser<TextViewHolder> {
     override val type: ViewType = ViewType.TEXT
     override val viewParser: ViewParser<TextView> = TextViewParser()
 
-    override fun encode(view: TextViewHolder): JsonObject = json { }
+    override fun encode(holder: TextViewHolder): JsonObject = json {
+        "type" to type.value
+        "index" to holder.index
+        "content" to viewParser.encode(holder.content)
+    }
 
     override fun decode(json: JsonObject): TextViewHolder = TextViewHolder(
         json.getInt("index"),
         ViewType.get(json.getInt("type")),
-        viewParser.decode(json.getObject("view"))
+        viewParser.decode(json.getObject("content"))
     )
 }

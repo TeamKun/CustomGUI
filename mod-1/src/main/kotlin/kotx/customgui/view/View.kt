@@ -10,6 +10,10 @@ interface View {
 
     val renderer: ViewRenderer<out View>
 
+    fun onClick() {
+
+    }
+
     val width: Int
         get() = max(x1, x2) - min(x1, x2)
 
