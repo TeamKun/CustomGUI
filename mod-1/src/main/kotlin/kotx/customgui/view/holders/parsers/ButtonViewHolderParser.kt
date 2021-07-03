@@ -19,7 +19,6 @@ class ButtonViewHolderParser : ViewHolderParser<ButtonViewHolder> {
 
     override fun decode(json: JsonObject): ButtonViewHolder = ButtonViewHolder(
         json.getInt("index"),
-        ViewType.get(json.getInt("type")),
         viewParser.decode(json.getObject("content"))
     )
 }
