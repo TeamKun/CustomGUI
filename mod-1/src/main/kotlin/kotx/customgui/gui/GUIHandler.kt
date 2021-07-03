@@ -3,6 +3,7 @@ package kotx.customgui.gui
 import com.mojang.blaze3d.matrix.*
 import kotx.customgui.util.*
 import net.minecraft.client.gui.screen.*
+import net.minecraft.client.gui.widget.*
 import net.minecraft.client.gui.widget.button.*
 
 class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
@@ -44,9 +45,12 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
 
     override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean {
         val mouseButton = MouseButton.get(button)
-        pressingButtons.removeIf { it.button == button }
 
         gui.onMouseRelease(mouseButton, mouseX.toInt(), mouseY.toInt())
+        if (pressingButtons.find { it.button == button } != null)
+            gui.onMouseClick(mouseButton, mouseX.toInt(), mouseY.toInt())
+
+        pressingButtons.removeIf { it.button == button }
 
         return super.mouseReleased(mouseX, mouseY, button)
     }
@@ -63,11 +67,12 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
         return super.keyReleased(keyCode, scanCode, modifiers)
     }
 
-    fun button(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit) {
-        addButton(Button(
-            x, y, width, height, text.component()
-        ) {
-            it.onClick()
-        })
-    }
+    fun button(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit) = Button(
+        x, y, width, height, text.component()
+    ) {
+        it.onClick()
+    }.also { addButton(it) }
+
+    fun textField(title: String, x: Int, y: Int, width: Int, height: Int) =
+        TextFieldWidget(fontRenderer, x, y, width, height, title.component()).also { addButton(it) }
 }
