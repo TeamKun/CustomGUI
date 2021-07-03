@@ -19,7 +19,6 @@ class RectViewHolderParser : ViewHolderParser<RectViewHolder> {
 
     override fun decode(json: JsonObject): RectViewHolder = RectViewHolder(
         json.getInt("index"),
-        ViewType.get(json.getInt("type")),
         viewParser.decode(json.getObject("content"))
     )
 }

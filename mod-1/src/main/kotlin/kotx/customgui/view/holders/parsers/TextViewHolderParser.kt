@@ -19,7 +19,6 @@ class TextViewHolderParser : ViewHolderParser<TextViewHolder> {
 
     override fun decode(json: JsonObject): TextViewHolder = TextViewHolder(
         json.getInt("index"),
-        ViewType.get(json.getInt("type")),
         viewParser.decode(json.getObject("content"))
     )
 }
