@@ -3,6 +3,7 @@ package kotx.customgui.gui
 import com.mojang.blaze3d.matrix.*
 import kotx.customgui.util.*
 import net.minecraft.client.gui.screen.*
+import net.minecraft.client.gui.widget.*
 import net.minecraft.client.gui.widget.button.Button
 import java.awt.*
 import kotlin.math.*
@@ -38,6 +39,10 @@ open class GUI {
 
     }
 
+    open fun onMouseClick(button: MouseButton, mouseX: Int, mouseY: Int) {
+
+    }
+
     open fun onKeyPress(key: Int, modifiers: Int) {
 
     }
@@ -46,15 +51,50 @@ open class GUI {
 
     }
 
-    fun button(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit = {}) {
-        handler.button(text, x, y, width, height, onClick)
+    fun button(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit = {}): Button {
+        return handler.button(text, x, y, width, height, onClick)
     }
 
-    fun button(text: String, x: Int, y: Int, onClick: Button.() -> Unit = {}) {
+    fun button(text: String, x: Int, y: Int, onClick: Button.() -> Unit = {}): Button {
         val width = fontRenderer.getStringWidth(text) + 50
         val height = fontRenderer.FONT_HEIGHT + 11
 
-        handler.button(text, x, y, width, height, onClick)
+        return handler.button(text, x, y, width, height, onClick)
+    }
+
+    fun buttonCenter(text: String, x: Int, y: Int, width: Int, height: Int, onClick: Button.() -> Unit = {}): Button {
+        return handler.button(text, x - width / 2, y - height / 2, width, height, onClick)
+    }
+
+
+    fun buttonCenter(text: String, x: Int, y: Int, onClick: Button.() -> Unit = {}): Button {
+        val width = fontRenderer.getStringWidth(text) + 50
+        val height = fontRenderer.FONT_HEIGHT + 11
+
+        return handler.button(text, x - width / 2, y - height / 2, width, height, onClick)
+    }
+
+    fun textField(title: String, x: Int, y: Int, width: Int, height: Int): TextFieldWidget {
+        return handler.textField(title, x, y, width, height)
+    }
+
+    fun textField(title: String, x: Int, y: Int): TextFieldWidget {
+        val width = fontRenderer.getStringWidth(title) + 50
+        val height = fontRenderer.FONT_HEIGHT + 11
+
+        return handler.textField(title, x, y, width, height)
+    }
+
+    fun textFieldCenter(title: String, x: Int, y: Int, width: Int, height: Int): TextFieldWidget {
+        return handler.textField(title, x - width / 2, y - height / 2, width, height)
+    }
+
+
+    fun textFieldCenter(title: String, x: Int, y: Int): TextFieldWidget {
+        val width = fontRenderer.getStringWidth(title) + 50
+        val height = fontRenderer.FONT_HEIGHT + 11
+
+        return handler.textField(title, x - width / 2, y - height / 2, width, height)
     }
 
     companion object {
