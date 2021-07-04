@@ -27,6 +27,10 @@ open class GUI {
 
     }
 
+    open fun onMouseDragDiff(button: MouseButton, x: Int, y: Int) {
+
+    }
+
     open fun onMouseMove(mouseX: Int, mouseY: Int) {
 
     }
@@ -39,15 +43,15 @@ open class GUI {
 
     }
 
-    open fun onMouseClick(button: MouseButton, mouseX: Int, mouseY: Int) {
-
-    }
-
     open fun onKeyPress(key: Int, modifiers: Int) {
 
     }
 
     open fun onKeyRelease(key: Int, modifiers: Int) {
+
+    }
+
+    open fun onClose() {
 
     }
 
