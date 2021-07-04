@@ -3,7 +3,7 @@ package kotx.customgui.gateway.handlers
 import kotlinx.serialization.json.*
 import kotx.customgui.*
 import kotx.customgui.gateway.*
-import kotx.customgui.gui.guis.*
+import kotx.customgui.gui.guis.editor.*
 import kotx.customgui.util.*
 import kotx.customgui.view.*
 
