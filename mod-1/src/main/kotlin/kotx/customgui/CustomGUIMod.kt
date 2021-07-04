@@ -2,13 +2,15 @@ package kotx.customgui
 
 import kotx.customgui.gateway.*
 import kotx.customgui.gui.*
-import kotx.customgui.gui.guis.*
+import kotx.customgui.gui.guis.editor.*
+import kotx.customgui.util.*
 import kotx.customgui.view.*
 import net.minecraft.client.settings.*
 import net.minecraft.client.util.*
 import net.minecraftforge.client.event.*
 import net.minecraftforge.client.settings.*
 import net.minecraftforge.common.*
+import net.minecraftforge.event.*
 import net.minecraftforge.eventbus.api.*
 import net.minecraftforge.fml.client.registry.*
 import net.minecraftforge.fml.common.*
@@ -41,5 +43,10 @@ class CustomGUIMod {
     fun onKeyboard(event: InputEvent.KeyInputEvent) {
         if (openEditorKeyBind.isPressed)
             GUI.display(EditorGUI)
+    }
+
+    @SubscribeEvent
+    fun onRender(event: TickEvent.RenderTickEvent) {
+        MainThreadExecutor.consume()
     }
 }
