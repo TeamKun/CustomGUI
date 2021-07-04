@@ -8,15 +8,29 @@ import kotx.customgui.view.holders.*
 import kotx.customgui.view.renderers.*
 import org.lwjgl.glfw.*
 import java.awt.*
+import kotlin.math.*
 
 object EditorGUI : GUI() {
     val holders = mutableListOf<ViewHolder>()
-    val creators = listOf<ViewCreator<out View>>(
-        TextViewCreator()
+    val creators = listOf(
+        TextViewCreator(),
+        RectViewCreator(),
     )
 
-    private const val editorWidth = 360
-    private const val editorHeight = 203
+    const val editorWidth = 360
+    const val editorHeight = 203
+
+    val left: Int
+        get() = (width / 2) - (editorWidth / 2)
+
+    val right: Int
+        get() = (width / 2) + (editorWidth / 2)
+
+    val top: Int
+        get() = (height / 2) - (editorHeight / 2)
+
+    val bottom: Int
+        get() = (height / 2) + (editorHeight / 2)
 
     var selectingCreator: Int = -1
 
@@ -29,7 +43,7 @@ object EditorGUI : GUI() {
             buttonCenter(
                 creator.type.capitalizedName(),
                 x,
-                50
+                35
             ) {
                 selectingCreator = i
             }
@@ -52,13 +66,16 @@ object EditorGUI : GUI() {
                 else -> ""
             }
 
-            textCenter(stack, text, width / 2, 50, Color.WHITE)
+            textCenter(stack, text, width / 2, 55, Color.WHITE)
 
             if (lastLocation == null) {
-                rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.GREEN)
+                if (isInEditor(mouseX, mouseY))
+                    rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.GREEN)
             } else {
-                rect(stack, lastLocation!!.first, lastLocation!!.second, mouseX, mouseY, Color.YELLOW)
-                rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED)
+                if (isInEditor(mouseX, mouseY))
+                    rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.RED)
+
+                rect(stack, lastLocation!!.first, lastLocation!!.second, max(left, min(right, mouseX)), max(top, min(bottom, mouseY)), Color.YELLOW)
             }
         }
 
@@ -96,7 +113,13 @@ object EditorGUI : GUI() {
     }
 
     override fun onMousePress(button: MouseButton, mouseX: Int, mouseY: Int) {
+        if (button == MouseButton.RIGHT) {
+            lastLocation = null
+            selectingCreator = -1
+        }
+
         if (!isInEditor(mouseX, mouseY)) return
+        if (button != MouseButton.LEFT) return
 
         if (creators.getOrNull(selectingCreator) != null) {
             val creator = creators[selectingCreator]
@@ -137,10 +160,17 @@ object EditorGUI : GUI() {
 
         val view = holders.find { it.moving }?.content ?: return
 
-        view.x1 += x
-        view.y1 += y
-        view.x2 += x
-        view.y2 += y
+        val nextX1 = view.x1 + x
+        val nextY1 = view.y1 + y
+        val nextX2 = view.x2 + x
+        val nextY2 = view.y2 + y
+
+        if (isInEditor(nextX1, nextY1) && isInEditor(nextX2, nextY2)) {
+            view.x1 = nextX1
+            view.y1 = nextY1
+            view.x2 = nextX2
+            view.y2 = nextY2
+        }
     }
 
     override fun onMouseRelease(button: MouseButton, mouseX: Int, mouseY: Int) {
@@ -154,6 +184,8 @@ object EditorGUI : GUI() {
     }
 
     override fun onClose() {
+        lastLocation = null
+        selectingCreator = -1
         holders.forEach {
             it.moving = false
             it.selecting = false
@@ -161,8 +193,7 @@ object EditorGUI : GUI() {
     }
 
     private fun isInEditor(mouseX: Int, mouseY: Int) =
-        mouseX in (width / 2 - editorWidth / 2)..(width / 2 + editorWidth / 2)
-                && mouseY in (height / 2 - editorHeight / 2)..(height / 2 + editorHeight / 2)
+        mouseX in left..right && mouseY in top..bottom
 
     private fun View.isHovering(mouseX: Int, mouseY: Int) = mouseX in x1..x2 && mouseY in y1..y2
 }
