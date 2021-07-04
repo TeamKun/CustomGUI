@@ -10,9 +10,9 @@ import kotlin.math.*
 
 open class GUI {
     private val handler = GUIHandler(this)
-    protected val width
+    val width
         get() = handler.width
-    protected val height
+    val height
         get() = handler.height
 
     open fun initialize() {
