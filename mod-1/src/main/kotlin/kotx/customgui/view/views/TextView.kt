@@ -7,10 +7,11 @@ import java.awt.*
 class TextView(
     val text: String,
     val color: Color,
-    override val x1: Int,
-    override val y1: Int,
-    override val x2: Int,
-    override val y2: Int,
 ) : View {
     override val renderer = TextViewRenderer()
+
+    override var x1: Int = 0
+    override var y1: Int = 0
+    override var x2: Int = 0
+    override var y2: Int = 0
 }
