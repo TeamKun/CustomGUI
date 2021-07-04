@@ -17,9 +17,10 @@ class RectViewParser : ViewParser<RectView> {
 
     override fun decode(json: JsonObject): RectView = RectView(
         Color(json.getInt("color")),
-        json.getInt("x1"),
-        json.getInt("y1"),
-        json.getInt("x2"),
-        json.getInt("y2"),
-    )
+    ).apply {
+        x1 = json.getInt("x1")
+        y1 = json.getInt("y1")
+        x2 = json.getInt("x2")
+        y2 = json.getInt("y2")
+    }
 }

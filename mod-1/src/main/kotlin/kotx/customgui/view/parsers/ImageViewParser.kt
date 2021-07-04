@@ -18,9 +18,10 @@ class ImageViewParser : ViewParser<ImageView> {
     override fun decode(json: JsonObject) = ImageView(
         json.getString("id"),
         json.getString("url"),
-        json.getInt("x1"),
-        json.getInt("y1"),
-        json.getInt("x2"),
-        json.getInt("y2"),
-    )
+    ).apply {
+        x1 = json.getInt("x1")
+        y1 = json.getInt("y1")
+        x2 = json.getInt("x2")
+        y2 = json.getInt("y2")
+    }
 }

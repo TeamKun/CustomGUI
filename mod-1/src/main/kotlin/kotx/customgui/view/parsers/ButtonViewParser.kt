@@ -16,9 +16,10 @@ class ButtonViewParser : ViewParser<ButtonView> {
 
     override fun decode(json: JsonObject): ButtonView = ButtonView(
         json.getString("command"),
-        json.getInt("x1"),
-        json.getInt("y1"),
-        json.getInt("x2"),
-        json.getInt("y2"),
-    )
+    ).apply {
+        x1 = json.getInt("x1")
+        y1 = json.getInt("y1")
+        x2 = json.getInt("x2")
+        y2 = json.getInt("y2")
+    }
 }
