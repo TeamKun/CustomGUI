@@ -1,9 +1,9 @@
 package kotx.customgui.gui
 
 enum class MouseButton(val button: Int) {
-    LEFT(1),
-    RIGHT(2),
-    MIDDLE(3),
+    LEFT(0),
+    RIGHT(1),
+    MIDDLE(2),
     UNKNOWN(-1);
 
     companion object {
