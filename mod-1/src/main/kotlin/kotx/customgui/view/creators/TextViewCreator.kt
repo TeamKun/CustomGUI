@@ -11,8 +11,21 @@ class TextViewCreator : ViewCreator<TextView>() {
     override val points: Int = 1
 
     override fun initialize() {
-        textFieldCenter("テキスト", width / 2, 50, 100, fontRenderer.FONT_HEIGHT + 11)
-        buttonCenter("作成", width / 2, 100)
+        val textField = textFieldCenter("テキスト", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11)
+
+        val button = buttonCenter("作成", width / 2, 100) {
+            build(TextView(textField.text, Color.WHITE).apply {
+                this.x2 = this@TextViewCreator.x1 + fontRenderer.getStringWidth(textField.text)
+                this.y2 = this@TextViewCreator.y1 + fontRenderer.FONT_HEIGHT
+            })
+        }
+
+        textField.setFocused2(true)
+        textField.setResponder {
+            button.active = it.isNotBlank()
+        }
+
+        button.active = false
     }
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
