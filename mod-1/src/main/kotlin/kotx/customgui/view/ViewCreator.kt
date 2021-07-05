@@ -55,8 +55,7 @@ abstract class ViewCreator<T : View> : GUI() {
             }
         }
 
-        if (holder != null)
-            EditorGUI.holders.add(holder)
+        EditorGUI.holders.add(holder!!)
 
         EditorGUI.selectingCreator = -1
         EditorGUI.lastLocation = null

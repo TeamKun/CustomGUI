@@ -74,25 +74,37 @@ object EditorGUI : GUI() {
                 is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
             }
 
-            if (it.selecting) {
-                rect(stack, x1, y1, x2, y1 + 1, Color(100, 0, 0))
-                rect(stack, x1, y1, x1 + 1, y2, Color(100, 0, 0))
-                rect(stack, x1, y2, x2, y2 - 1, Color(100, 0, 0))
-                rect(stack, x2, y1, x2 - 1, y2, Color(100, 0, 0))
-            }
+            when {
+                it.moving -> {
+                    rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
+                    rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
+                    rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
+                    rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
+                }
 
-            if (it.content.isHovering(mouseX, mouseY)) {
-                rect(stack, x1, y1, x2, y1 + 1, Color(200, 0, 0))
-                rect(stack, x1, y1, x1 + 1, y2, Color(200, 0, 0))
-                rect(stack, x1, y2, x2, y2 - 1, Color(200, 0, 0))
-                rect(stack, x2, y1, x2 - 1, y2, Color(200, 0, 0))
-            }
+                it.content.isHovering(mouseX, mouseY) -> {
+                    rect(stack, x1, y1, x2, y1 + 1, Color(200, 0, 0))
+                    rect(stack, x1, y1, x1 + 1, y2, Color(200, 0, 0))
+                    rect(stack, x1, y2, x2, y2 - 1, Color(200, 0, 0))
+                    rect(stack, x2, y1, x2 - 1, y2, Color(200, 0, 0))
+                    rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(200, 0, 0))
+                }
 
-            if (it.moving) {
-                rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
-                rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
-                rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
-                rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
+                it.selecting -> {
+                    rect(stack, x1, y1, x2, y1 + 1, Color(100, 0, 0))
+                    rect(stack, x1, y1, x1 + 1, y2, Color(100, 0, 0))
+                    rect(stack, x1, y2, x2, y2 - 1, Color(100, 0, 0))
+                    rect(stack, x2, y1, x2 - 1, y2, Color(100, 0, 0))
+                    rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(100, 0, 0))
+                    rectCenter(stack, x1, y1, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, x2, y1, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, x1, y2, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, x2, y2, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, (x1 + x2) / 2, y1, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, (x1 + x2) / 2, y2, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, x1, (y1 + y2) / 2, 3, 3, Color(100, 0, 0))
+                    rectCenter(stack, x2, (y1 + y2) / 2, 3, 3, Color(100, 0, 0))
+                }
             }
         }
 
@@ -156,12 +168,14 @@ object EditorGUI : GUI() {
                         }
                     }
                 } else {
+                    holders.forEach {
+                        it.selecting = false
+                        it.moving = false
+                    }
+
                     holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }?.apply {
                         selecting = true
                         moving = true
-                    } ?: holders.forEach {
-                        it.selecting = false
-                        it.moving = false
                     }
                 }
             }
