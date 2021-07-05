@@ -4,6 +4,7 @@ import kotx.customgui.gui.*
 import kotx.customgui.gui.guis.editor.*
 import kotx.customgui.view.holders.*
 import kotx.customgui.view.views.*
+import kotlin.math.*
 
 abstract class ViewCreator<T : View> : GUI() {
     abstract val type: ViewType
@@ -26,44 +27,32 @@ abstract class ViewCreator<T : View> : GUI() {
 
         view.x1 = x1
         view.y1 = y1
-        x2?.also { view.x2 = it }
-        y2?.also { view.y2 = it }
+        view.x2 = x2!!
+        view.y2 = y2!!
 
-        val left = -(EditorGUI.editorWidth / 2)
         val right = (EditorGUI.editorWidth / 2)
-        val top = -(EditorGUI.editorHeight / 2)
         val bottom = (EditorGUI.editorHeight / 2)
 
-        if (view.x1 < left) {
-            val diff = left - view.x1
-            view.x1 += diff
-            view.x2 += diff
+        when {
+            view.x2 > right && view.y2 > bottom -> {
+                val wRatio = view.x2 - right
+                val hRatio = view.y2 - bottom
+                val ratio = max(wRatio, hRatio)
+                view.x2 -= ratio
+                view.y2 -= ratio
+            }
 
-            if (view.x2 > right)
-                view.x2 = right
-        } else if (view.x2 > right) {
-            val diff = view.x2 - right
-            view.x1 -= diff
-            view.x2 -= diff
+            view.x2 > right -> {
+                val ratio = view.x2 - right
+                view.x2 -= ratio
+                view.y2 -= ratio
+            }
 
-            if (view.x1 < left)
-                view.x1 = left
-        }
-
-        if (view.y1 < top) {
-            val diff = top - view.y1
-            view.y1 += diff
-            view.y2 += diff
-
-            if (view.y2 > bottom)
-                view.y2 = bottom
-        } else if (view.y2 > bottom) {
-            val diff = view.y2 - bottom
-            view.y1 -= diff
-            view.y2 -= diff
-
-            if (view.y1 < top)
-                view.y1 = top
+            view.y2 > bottom -> {
+                val ratio = view.y2 - bottom
+                view.x2 -= ratio
+                view.y2 -= ratio
+            }
         }
 
         if (holder != null)
