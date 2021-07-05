@@ -64,15 +64,11 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        gui.onKeyPress(keyCode, modifiers)
-
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return if (gui.onKeyPress(keyCode, modifiers)) super.keyPressed(keyCode, scanCode, modifiers) else false
     }
 
     override fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        gui.onKeyRelease(keyCode, modifiers)
-
-        return super.keyReleased(keyCode, scanCode, modifiers)
+        return if (gui.onKeyRelease(keyCode, modifiers)) super.keyReleased(keyCode, scanCode, modifiers) else false
     }
 
     override fun onClose() {
@@ -89,4 +85,7 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
 
     fun textField(title: String, x: Int, y: Int, width: Int, height: Int) =
         TextFieldWidget(fontRenderer, x, y, width, height, title.component()).also { addButton(it) }
+
+    val buttons: List<Widget>
+        get() = buttons.toList()
 }
