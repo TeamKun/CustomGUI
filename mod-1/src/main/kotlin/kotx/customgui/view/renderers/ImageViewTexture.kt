@@ -25,7 +25,7 @@ class ImageViewTexture(
     }
 
     override fun loadTexture(manager: IResourceManager) {
-        val cacheFile = File("./mods/CustomGUI/caches")
+        val cacheFile = File("./mods/CustomGUI/caches/${view.id}")
         cacheFile.parentFile.mkdirs()
 
         if (cacheFile.exists()) {
