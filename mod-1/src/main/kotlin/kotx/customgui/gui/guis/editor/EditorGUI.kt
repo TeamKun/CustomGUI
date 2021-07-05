@@ -2,6 +2,7 @@ package kotx.customgui.gui.guis.editor
 
 import com.mojang.blaze3d.matrix.*
 import kotx.customgui.gui.*
+import kotx.customgui.gui.MouseButton.*
 import kotx.customgui.view.*
 import kotx.customgui.view.creators.*
 import kotx.customgui.view.holders.*
@@ -121,12 +122,12 @@ object EditorGUI : GUI() {
 
     override fun onMousePress(button: MouseButton, mouseX: Int, mouseY: Int) {
         when (button) {
-            MouseButton.RIGHT -> {
+            RIGHT -> {
                 lastLocation = null
                 selectingCreator = -1
             }
 
-            MouseButton.LEFT -> {
+            LEFT -> {
                 if (buttons.any { it.isHovered }) return
                 if (!isInEditor(mouseX, mouseY)) return
 
@@ -167,7 +168,7 @@ object EditorGUI : GUI() {
     }
 
     override fun onMouseDragDiff(button: MouseButton, x: Int, y: Int) {
-        if (button != MouseButton.LEFT) return
+        if (button != LEFT) return
 
         val view = holders.find { it.moving }?.content ?: return
 
