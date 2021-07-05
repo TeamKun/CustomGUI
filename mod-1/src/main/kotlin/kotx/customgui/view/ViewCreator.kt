@@ -29,10 +29,10 @@ abstract class ViewCreator<T : View> : GUI() {
         x2?.also { view.x2 = it }
         y2?.also { view.y2 = it }
 
-        val left = (EditorGUI.width / 2) - (EditorGUI.editorWidth / 2)
-        val right = (EditorGUI.width / 2) + (EditorGUI.editorWidth / 2)
-        val top = (EditorGUI.height / 2) - (EditorGUI.editorHeight / 2)
-        val bottom = (EditorGUI.height / 2) + (EditorGUI.editorHeight / 2)
+        val left = -(EditorGUI.editorWidth / 2)
+        val right = (EditorGUI.editorWidth / 2)
+        val top = -(EditorGUI.editorHeight / 2)
+        val bottom = (EditorGUI.editorHeight / 2)
 
         if (view.x1 < left) {
             val diff = left - view.x1
