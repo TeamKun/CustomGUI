@@ -14,6 +14,8 @@ interface View {
 
     }
 
+    fun copy(): View
+
     val width: Int
         get() = max(x1, x2) - min(x1, x2)
 

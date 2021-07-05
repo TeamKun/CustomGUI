@@ -5,4 +5,6 @@ interface ViewHolder {
     val content: View
     var moving: Boolean
     var selecting: Boolean
+
+    fun copy(): ViewHolder
 }

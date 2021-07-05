@@ -6,4 +6,6 @@ import kotx.customgui.view.views.*
 class ButtonViewHolder(override val index: Int, override val content: ButtonView) : ViewHolder {
     override var selecting: Boolean = false
     override var moving: Boolean = false
+
+    override fun copy(): ViewHolder = ButtonViewHolder(index, content.copy() as ButtonView)
 }
