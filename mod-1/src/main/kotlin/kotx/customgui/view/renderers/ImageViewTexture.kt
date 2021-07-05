@@ -1,9 +1,11 @@
 package kotx.customgui.view.renderers
 
 import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.*
 import kotx.customgui.util.*
 import kotx.customgui.view.views.*
@@ -19,9 +21,14 @@ class ImageViewTexture(
 ) : SimpleTexture(resourceLocation), CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
-    private val client = HttpClient {
+    private val client = HttpClient(OkHttp) {
         expectSuccess = false
         BrowserUserAgent()
+        defaultRequest {
+            accept(ContentType.Any)
+            header("Accept-Encoding", "")
+            header("Accept-Language", "ja,en-US;q=0.9,en;q=0.8")
+        }
     }
 
     override fun loadTexture(manager: IResourceManager) {
@@ -29,33 +36,43 @@ class ImageViewTexture(
         cacheFile.parentFile.mkdirs()
 
         if (cacheFile.exists()) {
-            loadImage(cacheFile)
+            loadImage(manager, cacheFile)
             return
         }
 
         launch {
-            FileUtils.copyInputStreamToFile(client.get<HttpStatement>(view.url).receive(), cacheFile)
+            val bytes = client.get<HttpStatement>(view.url).receive<InputStream>().readBytes()
+            FileUtils.copyInputStreamToFile(bytes.inputStream(), cacheFile)
 
             MainThreadExecutor.offer {
-                loadImage(cacheFile)
+                loadImage(manager, cacheFile)
             }
         }
     }
 
-    private fun loadImage(cacheFile: File) {
-        TextureUtil.prepareImage(getGlTextureId(), 0, view.width, view.height)
-        NativeImage.read(cacheFile.inputStream()).uploadTextureSub(
+    private fun loadImage(manager: IResourceManager, cacheFile: File) {
+        if (textureLocation == null) {
+            super.loadTexture(manager)
+        }
+
+        deleteGlTexture()
+
+        val inputStream = cacheFile.inputStream().readBytes().inputStream()
+        val image = NativeImage.read(inputStream)
+
+        TextureUtil.prepareImage(getGlTextureId(), 0, image.width, image.height)
+        image.uploadTextureSub(
             0,
             0,
             0,
             0,
             0,
-            view.width,
-            view.height,
+            image.width,
+            image.height,
             blur,
             false,
             false,
-            false
+            true
         )
 
         view.isLoading = false
