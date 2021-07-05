@@ -14,6 +14,8 @@ open class GUI {
         get() = handler.width
     val height
         get() = handler.height
+    val buttons
+        get() = handler.buttons
 
     open fun initialize() {
 
@@ -43,12 +45,12 @@ open class GUI {
 
     }
 
-    open fun onKeyPress(key: Int, modifiers: Int) {
-
+    open fun onKeyPress(key: Int, modifiers: Int): Boolean {
+        return true
     }
 
-    open fun onKeyRelease(key: Int, modifiers: Int) {
-
+    open fun onKeyRelease(key: Int, modifiers: Int): Boolean {
+        return true
     }
 
     open fun onClose() {
