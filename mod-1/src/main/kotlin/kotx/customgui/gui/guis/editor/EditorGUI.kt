@@ -56,8 +56,47 @@ object EditorGUI : GUI() {
         //Editor background
         rectCenter(stack, width / 2, height / 2, editorWidth, editorHeight, Color(12, 12, 12))
 
+        //components
+        holders.sortedBy { it.index }.forEach {
+            val renderer = it.content.renderer
+
+            val x1 = width / 2 + it.content.x1
+            val y1 = height / 2 + it.content.y1
+            val x2 = width / 2 + it.content.x2
+            val y2 = height / 2 + it.content.y2
+
+            when (it) {
+                is TextViewHolder -> (renderer as TextViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
+                is RectViewHolder -> (renderer as RectViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
+                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
+                is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
+            }
+
+            if (it.selecting) {
+                rect(stack, x1, y1, x2, y1 + 1, Color(100, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(100, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(100, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(100, 0, 0))
+            }
+
+            if (it.content.isHovering(mouseX, mouseY)) {
+                rect(stack, x1, y1, x2, y1 + 1, Color(200, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(200, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(200, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(200, 0, 0))
+            }
+
+            if (it.moving) {
+                rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
+            }
+        }
+
         //info
         if (creators.getOrNull(selectingCreator) != null) {
+            rect(stack, 0, 0, width, height, Color(0, 0, 0, 70))
             val creator = creators[selectingCreator]
             val text = when {
                 creator.points == 1 -> "${creator.type.capitalizedName()}を置く場所をクリックしてください。"
@@ -78,80 +117,52 @@ object EditorGUI : GUI() {
                 rect(stack, lastLocation!!.first, lastLocation!!.second, max(left, min(right, mouseX)), max(top, min(bottom, mouseY)), Color.YELLOW)
             }
         }
-
-        //components
-        holders.sortedBy { it.index }.forEach {
-            val renderer = it.content.renderer
-            when (it) {
-                is TextViewHolder -> (renderer as TextViewRenderer).renderPreview(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y2, it.content)
-                is RectViewHolder -> (renderer as RectViewRenderer).renderPreview(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y2, it.content)
-                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderPreview(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y2, it.content)
-                is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y2, it.content)
-            }
-
-            if (it.selecting) {
-                rect(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y1 + 1, Color(100, 0, 0))
-                rect(stack, it.content.x1, it.content.y1, it.content.x1 + 1, it.content.y2, Color(100, 0, 0))
-                rect(stack, it.content.x1, it.content.y2, it.content.x2, it.content.y2 - 1, Color(100, 0, 0))
-                rect(stack, it.content.x2, it.content.y1, it.content.x2 - 1, it.content.y2, Color(100, 0, 0))
-            }
-
-            if (it.content.isHovering(mouseX, mouseY)) {
-                rect(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y1 + 1, Color(200, 0, 0))
-                rect(stack, it.content.x1, it.content.y1, it.content.x1 + 1, it.content.y2, Color(200, 0, 0))
-                rect(stack, it.content.x1, it.content.y2, it.content.x2, it.content.y2 - 1, Color(200, 0, 0))
-                rect(stack, it.content.x2, it.content.y1, it.content.x2 - 1, it.content.y2, Color(200, 0, 0))
-            }
-
-            if (it.moving) {
-                rect(stack, it.content.x1, it.content.y1, it.content.x2, it.content.y1 + 1, Color(255, 0, 0))
-                rect(stack, it.content.x1, it.content.y1, it.content.x1 + 1, it.content.y2, Color(255, 0, 0))
-                rect(stack, it.content.x1, it.content.y2, it.content.x2, it.content.y2 - 1, Color(255, 0, 0))
-                rect(stack, it.content.x2, it.content.y1, it.content.x2 - 1, it.content.y2, Color(255, 0, 0))
-            }
-        }
     }
 
     override fun onMousePress(button: MouseButton, mouseX: Int, mouseY: Int) {
-        if (button == MouseButton.RIGHT) {
-            lastLocation = null
-            selectingCreator = -1
-        }
+        when (button) {
+            MouseButton.RIGHT -> {
+                lastLocation = null
+                selectingCreator = -1
+            }
 
-        if (!isInEditor(mouseX, mouseY)) return
-        if (button != MouseButton.LEFT) return
+            MouseButton.LEFT -> {
+                if (buttons.any { it.isHovered }) return
+                if (!isInEditor(mouseX, mouseY)) return
 
-        if (creators.getOrNull(selectingCreator) != null) {
-            val creator = creators[selectingCreator]
-            when {
-                creator.points == 1 -> {
-                    creator.x1 = mouseX
-                    creator.y1 = mouseY
+                if (creators.getOrNull(selectingCreator) != null) {
+                    val creator = creators[selectingCreator]
+                    when {
+                        creator.points == 1 -> {
+                            creator.x1 = mouseX - width / 2
+                            creator.y1 = mouseY - height / 2
 
-                    display(creator)
-                }
+                            display(creator)
+                        }
 
-                creator.points == 2 && lastLocation != null -> {
-                    creator.x1 = lastLocation!!.first
-                    creator.y1 = lastLocation!!.second
-                    creator.x2 = mouseX
-                    creator.y2 = mouseY
+                        creator.points == 2 && lastLocation != null -> {
+                            creator.x1 = lastLocation!!.first - width / 2
+                            creator.y1 = lastLocation!!.second - height / 2
+                            creator.x2 = mouseX - width / 2
+                            creator.y2 = mouseY - height / 2
 
-                    display(creator)
-                }
+                            display(creator)
+                        }
 
-                else -> {
-                    lastLocation = mouseX to mouseY
+                        else -> {
+                            lastLocation = mouseX to mouseY
+                        }
+                    }
+                } else {
+                    holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }?.apply {
+                        selecting = true
+                        moving = true
+                    } ?: holders.forEach {
+                        it.selecting = false
+                        it.moving = false
+                    }
                 }
             }
-        }
-
-        holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }?.apply {
-            selecting = true
-            moving = true
-        } ?: holders.forEach {
-            it.selecting = false
-            it.moving = false
         }
     }
 
@@ -165,7 +176,7 @@ object EditorGUI : GUI() {
         val nextX2 = view.x2 + x
         val nextY2 = view.y2 + y
 
-        if (isInEditor(nextX1, nextY1) && isInEditor(nextX2, nextY2)) {
+        if (isInEditor(nextX1 + width / 2, nextY1 + height / 2) && isInEditor(nextX2 + width / 2, nextY2 + height / 2)) {
             view.x1 = nextX1
             view.y1 = nextY1
             view.x2 = nextX2
@@ -177,10 +188,27 @@ object EditorGUI : GUI() {
         holders.find { it.moving }?.moving = false
     }
 
-    override fun onKeyPress(key: Int, modifiers: Int) {
-        if (key != GLFW.GLFW_KEY_DELETE) return
+    override fun onKeyPress(key: Int, modifiers: Int): Boolean {
+        when {
+            key == GLFW.GLFW_KEY_DELETE -> holders.removeIf { it.selecting }
+            key == GLFW.GLFW_KEY_ESCAPE && selectingCreator != -1 -> {
+                selectingCreator = -1
+                return false
+            }
+            key == GLFW.GLFW_KEY_C && modifiers == GLFW.GLFW_MOD_CONTROL -> {
+                holders.removeIf { it.selecting }
+            }
 
-        holders.removeIf { it.selecting }
+            key == GLFW.GLFW_KEY_X && modifiers == GLFW.GLFW_MOD_CONTROL -> {
+                holders.removeIf { it.selecting }
+            }
+
+            key == GLFW.GLFW_KEY_V && modifiers == GLFW.GLFW_MOD_CONTROL -> {
+                holders.removeIf { it.selecting }
+            }
+        }
+
+        return true
     }
 
     override fun onClose() {
@@ -195,5 +223,8 @@ object EditorGUI : GUI() {
     private fun isInEditor(mouseX: Int, mouseY: Int) =
         mouseX in left..right && mouseY in top..bottom
 
-    private fun View.isHovering(mouseX: Int, mouseY: Int) = mouseX in x1..x2 && mouseY in y1..y2
+    private fun View.isHovering(mouseX: Int, mouseY: Int): Boolean {
+        return mouseX in (x1 + this@EditorGUI.width / 2)..(x2 + this@EditorGUI.width / 2)
+                && mouseY in (y1 + this@EditorGUI.height / 2)..(y2 + this@EditorGUI.height / 2)
+    }
 }
