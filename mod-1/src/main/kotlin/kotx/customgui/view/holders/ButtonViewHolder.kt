@@ -7,5 +7,5 @@ class ButtonViewHolder(override val index: Int, override val content: ButtonView
     override var selecting: Boolean = false
     override var moving: Boolean = false
 
-    override fun copy(): ViewHolder = ButtonViewHolder(index, content.copy() as ButtonView)
+    override fun copy(newIndex: Int): ViewHolder = ButtonViewHolder(newIndex, content.copy() as ButtonView)
 }

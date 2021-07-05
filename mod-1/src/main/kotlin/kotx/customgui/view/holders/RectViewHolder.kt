@@ -7,5 +7,5 @@ class RectViewHolder(override val index: Int, override val content: RectView) : 
     override var selecting: Boolean = false
     override var moving: Boolean = false
 
-    override fun copy(): ViewHolder = RectViewHolder(index, content.copy() as RectView)
+    override fun copy(newIndex: Int): ViewHolder = RectViewHolder(newIndex, content.copy() as RectView)
 }

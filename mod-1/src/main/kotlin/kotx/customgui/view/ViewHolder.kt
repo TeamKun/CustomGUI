@@ -6,5 +6,5 @@ interface ViewHolder {
     var moving: Boolean
     var selecting: Boolean
 
-    fun copy(): ViewHolder
+    fun copy(newIndex: Int): ViewHolder
 }

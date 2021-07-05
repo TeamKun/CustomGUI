@@ -7,5 +7,5 @@ class ImageViewHolder(override val index: Int, override val content: ImageView) 
     override var selecting: Boolean = false
     override var moving: Boolean = false
 
-    override fun copy(): ViewHolder = ImageViewHolder(index, content.copy() as ImageView)
+    override fun copy(newIndex: Int): ViewHolder = ImageViewHolder(newIndex, content.copy() as ImageView)
 }
