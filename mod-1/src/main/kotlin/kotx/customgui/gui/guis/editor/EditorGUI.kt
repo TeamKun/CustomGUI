@@ -16,6 +16,7 @@ object EditorGUI : GUI() {
     val creators = listOf(
         TextViewCreator(),
         RectViewCreator(),
+        ImageViewCreator()
     )
 
     const val editorWidth = 360
@@ -189,6 +190,7 @@ object EditorGUI : GUI() {
         holders.find { it.moving }?.moving = false
     }
 
+    private var clipboard: ViewHolder? = null
     override fun onKeyPress(key: Int, modifiers: Int): Boolean {
         when {
             key == GLFW.GLFW_KEY_DELETE -> holders.removeIf { it.selecting }
@@ -196,16 +198,24 @@ object EditorGUI : GUI() {
                 selectingCreator = -1
                 return false
             }
+            key == GLFW.GLFW_KEY_ESCAPE && (holders.any { it.selecting } || holders.any { it.moving }) -> {
+                holders.forEach {
+                    it.selecting = false
+                    it.moving = false
+                }
+                return false
+            }
             key == GLFW.GLFW_KEY_C && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.removeIf { it.selecting }
+                holders.find { it.selecting }?.also { clipboard = it.copy() }
             }
 
             key == GLFW.GLFW_KEY_X && modifiers == GLFW.GLFW_MOD_CONTROL -> {
+                holders.find { it.selecting }?.also { clipboard = it.copy() }
                 holders.removeIf { it.selecting }
             }
 
             key == GLFW.GLFW_KEY_V && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.removeIf { it.selecting }
+                clipboard?.also { holders.add(it.copy()) }
             }
         }
 
