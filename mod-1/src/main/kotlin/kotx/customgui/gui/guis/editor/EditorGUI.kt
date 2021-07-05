@@ -206,16 +206,16 @@ object EditorGUI : GUI() {
                 return false
             }
             key == GLFW.GLFW_KEY_C && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.find { it.selecting }?.also { clipboard = it.copy() }
+                holders.find { it.selecting }?.also { clipboard = it.copy(holders.maxOf { it.index } + 1) }
             }
 
             key == GLFW.GLFW_KEY_X && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.find { it.selecting }?.also { clipboard = it.copy() }
+                holders.find { it.selecting }?.also { clipboard = it.copy(holders.maxOf { it.index } + 1) }
                 holders.removeIf { it.selecting }
             }
 
             key == GLFW.GLFW_KEY_V && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                clipboard?.also { holders.add(it.copy()) }
+                clipboard?.also { holders.add(it) }
             }
         }
 
