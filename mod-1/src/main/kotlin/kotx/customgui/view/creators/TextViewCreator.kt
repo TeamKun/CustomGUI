@@ -11,7 +11,11 @@ class TextViewCreator : ViewCreator<TextView>() {
     override val points: Int = 1
 
     override fun initialize() {
-        val textField = textFieldCenter("テキスト", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11)
+        val textField = textFieldCenter("テキスト", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11).apply {
+            setCanLoseFocus(true)
+            setMaxStringLength(1024)
+            setFocused2(true)
+        }
 
         val button = buttonCenter("作成", width / 2, 100) {
             build(TextView(textField.text, Color.WHITE).apply {
@@ -20,7 +24,6 @@ class TextViewCreator : ViewCreator<TextView>() {
             })
         }
 
-        textField.setFocused2(true)
         textField.setResponder {
             button.active = it.isNotBlank()
         }
