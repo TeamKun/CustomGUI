@@ -108,28 +108,28 @@ object EditorGUI : GUI() {
                     val y1 = y1 - 1
                     val x2 = x1 + 2
                     val y2 = y1 + 2
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in x1..x2 && it.second in y1..y2 }
+                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
                 }
                 val leftBottom = object {
                     val x1 = x1 - 1
                     val y1 = y2 - 2
                     val x2 = x1 + 2
                     val y2 = y2 + 1
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in x1..x2 && it.second in y1..y2 }
+                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
                 }
                 val rightTop = object {
                     val x1 = x2 - 2
                     val y1 = y1 - 1
                     val x2 = x2 + 1
                     val y2 = y1 + 2
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in x1..x2 && it.second in y1..y2 }
+                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
                 }
                 val rightBottom = object {
                     val x1 = x2 - 2
                     val y1 = y2 - 2
                     val x2 = x2 + 1
                     val y2 = y2 + 1
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in x1..x2 && it.second in y1..y2 }
+                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
                 }
                 rect(stack, leftTop.x1, leftTop.y1, leftTop.x2, leftTop.y2, if (leftTop.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
                 rect(stack, leftBottom.x1, leftBottom.y1, leftBottom.x2, leftBottom.y2, if (leftBottom.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
