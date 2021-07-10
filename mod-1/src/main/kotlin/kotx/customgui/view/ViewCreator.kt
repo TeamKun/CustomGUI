@@ -1,10 +1,16 @@
 package kotx.customgui.view
 
-import kotx.customgui.gui.*
-import kotx.customgui.gui.guis.editor.*
-import kotx.customgui.view.holders.*
-import kotx.customgui.view.views.*
-import kotlin.math.*
+import kotx.customgui.gui.GUI
+import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.view.holders.ButtonViewHolder
+import kotx.customgui.view.holders.ImageViewHolder
+import kotx.customgui.view.holders.RectViewHolder
+import kotx.customgui.view.holders.TextViewHolder
+import kotx.customgui.view.views.ButtonView
+import kotx.customgui.view.views.ImageView
+import kotx.customgui.view.views.RectView
+import kotx.customgui.view.views.TextView
+import kotlin.math.max
 
 abstract class ViewCreator<T : View> : GUI() {
     abstract val type: ViewType
@@ -58,7 +64,7 @@ abstract class ViewCreator<T : View> : GUI() {
         EditorGUI.holders.add(holder!!)
 
         EditorGUI.selectingCreator = -1
-        EditorGUI.lastLocation = null
+        EditorGUI.creatorLastLocation = null
 
         display(EditorGUI)
     }

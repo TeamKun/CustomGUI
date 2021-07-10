@@ -1,12 +1,14 @@
 package kotx.customgui.gui
 
-import com.mojang.blaze3d.matrix.*
-import kotx.customgui.util.*
-import net.minecraft.client.gui.screen.*
-import net.minecraft.client.gui.widget.*
+import com.mojang.blaze3d.matrix.MatrixStack
+import kotx.customgui.util.fontRenderer
+import kotx.customgui.util.mc
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.button.Button
-import java.awt.*
-import kotlin.math.*
+import java.awt.Color
+import kotlin.math.max
+import kotlin.math.min
 
 open class GUI {
     private val handler = GUIHandler(this)
@@ -114,7 +116,13 @@ open class GUI {
         }
 
         fun rectCenter(stack: MatrixStack, x: Int, y: Int, width: Int, height: Int, color: Color) {
-            rect(stack, x - width / 2, y - height / 2, x + width / 2, y + height / 2, color)
+            val isEvenWidth = width % 2 == 0
+            val isEvenHeight = height % 2 == 0
+
+            val dx = if (isEvenWidth) width / 2 else (width - 1) / 2
+            val dy = if (isEvenHeight) (height / 2) else (height - 1) / 2
+
+            rect(stack, x - dx, y - dy, x + dx, y + dy, color)
         }
 
         fun text(stack: MatrixStack, text: String, x: Int, y: Int, color: Color, shadow: Boolean = false) {
