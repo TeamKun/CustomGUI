@@ -1,11 +1,11 @@
 package kotx.customgui.view.holders
 
-import kotx.customgui.view.*
-import kotx.customgui.view.views.*
+import kotx.customgui.view.ViewHolder
+import kotx.customgui.view.views.RectView
 
-class RectViewHolder(override val index: Int, override val content: RectView) : ViewHolder {
+class RectViewHolder(override var index: Int, override val content: RectView) : ViewHolder {
     override var selecting: Boolean = false
     override var moving: Boolean = false
-
-    override fun copy(newIndex: Int): ViewHolder = RectViewHolder(newIndex, content.copy() as RectView)
+    override var scalable: Boolean = true
+    override var scaling: Boolean = false
 }
