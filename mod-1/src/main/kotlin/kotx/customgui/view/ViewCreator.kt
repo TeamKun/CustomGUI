@@ -16,6 +16,8 @@ abstract class ViewCreator<T : View> : GUI() {
     abstract val type: ViewType
     abstract val points: Int
 
+    var creating = false
+
     var x1: Int = 0
     var y1: Int = 0
     var x2: Int? = null

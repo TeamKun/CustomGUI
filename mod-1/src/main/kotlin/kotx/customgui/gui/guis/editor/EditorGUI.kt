@@ -49,16 +49,17 @@ object EditorGUI : GUI() {
     var selectingCreator: Int = -1
     var creatorLastLocation: Pair<Int, Int>? = null
 
-    var dragLastLocation: Pair<Int, Int>? = null
+    var resizingHolder: Int = -1
+    var resizingCorner = -1
 
     override fun initialize() {
         val w = width / (creators.size + 1)
         creators.forEachIndexed { i, creator ->
             val x = w * (i + 1)
             buttonCenter(
-                    creator.type.capitalizedName(),
-                    x,
-                    35
+                creator.type.capitalizedName(),
+                x,
+                35
             ) {
                 selectingCreator = i
             }
@@ -160,23 +161,11 @@ object EditorGUI : GUI() {
                 }
             }
         }
-
-        if (dragLastLocation != null && creators.getOrNull(selectingCreator) == null) {
-            rect(
-                    stack,
-                    dragLastLocation!!.first,
-                    dragLastLocation!!.second,
-                    max(left, min(right, mouseX)),
-                    max(top, min(bottom, mouseY)),
-                    Color(255, 0, 0, 100)
-            )
-        }
     }
 
     override fun onMousePress(button: MouseButton, mouseX: Int, mouseY: Int) {
         when (button) {
             RIGHT -> {
-                dragLastLocation = null
                 creatorLastLocation = null
                 selectingCreator = -1
             }
@@ -214,16 +203,11 @@ object EditorGUI : GUI() {
                         it.moving = false
                     }
 
-                    val holder = holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }
-
-                    if (holder != null) {
-                        holder.apply {
+                    holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }
+                        ?.apply {
                             selecting = true
                             moving = true
                         }
-                    } else {
-                        dragLastLocation = mouseX to mouseY
-                    }
                 }
             }
         }
@@ -253,7 +237,6 @@ object EditorGUI : GUI() {
 
     override fun onMouseRelease(button: MouseButton, mouseX: Int, mouseY: Int) {
         holders.find { it.moving }?.moving = false
-        dragLastLocation = null
     }
 
     private var clipboard: ViewHolder? = null
