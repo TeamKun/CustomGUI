@@ -7,6 +7,7 @@ import kotx.customgui.gui.MouseButton
 import kotx.customgui.gui.MouseButton.LEFT
 import kotx.customgui.gui.MouseButton.RIGHT
 import kotx.customgui.util.asJsonObject
+import kotx.customgui.util.fontRenderer
 import kotx.customgui.view.View
 import kotx.customgui.view.ViewHolder
 import kotx.customgui.view.creators.ImageViewCreator
@@ -53,9 +54,6 @@ object EditorGUI : GUI() {
     var creatorLastLocation: Pair<Int, Int>? = null
 
     var scalingCorner = -1
-    var aspectRatio: Double? = null
-
-    var pressShift = false
 
     override fun initialize() {
         val w = width / (creators.size + 1)
@@ -134,12 +132,14 @@ object EditorGUI : GUI() {
                 rect(stack, x1, y1, x1 + 1, y2, Color(100, 0, 0))
                 rect(stack, x1, y2, x2, y2 - 1, Color(100, 0, 0))
                 rect(stack, x2, y1, x2 - 1, y2, Color(100, 0, 0))
+                val color = if (selectContent.moving) 250 else if (selectContent.content.isHovering(
+                        mouseX,
+                        mouseY
+                    )
+                ) 200 else 100
+                rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(color, 0, 0))
 
                 if (!selectContent.moving && selectContent.scalable) {
-                    val color = if (selectContent.content.isHovering(mouseX, mouseY)) 200 else 100
-                    //center
-                    rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(color, 0, 0))
-                    //corner
                     val leftTop = object {
                         val x1 = x1 - 1
                         val y1 = y1 - 1
@@ -228,10 +228,53 @@ object EditorGUI : GUI() {
                 val x2 = width / 2 + moveContent.content.x2
                 val y2 = height / 2 + moveContent.content.y2
 
+                rect(
+                    stack,
+                    width / 2 - 1,
+                    height / 2 - editorHeight / 2,
+                    width / 2 + 1,
+                    height / 2 + editorHeight / 2,
+                    Color(255, 255, 255, 100)
+                )
+                rect(
+                    stack,
+                    width / 2 - editorWidth / 2,
+                    height / 2 - 1,
+                    width / 2 + editorWidth / 2,
+                    height / 2 + 1,
+                    Color(255, 255, 255, 100)
+                )
+
                 rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
                 rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
                 rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
                 rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
+
+                val text =
+                    "${moveContent.content.x1 + (moveContent.content.width / 2)}, ${moveContent.content.y1 + (moveContent.content.height / 2)}"
+                rect(
+                    stack,
+                    mouseX,
+                    mouseY,
+                    mouseX + fontRenderer.getStringWidth(text) + 10,
+                    mouseY + fontRenderer.FONT_HEIGHT + 10,
+                    Color(0, 0, 0, 150)
+                )
+                text(stack, text, mouseX + 5, mouseY + 5, Color.WHITE)
+            }
+
+            val scaleContent = holders.find { it.scaling }
+            if (scaleContent != null) {
+                val text = "${scaleContent.content.width}, ${scaleContent.content.height}"
+                rect(
+                    stack,
+                    mouseX,
+                    mouseY,
+                    mouseX + fontRenderer.getStringWidth(text) + 10,
+                    mouseY + fontRenderer.FONT_HEIGHT + 10,
+                    Color(0, 0, 0, 150)
+                )
+                text(stack, text, mouseX + 5, mouseY + 5, Color.WHITE)
             }
         }
     }
@@ -254,6 +297,11 @@ object EditorGUI : GUI() {
                             creator.x1 = mouseX - width / 2
                             creator.y1 = mouseY - height / 2
 
+                            holders.forEach {
+                                it.selecting = false
+                                it.scaling = false
+                                it.moving = false
+                            }
                             display(creator)
                         }
 
@@ -262,6 +310,12 @@ object EditorGUI : GUI() {
                             creator.y1 = creatorLastLocation!!.second - height / 2
                             creator.x2 = mouseX - width / 2
                             creator.y2 = mouseY - height / 2
+
+                            holders.forEach {
+                                it.selecting = false
+                                it.scaling = false
+                                it.moving = false
+                            }
 
                             display(creator)
                         }
@@ -316,33 +370,21 @@ object EditorGUI : GUI() {
                             leftTop.validator(mouseX to mouseY) -> {
                                 scalingCorner = 1
                                 selectContent.scaling = true
-                                if (pressShift)
-                                    aspectRatio =
-                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
                             }
 
                             leftBottom.validator(mouseX to mouseY) -> {
                                 scalingCorner = 2
                                 selectContent.scaling = true
-                                if (pressShift)
-                                    aspectRatio =
-                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
                             }
 
                             rightTop.validator(mouseX to mouseY) -> {
                                 scalingCorner = 3
                                 selectContent.scaling = true
-                                if (pressShift)
-                                    aspectRatio =
-                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
                             }
 
                             rightBottom.validator(mouseX to mouseY) -> {
                                 scalingCorner = 4
                                 selectContent.scaling = true
-                                if (pressShift)
-                                    aspectRatio =
-                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
                             }
 
                             else -> {
@@ -444,14 +486,47 @@ object EditorGUI : GUI() {
         }
     }
 
+    var lastClick: Int? = null
+    var lastRelease: Long? = null
     override fun onMouseRelease(button: MouseButton, mouseX: Int, mouseY: Int) {
         holders.find { it.moving }?.moving = false
         holders.find { it.scaling }?.scaling = false
+
+        val l = holders.indexOfFirst { it.selecting }
+        if (l == lastClick && l != -1) {
+            if (System.currentTimeMillis() - (lastRelease ?: 0) < 200) {
+                val h = holders.find { it.selecting }!!
+                val creator = when (h) {
+                    is TextViewHolder -> TextViewCreator().apply {
+                        this.x1 = h.content.x1
+                        this.y1 = h.content.y1
+                        initView = h
+                    }
+                    is RectViewHolder -> RectViewCreator().apply {
+                        this.x1 = h.content.x1
+                        this.y1 = h.content.y1
+                        this.x2 = h.content.x2
+                        this.y2 = h.content.y2
+                        initView = h
+                    }
+                    is ImageViewHolder -> ImageViewCreator().apply {
+                        this.x1 = h.content.x1
+                        this.y1 = h.content.y1
+                        initView = h
+                    }
+                    else -> null
+                }
+                if (creator != null)
+                    display(creator)
+            }
+            lastRelease = System.currentTimeMillis()
+        }
+
+        lastClick = l
     }
 
     var clipboard: String? = null
     override fun onKeyPress(key: Int, modifiers: Int): Boolean {
-        if (modifiers == GLFW.GLFW_MOD_SHIFT) pressShift = true
         when {
             key == GLFW.GLFW_KEY_DELETE -> holders.removeIf { it.selecting }
             key == GLFW.GLFW_KEY_ESCAPE && selectingCreator != -1 -> {
@@ -492,12 +567,6 @@ object EditorGUI : GUI() {
                 if (parsed != null) holders.add(parsed)
             }
         }
-
-        return true
-    }
-
-    override fun onKeyRelease(key: Int, modifiers: Int): Boolean {
-        if (modifiers == GLFW.GLFW_MOD_SHIFT) pressShift = false
 
         return true
     }
