@@ -1,15 +1,17 @@
 package kotx.customgui.view.holders.parsers
 
-import kotlinx.serialization.json.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.holders.*
-import kotx.customgui.view.parsers.*
-import kotx.customgui.view.views.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.util.getInt
+import kotx.customgui.util.getObject
+import kotx.customgui.util.json
+import kotx.customgui.view.ViewHolderParser
+import kotx.customgui.view.ViewType
+import kotx.customgui.view.holders.ImageViewHolder
+import kotx.customgui.view.parsers.ImageViewParser
 
 class ImageViewHolderParser : ViewHolderParser<ImageViewHolder> {
     override val type: ViewType = ViewType.IMAGE
-    override val viewParser: ViewParser<ImageView> = ImageViewParser()
+    override val viewParser = ImageViewParser()
 
     override fun encode(holder: ImageViewHolder): JsonObject = json {
         "type" to type.value
