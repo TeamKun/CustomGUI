@@ -1,10 +1,12 @@
 package kotx.customgui.gui.guis.editor
 
 import com.mojang.blaze3d.matrix.MatrixStack
+import kotx.customgui.CustomGUIMod
 import kotx.customgui.gui.GUI
 import kotx.customgui.gui.MouseButton
 import kotx.customgui.gui.MouseButton.LEFT
 import kotx.customgui.gui.MouseButton.RIGHT
+import kotx.customgui.util.asJsonObject
 import kotx.customgui.view.View
 import kotx.customgui.view.ViewHolder
 import kotx.customgui.view.creators.ImageViewCreator
@@ -20,15 +22,16 @@ import kotx.customgui.view.renderers.RectViewRenderer
 import kotx.customgui.view.renderers.TextViewRenderer
 import org.lwjgl.glfw.GLFW
 import java.awt.Color
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
 object EditorGUI : GUI() {
     val holders = mutableListOf<ViewHolder>()
     val creators = listOf(
-            TextViewCreator(),
-            RectViewCreator(),
-            ImageViewCreator()
+        TextViewCreator(),
+        RectViewCreator(),
+        ImageViewCreator()
     )
 
     const val editorWidth = 360
@@ -49,8 +52,10 @@ object EditorGUI : GUI() {
     var selectingCreator: Int = -1
     var creatorLastLocation: Pair<Int, Int>? = null
 
-    var resizingHolder: Int = -1
-    var resizingCorner = -1
+    var scalingCorner = -1
+    var aspectRatio: Double? = null
+
+    var pressShift = false
 
     override fun initialize() {
         val w = width / (creators.size + 1)
@@ -72,7 +77,6 @@ object EditorGUI : GUI() {
         //Editor background
         rectCenter(stack, width / 2, height / 2, editorWidth, editorHeight, Color(12, 12, 12))
 
-        //components
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
@@ -86,56 +90,6 @@ object EditorGUI : GUI() {
                 is RectViewHolder -> (renderer as RectViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
                 is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
                 is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
-            }
-
-            val color = when {
-                it.moving -> 255
-                it.content.isHovering(mouseX, mouseY) -> 200
-                it.selecting -> 100
-                else -> 0
-            }
-
-            rect(stack, x1, y1, x2, y1 + 1, Color(color, 0, 0))
-            rect(stack, x1, y1, x1 + 1, y2, Color(color, 0, 0))
-            rect(stack, x1, y2, x2, y2 - 1, Color(color, 0, 0))
-            rect(stack, x2, y1, x2 - 1, y2, Color(color, 0, 0))
-
-            if (it.selecting && !it.moving) {
-                //center
-                rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(color, 0, 0))
-                //corner
-                val leftTop = object {
-                    val x1 = x1 - 1
-                    val y1 = y1 - 1
-                    val x2 = x1 + 2
-                    val y2 = y1 + 2
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
-                }
-                val leftBottom = object {
-                    val x1 = x1 - 1
-                    val y1 = y2 - 2
-                    val x2 = x1 + 2
-                    val y2 = y2 + 1
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
-                }
-                val rightTop = object {
-                    val x1 = x2 - 2
-                    val y1 = y1 - 1
-                    val x2 = x2 + 1
-                    val y2 = y1 + 2
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
-                }
-                val rightBottom = object {
-                    val x1 = x2 - 2
-                    val y1 = y2 - 2
-                    val x2 = x2 + 1
-                    val y2 = y2 + 1
-                    val validator: (Pair<Int, Int>) -> Boolean = { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
-                }
-                rect(stack, leftTop.x1, leftTop.y1, leftTop.x2, leftTop.y2, if (leftTop.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
-                rect(stack, leftBottom.x1, leftBottom.y1, leftBottom.x2, leftBottom.y2, if (leftBottom.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
-                rect(stack, rightTop.x1, rightTop.y1, rightTop.x2, rightTop.y2, if (rightTop.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
-                rect(stack, rightBottom.x1, rightBottom.y1, rightBottom.x2, rightBottom.y2, if (rightBottom.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0))
             }
         }
 
@@ -153,12 +107,131 @@ object EditorGUI : GUI() {
             textCenter(stack, text, width / 2, 55, Color.WHITE)
 
             if (creatorLastLocation == null) {
-                if (isInEditor(mouseX, mouseY))
-                    rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.GREEN)
+                if (isInEditor(mouseX, mouseY)) {
+                }
+                rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.GREEN)
             } else {
                 if (isInEditor(mouseX, mouseY)) {
-                    rect(stack, creatorLastLocation!!.first, creatorLastLocation!!.second, max(left, min(right, mouseX)), max(top, min(bottom, mouseY)), Color(255, 0, 0, 100))
+                    rect(
+                        stack,
+                        creatorLastLocation!!.first,
+                        creatorLastLocation!!.second,
+                        max(left, min(right, mouseX)),
+                        max(top, min(bottom, mouseY)),
+                        Color(255, 0, 0, 100)
+                    )
                 }
+            }
+        } else {
+            val selectContent = holders.find { it.selecting }
+            if (selectContent != null) {
+                val x1 = width / 2 + selectContent.content.x1
+                val y1 = height / 2 + selectContent.content.y1
+                val x2 = width / 2 + selectContent.content.x2
+                val y2 = height / 2 + selectContent.content.y2
+
+                rect(stack, x1, y1, x2, y1 + 1, Color(100, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(100, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(100, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(100, 0, 0))
+
+                if (!selectContent.moving && selectContent.scalable) {
+                    val color = if (selectContent.content.isHovering(mouseX, mouseY)) 200 else 100
+                    //center
+                    rectCenter(stack, (x1 + x2) / 2, (y1 + y2) / 2, 2, 2, Color(color, 0, 0))
+                    //corner
+                    val leftTop = object {
+                        val x1 = x1 - 1
+                        val y1 = y1 - 1
+                        val x2 = x1 + 2
+                        val y2 = y1 + 2
+                        val validator: (Pair<Int, Int>) -> Boolean =
+                            { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                    }
+                    val leftBottom = object {
+                        val x1 = x1 - 1
+                        val y1 = y2 - 2
+                        val x2 = x1 + 2
+                        val y2 = y2 + 1
+                        val validator: (Pair<Int, Int>) -> Boolean =
+                            { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                    }
+                    val rightTop = object {
+                        val x1 = x2 - 2
+                        val y1 = y1 - 1
+                        val x2 = x2 + 1
+                        val y2 = y1 + 2
+                        val validator: (Pair<Int, Int>) -> Boolean =
+                            { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                    }
+                    val rightBottom = object {
+                        val x1 = x2 - 2
+                        val y1 = y2 - 2
+                        val x2 = x2 + 1
+                        val y2 = y2 + 1
+                        val validator: (Pair<Int, Int>) -> Boolean =
+                            { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                    }
+
+                    rect(
+                        stack,
+                        leftTop.x1,
+                        leftTop.y1,
+                        leftTop.x2,
+                        leftTop.y2,
+                        if (leftTop.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0)
+                    )
+                    rect(
+                        stack,
+                        leftBottom.x1,
+                        leftBottom.y1,
+                        leftBottom.x2,
+                        leftBottom.y2,
+                        if (leftBottom.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0)
+                    )
+                    rect(
+                        stack,
+                        rightTop.x1,
+                        rightTop.y1,
+                        rightTop.x2,
+                        rightTop.y2,
+                        if (rightTop.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0)
+                    )
+                    rect(
+                        stack,
+                        rightBottom.x1,
+                        rightBottom.y1,
+                        rightBottom.x2,
+                        rightBottom.y2,
+                        if (rightBottom.validator(mouseX to mouseY)) Color.RED else Color(color, 0, 0)
+                    )
+                }
+            }
+
+            val hoverContent = holders.sortedByDescending { it.index }.find { it.content.isHovering(mouseX, mouseY) }
+            if (hoverContent != null) {
+                val x1 = width / 2 + hoverContent.content.x1
+                val y1 = height / 2 + hoverContent.content.y1
+                val x2 = width / 2 + hoverContent.content.x2
+                val y2 = height / 2 + hoverContent.content.y2
+
+                rect(stack, x1, y1, x2, y1 + 1, Color(200, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(200, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(200, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(200, 0, 0))
+            }
+
+            val moveContent = holders.find { it.moving }
+            if (moveContent != null) {
+                val x1 = width / 2 + moveContent.content.x1
+                val y1 = height / 2 + moveContent.content.y1
+                val x2 = width / 2 + moveContent.content.x2
+                val y2 = height / 2 + moveContent.content.y2
+
+                rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
+                rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
+                rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
+                rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
             }
         }
     }
@@ -198,16 +271,109 @@ object EditorGUI : GUI() {
                         }
                     }
                 } else {
-                    holders.forEach {
-                        it.selecting = false
-                        it.moving = false
-                    }
+                    val selectContent = holders.find { it.selecting }
 
-                    holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }
-                        ?.apply {
-                            selecting = true
-                            moving = true
+                    if (selectContent != null && selectContent.scalable) {
+                        val x1 = width / 2 + selectContent.content.x1
+                        val y1 = height / 2 + selectContent.content.y1
+                        val x2 = width / 2 + selectContent.content.x2
+                        val y2 = height / 2 + selectContent.content.y2
+
+                        val leftTop = object {
+                            val x1 = x1 - 1
+                            val y1 = y1 - 1
+                            val x2 = x1 + 2
+                            val y2 = y1 + 2
+                            val validator: (Pair<Int, Int>) -> Boolean =
+                                { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
                         }
+                        val leftBottom = object {
+                            val x1 = x1 - 1
+                            val y1 = y2 - 2
+                            val x2 = x1 + 2
+                            val y2 = y2 + 1
+                            val validator: (Pair<Int, Int>) -> Boolean =
+                                { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                        }
+                        val rightTop = object {
+                            val x1 = x2 - 2
+                            val y1 = y1 - 1
+                            val x2 = x2 + 1
+                            val y2 = y1 + 2
+                            val validator: (Pair<Int, Int>) -> Boolean =
+                                { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                        }
+                        val rightBottom = object {
+                            val x1 = x2 - 2
+                            val y1 = y2 - 2
+                            val x2 = x2 + 1
+                            val y2 = y2 + 1
+                            val validator: (Pair<Int, Int>) -> Boolean =
+                                { it.first in this.x1..this.x2 && it.second in this.y1..this.y2 }
+                        }
+
+                        when {
+                            leftTop.validator(mouseX to mouseY) -> {
+                                scalingCorner = 1
+                                selectContent.scaling = true
+                                if (pressShift)
+                                    aspectRatio =
+                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
+                            }
+
+                            leftBottom.validator(mouseX to mouseY) -> {
+                                scalingCorner = 2
+                                selectContent.scaling = true
+                                if (pressShift)
+                                    aspectRatio =
+                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
+                            }
+
+                            rightTop.validator(mouseX to mouseY) -> {
+                                scalingCorner = 3
+                                selectContent.scaling = true
+                                if (pressShift)
+                                    aspectRatio =
+                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
+                            }
+
+                            rightBottom.validator(mouseX to mouseY) -> {
+                                scalingCorner = 4
+                                selectContent.scaling = true
+                                if (pressShift)
+                                    aspectRatio =
+                                        selectContent.content.width.toDouble() / selectContent.content.height.toDouble()
+                            }
+
+                            else -> {
+                                holders.forEach {
+                                    it.selecting = false
+                                    it.moving = false
+                                    it.scaling = false
+                                }
+
+                                holders.sortedByDescending { it.index }
+                                    .firstOrNull { it.content.isHovering(mouseX, mouseY) }?.apply {
+                                        selecting = true
+                                        moving = true
+                                        scaling = false
+                                    }
+                            }
+                        }
+                    } else {
+                        holders.forEach {
+                            it.selecting = false
+                            it.moving = false
+                            it.scaling = false
+                        }
+
+                        holders.sortedByDescending { it.index }.firstOrNull { it.content.isHovering(mouseX, mouseY) }
+                            ?.apply {
+                                selecting = true
+                                moving = true
+                                scaling = false
+                            }
+                    }
                 }
             }
         }
@@ -216,31 +382,76 @@ object EditorGUI : GUI() {
     override fun onMouseDragDiff(button: MouseButton, x: Int, y: Int) {
         if (button != LEFT) return
 
-        val view = holders.find { it.moving }?.content
+        when {
+            holders.find { it.moving } != null -> {
+                val view = holders.find { it.moving }!!.content
 
-        if (view == null) {
-            //select items
-        } else {
-            val nextX1 = view.x1 + x
-            val nextY1 = view.y1 + y
-            val nextX2 = view.x2 + x
-            val nextY2 = view.y2 + y
+                val nextX1 = view.x1 + x
+                val nextY1 = view.y1 + y
+                val nextX2 = view.x2 + x
+                val nextY2 = view.y2 + y
 
-            if (isInEditor(nextX1 + width / 2, nextY1 + height / 2) && isInEditor(nextX2 + width / 2, nextY2 + height / 2)) {
-                view.x1 = nextX1
-                view.y1 = nextY1
-                view.x2 = nextX2
-                view.y2 = nextY2
+                if (isInEditor(nextX1 + width / 2, nextY1 + height / 2) &&
+                    isInEditor(nextX2 + width / 2, nextY2 + height / 2)
+                ) {
+                    view.x1 = nextX1
+                    view.y1 = nextY1
+                    view.x2 = nextX2
+                    view.y2 = nextY2
+                }
+            }
+
+            holders.find { it.scaling } != null -> {
+                val view = holders.find { it.scaling }!!.content
+                var nextX1 = view.x1
+                var nextY1 = view.y1
+                var nextX2 = view.x2
+                var nextY2 = view.y2
+
+                when (scalingCorner) {
+                    1 -> {
+                        nextX1 += x
+                        nextY1 += y
+                    }
+
+                    2 -> {
+                        nextX1 += x
+                        nextY2 += y
+                    }
+
+                    3 -> {
+                        nextX2 += x
+                        nextY1 += y
+                    }
+
+                    4 -> {
+                        nextX2 += x
+                        nextY2 += y
+                    }
+                }
+
+                if (isInEditor(nextX1 + width / 2, nextY1 + height / 2) &&
+                    isInEditor(nextX2 + width / 2, nextY2 + height / 2) &&
+                    abs(nextX1 - nextX2) > 0 &&
+                    abs(nextY1 - nextY2) > 0
+                ) {
+                    view.x1 = nextX1
+                    view.y1 = nextY1
+                    view.x2 = nextX2
+                    view.y2 = nextY2
+                }
             }
         }
     }
 
     override fun onMouseRelease(button: MouseButton, mouseX: Int, mouseY: Int) {
         holders.find { it.moving }?.moving = false
+        holders.find { it.scaling }?.scaling = false
     }
 
-    private var clipboard: ViewHolder? = null
+    var clipboard: String? = null
     override fun onKeyPress(key: Int, modifiers: Int): Boolean {
+        if (modifiers == GLFW.GLFW_MOD_SHIFT) pressShift = true
         when {
             key == GLFW.GLFW_KEY_DELETE -> holders.removeIf { it.selecting }
             key == GLFW.GLFW_KEY_ESCAPE && selectingCreator != -1 -> {
@@ -255,18 +466,38 @@ object EditorGUI : GUI() {
                 return false
             }
             key == GLFW.GLFW_KEY_C && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.find { it.selecting }?.also { clipboard = it.copy(holders.maxOf { it.index } + 1) }
+                clipboard = holders.find { it.selecting }
+                    ?.let { CustomGUIMod.viewHandler.encode(it) }
+                    .toString()
             }
 
             key == GLFW.GLFW_KEY_X && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                holders.find { it.selecting }?.also { clipboard = it.copy(holders.maxOf { it.index } + 1) }
+                clipboard = holders.find { it.selecting }
+                    ?.let { CustomGUIMod.viewHandler.encode(it) }
+                    .toString()
+
                 holders.removeIf { it.selecting }
             }
 
             key == GLFW.GLFW_KEY_V && modifiers == GLFW.GLFW_MOD_CONTROL -> {
-                clipboard?.also { holders.add(it) }
+                val clipboard = try {
+                    clipboard?.asJsonObject()
+                } catch (e: Exception) {
+                    null
+                }
+
+                val targetIndex = (holders.maxOfOrNull { it.index } ?: 0) + 1
+                val parsed = clipboard?.let { CustomGUIMod.viewHandler.decode(it) }?.also { it.index = targetIndex }
+
+                if (parsed != null) holders.add(parsed)
             }
         }
+
+        return true
+    }
+
+    override fun onKeyRelease(key: Int, modifiers: Int): Boolean {
+        if (modifiers == GLFW.GLFW_MOD_SHIFT) pressShift = false
 
         return true
     }
@@ -281,7 +512,7 @@ object EditorGUI : GUI() {
     }
 
     private fun isInEditor(mouseX: Int, mouseY: Int) =
-            mouseX in left..right && mouseY in top..bottom
+        mouseX in left..right && mouseY in top..bottom
 
     private fun View.isHovering(mouseX: Int, mouseY: Int): Boolean {
         return mouseX in (x1 + this@EditorGUI.width / 2)..(x2 + this@EditorGUI.width / 2)
