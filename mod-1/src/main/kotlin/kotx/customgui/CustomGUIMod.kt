@@ -1,21 +1,22 @@
 package kotx.customgui
 
-import kotx.customgui.gateway.*
-import kotx.customgui.gui.*
-import kotx.customgui.gui.guis.editor.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import net.minecraft.client.settings.*
-import net.minecraft.client.util.*
-import net.minecraftforge.client.event.*
-import net.minecraftforge.client.settings.*
-import net.minecraftforge.common.*
-import net.minecraftforge.event.*
-import net.minecraftforge.eventbus.api.*
-import net.minecraftforge.fml.client.registry.*
-import net.minecraftforge.fml.common.*
-import org.lwjgl.glfw.*
-import org.slf4j.*
+import kotx.customgui.gateway.GatewayClient
+import kotx.customgui.gui.GUI
+import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.util.MainThreadExecutor
+import kotx.customgui.view.ViewHandler
+import net.minecraft.client.settings.KeyBinding
+import net.minecraft.client.util.InputMappings
+import net.minecraftforge.client.event.InputEvent
+import net.minecraftforge.client.settings.KeyConflictContext
+import net.minecraftforge.client.settings.KeyModifier
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.TickEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.client.registry.ClientRegistry
+import net.minecraftforge.fml.common.Mod
+import org.lwjgl.glfw.GLFW
+import org.slf4j.LoggerFactory
 
 @Mod(CustomGUIMod.MOD_ID)
 class CustomGUIMod {
