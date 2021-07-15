@@ -10,10 +10,12 @@ import io.ktor.http.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotx.customgui.gui.guis.editor.EditorGUI
 import kotx.customgui.util.component
 import kotx.customgui.util.fontRenderer
 import kotx.customgui.view.ViewCreator
 import kotx.customgui.view.ViewType
+import kotx.customgui.view.holders.ImageViewHolder
 import kotx.customgui.view.views.ImageView
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.button.Button
@@ -27,6 +29,8 @@ import javax.imageio.ImageIO
 
 class ImageViewCreator : ViewCreator<ImageView>(), CoroutineScope {
     override val coroutineContext = Dispatchers.Default
+
+    var initView: ImageViewHolder? = null
 
     override val type: ViewType = ViewType.IMAGE
     override val points: Int = 1
@@ -50,6 +54,9 @@ class ImageViewCreator : ViewCreator<ImageView>(), CoroutineScope {
             setMaxStringLength(1024)
             setFocused2(true)
         }
+
+        if (initView != null)
+            textField.text = initView!!.content.url
 
         button = buttonCenter("作成", width / 2, 100) {
             handle()
@@ -80,6 +87,11 @@ class ImageViewCreator : ViewCreator<ImageView>(), CoroutineScope {
             x2 = x1 + image.width
             y2 = y1 + image.height
 
+            if (initView != null) {
+                EditorGUI.holders.removeIf { it.index == initView!!.index }
+                x2 = initView!!.content.x2
+                y2 = initView!!.content.y2
+            }
             build(
                 ImageView(
                     id,
