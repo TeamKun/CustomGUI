@@ -1,14 +1,15 @@
 package kotx.customgui.view.parsers
 
-import kotlinx.serialization.json.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.views.*
-import java.awt.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.util.getInt
+import kotx.customgui.util.json
+import kotx.customgui.view.ViewParser
+import kotx.customgui.view.views.RectView
+import java.awt.Color
 
 class RectViewParser : ViewParser<RectView> {
     override fun encode(view: RectView): JsonObject = json {
-        "color" to view.color
+        "color" to view.color.rgb
         "x1" to view.x1
         "y1" to view.y1
         "x2" to view.x2
