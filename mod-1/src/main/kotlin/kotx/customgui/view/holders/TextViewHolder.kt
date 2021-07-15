@@ -1,11 +1,11 @@
 package kotx.customgui.view.holders
 
-import kotx.customgui.view.*
-import kotx.customgui.view.views.*
+import kotx.customgui.view.ViewHolder
+import kotx.customgui.view.views.TextView
 
-class TextViewHolder(override val index: Int, override val content: TextView) : ViewHolder {
+class TextViewHolder(override var index: Int, override val content: TextView) : ViewHolder {
     override var selecting: Boolean = false
     override var moving: Boolean = false
-
-    override fun copy(newIndex: Int): ViewHolder = TextViewHolder(newIndex, content.copy() as TextView)
+    override var scalable: Boolean = false
+    override var scaling: Boolean = false
 }
