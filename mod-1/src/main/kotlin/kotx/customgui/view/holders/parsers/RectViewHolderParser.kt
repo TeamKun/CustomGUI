@@ -1,15 +1,17 @@
 package kotx.customgui.view.holders.parsers
 
-import kotlinx.serialization.json.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.holders.*
-import kotx.customgui.view.parsers.*
-import kotx.customgui.view.views.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.util.getInt
+import kotx.customgui.util.getObject
+import kotx.customgui.util.json
+import kotx.customgui.view.ViewHolderParser
+import kotx.customgui.view.ViewType
+import kotx.customgui.view.holders.RectViewHolder
+import kotx.customgui.view.parsers.RectViewParser
 
 class RectViewHolderParser : ViewHolderParser<RectViewHolder> {
     override val type: ViewType = ViewType.RECT
-    override val viewParser: ViewParser<RectView> = RectViewParser()
+    override val viewParser = RectViewParser()
 
     override fun encode(holder: RectViewHolder): JsonObject = json {
         "type" to type.value
