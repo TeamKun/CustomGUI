@@ -1,23 +1,23 @@
 package kotx.customgui.view.renderers
 
-import com.mojang.blaze3d.matrix.*
-import com.mojang.blaze3d.systems.*
-import kotx.customgui.*
-import kotx.customgui.gui.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.views.*
-import net.minecraft.client.*
-import net.minecraft.client.renderer.*
-import net.minecraft.client.renderer.vertex.*
-import net.minecraft.util.*
-import org.lwjgl.opengl.*
-import java.awt.*
+import com.mojang.blaze3d.matrix.MatrixStack
+import com.mojang.blaze3d.systems.RenderSystem
+import kotx.customgui.CustomGUIMod
+import kotx.customgui.gui.GUI
+import kotx.customgui.util.mc
+import kotx.customgui.view.ViewRenderer
+import kotx.customgui.view.views.ImageView
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.WorldVertexBufferUploader
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.util.ResourceLocation
+import org.lwjgl.opengl.GL11
+import java.awt.Color
 
 class ImageViewRenderer : ViewRenderer<ImageView> {
     override fun renderPreview(stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, view: ImageView) {
         renderImage(view, stack, x1, y1, x2, y2)
-        GUI.textShadow(stack, view.url, x1, y2, Color.WHITE)
     }
 
     override fun renderFull(stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, view: ImageView) {
