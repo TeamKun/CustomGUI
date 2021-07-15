@@ -1,6 +1,6 @@
 package kotx.customgui.view
 
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
 
 interface ViewHolderParser<T : ViewHolder> {
     val type: ViewType
