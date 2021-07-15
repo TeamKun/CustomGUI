@@ -17,11 +17,11 @@ server.
 
 ### Commands
 
-```css
+```prolog
 /customgui - Base of customgui commands
-    add <name>                       - Saves the Workspace with the specified name. 
-    update <name>                    - Explicitly update(overwrite) the Workspace with the specified name.
-    remove <name                     - Deletes the GUI with the specified name. Users with OP can also delete the GUI of others.
+    add <name>                       - Saves the workspace with the specified name. 
+    update <name>                    - Explicitly update(overwrite) the workspace with the specified name.
+    remove <name                     - Deletes the GUI with the specified name. Users with op can also delete the GUI of others.
     copy <from> <to>                 - Copies the GUI specified by <from> to <to>.
     use <name>                       - Loads the GUI with the specified name into the workspace.
     list                             - Lists all GUIs and their authors.
