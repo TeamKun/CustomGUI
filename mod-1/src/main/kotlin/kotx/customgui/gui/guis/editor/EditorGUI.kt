@@ -91,7 +91,6 @@ object EditorGUI : GUI() {
             }
         }
 
-        //info
         if (creators.getOrNull(selectingCreator) != null) {
             rect(stack, 0, 0, width, height, Color(0, 0, 0, 70))
             val creator = creators[selectingCreator]
@@ -105,8 +104,6 @@ object EditorGUI : GUI() {
             textCenter(stack, text, width / 2, 55, Color.WHITE)
 
             if (creatorLastLocation == null) {
-                if (isInEditor(mouseX, mouseY)) {
-                }
                 rect(stack, mouseX - 1, mouseY - 1, mouseX + 1, mouseY + 1, Color.GREEN)
             } else {
                 if (isInEditor(mouseX, mouseY)) {
@@ -287,10 +284,10 @@ object EditorGUI : GUI() {
             }
 
             LEFT -> {
-                if (buttons.any { it.isHovered }) return
-                if (!isInEditor(mouseX, mouseY)) return
-
                 if (creators.getOrNull(selectingCreator) != null) {
+                    if (buttons.any { it.isHovered }) return
+                    if (!isInEditor(mouseX, mouseY)) return
+
                     val creator = creators[selectingCreator]
                     when {
                         creator.points == 1 -> {
