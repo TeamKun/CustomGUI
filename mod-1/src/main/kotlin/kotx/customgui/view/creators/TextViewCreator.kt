@@ -22,7 +22,6 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
         textField = textFieldCenter("テキスト", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11).apply {
             setCanLoseFocus(true)
             setMaxStringLength(1024)
-            setFocused2(true)
         }
 
         if (initView != null)
@@ -37,6 +36,8 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
         }
 
         button.active = false
+
+        handler.setFocusedDefault(textField)
     }
 
     override fun onKeyPress(key: Int, modifiers: Int): Boolean {

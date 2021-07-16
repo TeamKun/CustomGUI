@@ -52,7 +52,6 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
         textField = textFieldCenter("URL", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11).apply {
             setCanLoseFocus(true)
             setMaxStringLength(1024)
-            setFocused2(true)
         }
 
         if (initView != null)
@@ -67,6 +66,8 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
         }
 
         button.active = false
+
+        handler.setFocusedDefault(textField)
     }
 
     private fun Button.handle() {

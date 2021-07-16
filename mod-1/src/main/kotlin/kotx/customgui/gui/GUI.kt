@@ -11,7 +11,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 open class GUI {
-    private val handler = GUIHandler(this)
+    protected val handler = GUIHandler(this)
     val width
         get() = handler.width
     val height

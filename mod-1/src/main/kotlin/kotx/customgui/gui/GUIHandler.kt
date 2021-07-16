@@ -1,10 +1,12 @@
 package kotx.customgui.gui
 
-import com.mojang.blaze3d.matrix.*
-import kotx.customgui.util.*
-import net.minecraft.client.gui.screen.*
-import net.minecraft.client.gui.widget.*
-import net.minecraft.client.gui.widget.button.*
+import com.mojang.blaze3d.matrix.MatrixStack
+import kotx.customgui.util.component
+import kotx.customgui.util.fontRenderer
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.widget.TextFieldWidget
+import net.minecraft.client.gui.widget.Widget
+import net.minecraft.client.gui.widget.button.Button
 
 class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
 
