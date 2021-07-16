@@ -9,7 +9,10 @@ import java.awt.Color
 
 class RectViewParser : ViewParser<RectView> {
     override fun encode(view: RectView): JsonObject = json {
-        "color" to view.color.rgb
+        "red" to view.color.red
+        "green" to view.color.green
+        "blue" to view.color.blue
+        "alpha" to view.color.alpha
         "x1" to view.x1
         "y1" to view.y1
         "x2" to view.x2
@@ -17,7 +20,12 @@ class RectViewParser : ViewParser<RectView> {
     }
 
     override fun decode(json: JsonObject): RectView = RectView(
-        Color(json.getInt("color")),
+        Color(
+            json.getInt("red"),
+            json.getInt("green"),
+            json.getInt("blue"),
+            json.getInt("alpha"),
+        ),
     ).apply {
         x1 = json.getInt("x1")
         y1 = json.getInt("y1")

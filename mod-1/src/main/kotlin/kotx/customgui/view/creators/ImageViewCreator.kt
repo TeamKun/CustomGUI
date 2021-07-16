@@ -106,7 +106,7 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
         if (key == GLFW.GLFW_KEY_ENTER && textField.text.isNotBlank())
             button.handle()
 
-        return true
+        return super.onKeyPress(key, modifiers)
     }
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {

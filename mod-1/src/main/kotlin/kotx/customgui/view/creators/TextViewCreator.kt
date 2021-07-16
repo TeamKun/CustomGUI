@@ -44,7 +44,7 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
         if (key == GLFW.GLFW_KEY_ENTER && textField.text.isNotBlank())
             handle()
 
-        return true
+        return super.onKeyPress(key, modifiers)
     }
 
     private fun handle() {
