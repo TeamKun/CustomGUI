@@ -27,10 +27,10 @@ import java.io.InputStream
 import java.util.*
 import javax.imageio.ImageIO
 
-class ImageViewCreator : ViewCreator<ImageView>(), CoroutineScope {
+class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 
-    var initView: ImageViewHolder? = null
+    override var initView: ImageViewHolder? = null
 
     override val type: ViewType = ViewType.IMAGE
     override val points: Int = 1

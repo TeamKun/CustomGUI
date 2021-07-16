@@ -12,11 +12,13 @@ import kotx.customgui.view.views.RectView
 import kotx.customgui.view.views.TextView
 import kotlin.math.max
 
-abstract class ViewCreator<T : View> : GUI() {
+abstract class ViewCreator<T : View, E : ViewHolder> : GUI() {
     abstract val type: ViewType
     abstract val points: Int
 
     var creating = false
+
+    abstract var initView: E?
 
     var x1: Int = 0
     var y1: Int = 0

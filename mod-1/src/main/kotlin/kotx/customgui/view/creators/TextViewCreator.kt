@@ -11,11 +11,11 @@ import net.minecraft.client.gui.widget.TextFieldWidget
 import org.lwjgl.glfw.GLFW
 import java.awt.Color
 
-class TextViewCreator : ViewCreator<TextView>() {
+class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
     override val type: ViewType = ViewType.TEXT
     override val points: Int = 1
 
-    var initView: TextViewHolder? = null
+    override var initView: TextViewHolder? = null
     private lateinit var textField: TextFieldWidget
 
     override fun initialize() {

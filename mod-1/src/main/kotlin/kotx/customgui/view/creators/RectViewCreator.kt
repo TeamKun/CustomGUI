@@ -8,11 +8,11 @@ import kotx.customgui.view.holders.RectViewHolder
 import kotx.customgui.view.views.RectView
 import java.awt.Color
 
-class RectViewCreator : ViewCreator<RectView>() {
+class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
     override val type: ViewType = ViewType.RECT
     override val points: Int = 2
 
-    var initView: RectViewHolder? = null
+    override var initView: RectViewHolder? = null
 
     override fun initialize() {
         buttonCenter("作成", width / 2, 100) {
