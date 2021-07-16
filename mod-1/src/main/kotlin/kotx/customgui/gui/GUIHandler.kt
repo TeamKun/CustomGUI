@@ -88,6 +88,8 @@ class GUIHandler(private val gui: GUI) : Screen("GuiHandler".component()) {
     fun textField(title: String, x: Int, y: Int, width: Int, height: Int) =
         TextFieldWidget(fontRenderer, x, y, width, height, title.component()).also { addButton(it) }
 
+    fun widget(widget: Widget): Widget = addButton(widget)
+
     val buttons: List<Widget>
         get() = buttons.toList()
 }
