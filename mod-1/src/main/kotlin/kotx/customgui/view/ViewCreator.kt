@@ -10,6 +10,7 @@ import kotx.customgui.view.views.ButtonView
 import kotx.customgui.view.views.ImageView
 import kotx.customgui.view.views.RectView
 import kotx.customgui.view.views.TextView
+import org.lwjgl.glfw.GLFW
 import kotlin.math.max
 
 abstract class ViewCreator<T : View, E : ViewHolder> : GUI() {
@@ -24,6 +25,15 @@ abstract class ViewCreator<T : View, E : ViewHolder> : GUI() {
     var y1: Int = 0
     var x2: Int? = null
     var y2: Int? = null
+
+    override fun onKeyPress(key: Int, modifiers: Int): Boolean {
+        return if (key == GLFW.GLFW_KEY_ESCAPE) {
+            display(EditorGUI)
+            false
+        } else {
+            true
+        }
+    }
 
     protected fun build(view: T) {
         val index = (EditorGUI.holders.maxByOrNull { it.index }?.index ?: 0) + 1
