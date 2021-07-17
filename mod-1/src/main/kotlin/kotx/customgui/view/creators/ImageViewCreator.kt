@@ -5,11 +5,11 @@ import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import kotx.customgui.gui.guis.editor.EditorGUI
 import kotx.customgui.util.component
 import kotx.customgui.util.fontRenderer
@@ -23,9 +23,9 @@ import org.apache.commons.io.FileUtils
 import org.lwjgl.glfw.GLFW
 import java.awt.Color
 import java.io.File
-import java.io.InputStream
 import java.util.*
 import javax.imageio.ImageIO
+import kotlin.concurrent.schedule
 
 class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineScope {
     override val coroutineContext = Dispatchers.Default
@@ -47,9 +47,11 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
 
     private lateinit var textField: TextFieldWidget
     private lateinit var button: Button
+    private var success = true
+    private var timer = Timer()
 
     override fun initialize() {
-        textField = textFieldCenter("URL", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11).apply {
+        textField = textFieldCenter("URL", width / 2, 70, 200, fontRenderer.FONT_HEIGHT + 11).apply {
             setCanLoseFocus(true)
             setMaxStringLength(1024)
         }
@@ -57,7 +59,7 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
         if (initView != null)
             textField.text = initView!!.content.url
 
-        button = buttonCenter("作成", width / 2, 100) {
+        button = buttonCenter("   作成   ", width / 2, 110) {
             handle()
         }
 
@@ -75,30 +77,52 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
         active = false
 
         launch {
-            val bytes = client.get<HttpStatement>(textField.text).receive<InputStream>().readBytes()
-            val image = ImageIO.read(bytes.inputStream())
+            try {
+                withTimeout(5000) {
+                    val bytes = client.get<ByteArray>(textField.text) {
+                        onDownload { bytesSentTotal, contentLength ->
+                            val percentage = ((bytesSentTotal.toDouble() / contentLength.toDouble()) * 100).toInt()
+                            message = if (percentage in 0..100)
+                                "ロード中... ($percentage%)".component()
+                            else
+                                "ロード中...".component()
+                        }
+                    }
+                    val image = ImageIO.read(bytes.copyOf().inputStream())
 
-            val id = UUID.randomUUID().toString().replace("-", "")
+                    val id = UUID.randomUUID().toString().replace("-", "")
 
-            val cacheFile = File("./mods/CustomGUI/caches/$id")
-            cacheFile.parentFile.mkdirs()
+                    val cacheFile = File("./mods/CustomGUI/caches/$id")
+                    cacheFile.parentFile.mkdirs()
 
-            FileUtils.copyInputStreamToFile(bytes.inputStream(), cacheFile)
+                    FileUtils.copyInputStreamToFile(bytes.copyOf().inputStream(), cacheFile)
 
-            x2 = x1 + image.width
-            y2 = y1 + image.height
+                    x2 = x1 + image.width
+                    y2 = y1 + image.height
 
-            if (initView != null) {
-                EditorGUI.holders.removeIf { it.index == initView!!.index }
-                x2 = initView!!.content.x2
-                y2 = initView!!.content.y2
+                    if (initView != null) {
+                        EditorGUI.holders.removeIf { it.index == initView!!.index }
+                        x2 = initView!!.content.x2
+                        y2 = initView!!.content.y2
+                    }
+
+                    build(
+                        ImageView(
+                            id,
+                            textField.text
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                message = "作成".component()
+                success = false
+                timer.cancel()
+                timer = Timer()
+                timer.schedule(5000) {
+                    success = true
+                }
+                active = true
             }
-            build(
-                ImageView(
-                    id,
-                    textField.text
-                )
-            )
         }
     }
 
@@ -111,5 +135,10 @@ class ImageViewCreator : ViewCreator<ImageView, ImageViewHolder>(), CoroutineSco
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         rect(stack, 0, 0, width, height, Color(0, 0, 0, 100))
+        if (success) {
+            textCenter(stack, "画像のURLを入力", width / 2, 30, Color.WHITE)
+        } else {
+            textCenter(stack, "画像の読み込みに失敗しました。", width / 2, 30, Color.RED)
+        }
     }
 }
