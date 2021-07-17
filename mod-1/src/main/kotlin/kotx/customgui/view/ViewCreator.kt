@@ -12,6 +12,7 @@ import kotx.customgui.view.views.RectView
 import kotx.customgui.view.views.TextView
 import org.lwjgl.glfw.GLFW
 import kotlin.math.max
+import kotlin.math.min
 
 abstract class ViewCreator<T : View, E : ViewHolder> : GUI() {
     abstract val type: ViewType
@@ -45,33 +46,38 @@ abstract class ViewCreator<T : View, E : ViewHolder> : GUI() {
             else -> null
         }
 
-        view.x1 = x1
-        view.y1 = y1
-        view.x2 = x2!!
-        view.y2 = y2!!
+        val actX1 = min(x1, x2!!)
+        val actY1 = min(y1, y2!!)
+        val actX2 = max(x1, x2!!)
+        val actY2 = max(y1, y2!!)
+
+        view.x1 = actX1
+        view.y1 = actY1
+        view.x2 = actX2
+        view.y2 = actY2
 
         val right = (EditorGUI.editorWidth / 2)
         val bottom = (EditorGUI.editorHeight / 2)
 
         when {
             view.x2 > right && view.y2 > bottom -> {
-                val wRatio = view.x2 - right
-                val hRatio = view.y2 - bottom
-                val ratio = max(wRatio, hRatio)
-                view.x2 -= ratio
-                view.y2 -= ratio
+                val xRa = right.toDouble() / view.x2.toDouble()
+                val yRa = bottom.toDouble() / view.y2.toDouble()
+                val ra = min(xRa, yRa)
+                view.x2 = (view.x2.toDouble() * ra).toInt()
+                view.y2 = (view.y2.toDouble() * ra).toInt()
             }
 
             view.x2 > right -> {
-                val ratio = view.x2 - right
-                view.x2 -= ratio
-                view.y2 -= ratio
+                val ra = right.toDouble() / view.x2.toDouble()
+                view.x2 = (view.x2.toDouble() * ra).toInt()
+                view.y2 = (view.y2.toDouble() * ra).toInt()
             }
 
             view.y2 > bottom -> {
-                val ratio = view.y2 - bottom
-                view.x2 -= ratio
-                view.y2 -= ratio
+                val ra = bottom.toDouble() / view.y2.toDouble()
+                view.x2 = (view.x2.toDouble() * ra).toInt()
+                view.y2 = (view.y2.toDouble() * ra).toInt()
             }
         }
 
