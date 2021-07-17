@@ -2,12 +2,14 @@ package kotx.customgui.gui.guis.editor
 
 import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.CustomGUIMod
+import kotx.customgui.gateway.OpCode
 import kotx.customgui.gui.GUI
 import kotx.customgui.gui.MouseButton
 import kotx.customgui.gui.MouseButton.LEFT
 import kotx.customgui.gui.MouseButton.RIGHT
 import kotx.customgui.util.asJsonObject
 import kotx.customgui.util.fontRenderer
+import kotx.customgui.util.json
 import kotx.customgui.view.View
 import kotx.customgui.view.ViewHolder
 import kotx.customgui.view.creators.ButtonViewCreator
@@ -583,6 +585,14 @@ object EditorGUI : GUI() {
             it.moving = false
             it.selecting = false
         }
+
+        CustomGUIMod.gatewayClient.send(OpCode.SAVE_GUI, json {
+            "guis" array {
+                holders.forEach {
+                    +CustomGUIMod.viewHandler.encode(it)
+                }
+            }
+        })
     }
 
     private fun isInEditor(mouseX: Int, mouseY: Int) =
