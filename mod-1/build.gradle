@@ -77,8 +77,8 @@ dependencies {
     embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
     embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
 
-    embed "io.ktor:ktor-client-core:1.5.3"
-    embed "io.ktor:ktor-client-okhttp:1.5.3"
+    embed "io.ktor:ktor-client-core:1.6.1"
+    embed "io.ktor:ktor-client-okhttp:1.6.1"
 }
 
 compileKotlin {
