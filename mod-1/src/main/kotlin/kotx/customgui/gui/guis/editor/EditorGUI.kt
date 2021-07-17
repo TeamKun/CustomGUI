@@ -23,7 +23,6 @@ import kotx.customgui.view.renderers.RectViewRenderer
 import kotx.customgui.view.renderers.TextViewRenderer
 import org.lwjgl.glfw.GLFW
 import java.awt.Color
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -471,8 +470,8 @@ object EditorGUI : GUI() {
 
                 if (isInEditor(nextX1 + width / 2, nextY1 + height / 2) &&
                     isInEditor(nextX2 + width / 2, nextY2 + height / 2) &&
-                    abs(nextX1 - nextX2) > 0 &&
-                    abs(nextY1 - nextY2) > 0
+                    nextX2 - nextX1 > 0 &&
+                    nextY2 - nextY1 > 0
                 ) {
                     view.x1 = nextX1
                     view.y1 = nextY1
