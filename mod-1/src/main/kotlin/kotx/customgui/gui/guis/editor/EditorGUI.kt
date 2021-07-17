@@ -10,6 +10,7 @@ import kotx.customgui.util.asJsonObject
 import kotx.customgui.util.fontRenderer
 import kotx.customgui.view.View
 import kotx.customgui.view.ViewHolder
+import kotx.customgui.view.creators.ButtonViewCreator
 import kotx.customgui.view.creators.ImageViewCreator
 import kotx.customgui.view.creators.RectViewCreator
 import kotx.customgui.view.creators.TextViewCreator
@@ -31,7 +32,8 @@ object EditorGUI : GUI() {
     val creators = listOf(
         TextViewCreator(),
         RectViewCreator(),
-        ImageViewCreator()
+        ImageViewCreator(),
+        ButtonViewCreator(),
     )
 
     const val editorWidth = 360
@@ -205,7 +207,7 @@ object EditorGUI : GUI() {
             }
 
             val hoverContent = holders.sortedByDescending { it.index }.find { it.content.isHovering(mouseX, mouseY) }
-            if (hoverContent != null) {
+            if (hoverContent != null && holders.none { it.scaling || it.moving }) {
                 val x1 = width / 2 + hoverContent.content.x1
                 val y1 = height / 2 + hoverContent.content.y1
                 val x2 = width / 2 + hoverContent.content.x2
@@ -490,7 +492,7 @@ object EditorGUI : GUI() {
 
         val l = holders.indexOfFirst { it.selecting }
         if (l == lastClick && l != -1) {
-            if (System.currentTimeMillis() - (lastRelease ?: 0) < 200) {
+            if (System.currentTimeMillis() - (lastRelease ?: 0) < 250) {
                 val h = holders.find { it.selecting }!!
                 val creator = when (h) {
                     is TextViewHolder -> TextViewCreator().apply {
@@ -508,6 +510,13 @@ object EditorGUI : GUI() {
                     is ImageViewHolder -> ImageViewCreator().apply {
                         this.x1 = h.content.x1
                         this.y1 = h.content.y1
+                        initView = h
+                    }
+                    is ButtonViewHolder -> ButtonViewCreator().apply {
+                        this.x1 = h.content.x1
+                        this.y1 = h.content.y1
+                        this.x2 = h.content.x2
+                        this.y2 = h.content.y2
                         initView = h
                     }
                     else -> null
