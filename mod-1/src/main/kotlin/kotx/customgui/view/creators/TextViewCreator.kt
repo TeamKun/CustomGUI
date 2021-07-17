@@ -19,7 +19,7 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
     private lateinit var textField: TextFieldWidget
 
     override fun initialize() {
-        textField = textFieldCenter("テキスト", width / 2, 50, 200, fontRenderer.FONT_HEIGHT + 11).apply {
+        textField = textFieldCenter("テキスト", width / 2, 70, 200, fontRenderer.FONT_HEIGHT + 11).apply {
             setCanLoseFocus(true)
             setMaxStringLength(1024)
         }
@@ -27,7 +27,7 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
         if (initView != null)
             textField.text = initView!!.content.text
 
-        val button = buttonCenter("作成", width / 2, 100) {
+        val button = buttonCenter("作成", width / 2, 110) {
             handle()
         }
 
@@ -57,5 +57,6 @@ class TextViewCreator : ViewCreator<TextView, TextViewHolder>() {
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         rect(stack, 0, 0, width, height, Color(0, 0, 0, 100))
+        textCenter(stack, "テキストを入力", width / 2, 30, Color.WHITE)
     }
 }

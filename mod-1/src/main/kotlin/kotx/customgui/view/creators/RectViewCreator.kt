@@ -44,7 +44,7 @@ class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
         }
 
         redSlider = handler.widget(object :
-            AbstractSlider(width / 2 - 100, 30, 200, 20, "赤 ${(red * 255).toInt()}".component(), red) {
+            AbstractSlider(width / 2 - 100, 50, 200, 20, "赤 ${(red * 255).toInt()}".component(), red) {
             override fun func_230979_b_() {
                 red = sliderValue
             }
@@ -55,7 +55,7 @@ class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
         }) as AbstractSlider
 
         greenSlider = handler.widget(object :
-            AbstractSlider(width / 2 - 100, 70, 200, 20, "緑 ${(green * 255).toInt()}".component(), green) {
+            AbstractSlider(width / 2 - 100, 80, 200, 20, "緑 ${(green * 255).toInt()}".component(), green) {
             override fun func_230979_b_() {
                 green = sliderValue
             }
@@ -77,7 +77,7 @@ class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
         }) as AbstractSlider
 
         alphaSlider = handler.widget(object :
-            AbstractSlider(width / 2 - 100, 150, 200, 20, "不透明度 ${(alpha * 255).toInt()}".component(), alpha) {
+            AbstractSlider(width / 2 - 100, 140, 200, 20, "不透明度 ${(alpha * 255).toInt()}".component(), alpha) {
             override fun func_230979_b_() {
                 this@RectViewCreator.alpha = sliderValue
             }
@@ -87,7 +87,7 @@ class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
             }
         }) as AbstractSlider
 
-        button = buttonCenter("作成", width / 2, 200) {
+        button = buttonCenter("作成", width / 2, 190) {
             handle()
         }
     }
@@ -112,8 +112,9 @@ class RectViewCreator : ViewCreator<RectView, RectViewHolder>() {
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         rect(stack, 0, 0, width, height, Color(0, 0, 0, 100))
+        textCenter(stack, "色を指定", width / 2, 30, Color.WHITE)
         rectCenter(
-            stack, width / 2, 240, 20, 20, Color(
+            stack, width / 2, 190, 200, 30, Color(
                 (red * 255).toInt(), (green * 255).toInt(), (blue * 255).toInt(), (alpha * 255).toInt()
             )
         )
