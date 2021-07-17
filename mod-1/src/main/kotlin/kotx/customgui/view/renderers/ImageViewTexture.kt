@@ -6,14 +6,18 @@ import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.*
-import kotx.customgui.util.*
-import kotx.customgui.view.views.*
-import net.minecraft.client.renderer.texture.*
-import net.minecraft.resources.*
-import net.minecraft.util.*
-import org.apache.commons.io.*
-import java.io.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotx.customgui.util.MainThreadExecutor
+import kotx.customgui.view.views.ImageView
+import net.minecraft.client.renderer.texture.NativeImage
+import net.minecraft.client.renderer.texture.SimpleTexture
+import net.minecraft.client.renderer.texture.TextureUtil
+import net.minecraft.resources.IResourceManager
+import net.minecraft.util.ResourceLocation
+import org.apache.commons.io.FileUtils
+import java.io.File
 
 class ImageViewTexture(
     val view: ImageView,
@@ -41,8 +45,8 @@ class ImageViewTexture(
         }
 
         launch {
-            val bytes = client.get<HttpStatement>(view.url).receive<InputStream>().readBytes()
-            FileUtils.copyInputStreamToFile(bytes.inputStream(), cacheFile)
+            val bytes = client.get<HttpStatement>(view.url).receive<ByteArray>()
+            FileUtils.copyInputStreamToFile(bytes.copyOf().inputStream(), cacheFile)
 
             MainThreadExecutor.offer {
                 loadImage(manager, cacheFile)

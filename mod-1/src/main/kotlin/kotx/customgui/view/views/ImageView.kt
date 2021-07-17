@@ -1,7 +1,7 @@
 package kotx.customgui.view.views
 
-import kotx.customgui.view.*
-import kotx.customgui.view.renderers.*
+import kotx.customgui.view.View
+import kotx.customgui.view.renderers.ImageViewRenderer
 
 class ImageView(
     val id: String,
