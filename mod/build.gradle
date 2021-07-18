@@ -1,13 +1,13 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
-    ext.kotlin_version = '1.5.10'
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.5.21"
     }
 }
 
@@ -26,34 +26,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                chatControl {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                chatControl {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'chat-control', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                chatControl {
+                customgui {
                     source sourceSets.main
                 }
             }
@@ -66,27 +39,36 @@ configurations {
     compile.extendsFrom(embed)
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
-    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.10"
-    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.10"
-    embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.10"
-
-    embed "io.insert-koin:koin-core:3.0.1-beta-2"
-    embed "io.insert-koin:koin-core-ext:3.0.1-beta-2"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.21"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.21"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.21"
 
     embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
+    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
 
-    embed "io.ktor:ktor-client-core:1.5.3"
-    embed "io.ktor:ktor-client-okhttp:1.5.3"
-
-    embed "com.fasterxml.jackson.core:jackson-databind:2.12.2"
+    embed "io.ktor:ktor-client-core:1.6.1"
+    embed "io.ktor:ktor-client-okhttp:1.6.1"
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter(
+                ReplaceTokens,
+                tokens: [
+                        'version': project.version,
+                ]
+        )
+    }
 }
 
 jar {
@@ -102,7 +84,7 @@ jar {
         ])
     }
 
-    archiveName("1-${parent.project.name}-mod-${parent.project.version}.jar")
+    archiveName("${parent.project.name}-mod-${parent.project.version}.jar")
 
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
@@ -119,6 +101,3 @@ task shadow {
 }
 
 jar.finalizedBy('reobfJar')
-repositories {
-    mavenCentral()
-}

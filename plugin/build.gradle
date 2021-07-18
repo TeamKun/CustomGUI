@@ -1,10 +1,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "com.github.johnrengelman.shadow"
-    id "de.undercouch.download" version "4.1.1"
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.10'
+    id "de.undercouch.download"
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.20'
 }
 
 repositories {
@@ -13,30 +12,26 @@ repositories {
         url = "https://papermc.io/repo/repository/maven-public/"
     }
     maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
-    }
-    maven {
-        url = 'https://jitpack.io'
+        url = "https://s01.oss.sonatype.org/service/local/repositories/releases/content/"
     }
 }
 
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
 dependencies {
-    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+    implementation "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
 
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.10"
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.10"
-    implementation group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.10"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.20"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.20"
+    embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.20"
 
-    implementation "io.insert-koin:koin-core:2.2.2"
-    implementation "io.insert-koin:koin-core-ext:2.2.2"
-    implementation group: "org.jetbrains.kotlinx", name: "kotlinx-coroutines-core", version: "1.5.0-RC"
-    implementation group: "ch.qos.logback", name: "logback-classic", version: "latest.release"
-    implementation group: "com.destroystokyo.paper", name: "paper-api", version: "1.16.5-R0.1-SNAPSHOT"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.1"
-    implementation "org.apache.lucene:lucene-suggest:5.3.0"
-    implementation "com.github.TeamKun:flylib-reloaded:0.1.11"
+    embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
+    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    embed group: "ch.qos.logback", name: "logback-classic", version: "latest.release"
+    embed "dev.kotx:flylib-reloaded:latest.release"
 }
 
 processResources {
@@ -50,26 +45,25 @@ processResources {
     }
 }
 
-tasks.build.dependsOn tasks.shadowJar
-
-shadowJar {
-    archiveName("0-${parent.project.name}-plugin-${parent.project.version}.jar")
+jar {
+    archiveName("${parent.project.name}-plugin-${parent.project.version}.jar")
+    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 task shadow {
     group("kotx_build")
-    dependsOn(shadowJar)
+    dependsOn(jar)
     doLast {
         copy {
-            from shadowJar
+            from jar
             into new File("${projectDir}/../output")
         }
     }
 }
 
-task runPaperServer {
+task debug {
     group("kotx_build")
-    dependsOn(shadowJar)
+    dependsOn(jar)
     doLast {
         def serverDir = new File("${projectDir}/../server")
         def pluginsDir = new File(serverDir, "plugins")
@@ -81,7 +75,7 @@ task runPaperServer {
             pluginsDir.mkdirs()
 
         copy {
-            from shadowJar
+            from jar
             into new File("${projectDir}/../server/plugins")
         }
 
@@ -103,7 +97,7 @@ task environment {
             serverDir.mkdirs()
 
         download {
-            src "https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/637/downloads/paper-1.16.5-637.jar"
+            src "https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/782/downloads/paper-1.16.5-782.jar"
             dest paperJarFile
         }
 
