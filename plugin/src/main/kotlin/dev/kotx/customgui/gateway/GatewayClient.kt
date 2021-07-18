@@ -1,6 +1,8 @@
 package dev.kotx.customgui.gateway
 
 import dev.kotx.customgui.asJsonObject
+import dev.kotx.customgui.getInt
+import dev.kotx.customgui.getObject
 import dev.kotx.customgui.json
 import kotlinx.serialization.json.JsonObject
 import org.bukkit.entity.Player
@@ -12,9 +14,15 @@ import java.io.DataOutputStream
 class GatewayClient(
     private val plugin: JavaPlugin
 ) : PluginMessageListener {
+    private val handlers = mutableListOf<GatewayHandler>()
+
     override fun onPluginMessageReceived(channel: String, player: Player, message: ByteArray) {
         val msg = message.drop(1).dropLast(1).toByteArray().toString(Charsets.UTF_8)
         val json = msg.asJsonObject()
+        val opCode = OpCode.get(json.getInt("op"))
+        val data = json.getObject("data")
+
+        handlers.filter { it.opCode == opCode }.forEach { it.handle(data) }
     }
 
     fun send(player: Player, opCode: OpCode, data: JsonObject) {
