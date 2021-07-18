@@ -1,6 +1,6 @@
 package kotx.customgui.util
 
-import java.util.concurrent.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 object MainThreadExecutor {
     private val tasks = ConcurrentLinkedQueue<Runnable>()

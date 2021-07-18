@@ -1,11 +1,13 @@
 package kotx.customgui.gateway.handlers
 
-import kotlinx.serialization.json.*
-import kotx.customgui.*
-import kotx.customgui.gateway.*
-import kotx.customgui.gui.guis.editor.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.CustomGUIMod
+import kotx.customgui.gateway.GatewayHandler
+import kotx.customgui.gateway.OpCode
+import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.util.getInt
+import kotx.customgui.util.getObjectArray
+import kotx.customgui.view.ViewType
 
 class LoadGUIHandler : GatewayHandler {
     override val opCode: OpCode = OpCode.LOAD_GUI

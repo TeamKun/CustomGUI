@@ -1,19 +1,24 @@
-package kotx.customgui.util
+package dev.kotx.customgui
 
-import kotlinx.serialization.json.*
-import net.minecraft.client.*
-import net.minecraft.client.gui.*
-import net.minecraft.util.text.*
-import java.time.*
-import java.time.format.*
-
-val mc: Minecraft
-    get() = Minecraft.getInstance()
-
-val fontRenderer: FontRenderer
-    get() = mc.fontRenderer
-
-fun String.component() = StringTextComponent(this)
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 
 fun String.asJsonElement() = Json.parseToJsonElement(this)
 fun String.asJsonObject() = Json.parseToJsonElement(this).jsonObject

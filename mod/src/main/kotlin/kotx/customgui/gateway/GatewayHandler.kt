@@ -1,6 +1,6 @@
 package kotx.customgui.gateway
 
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
 
 interface GatewayHandler {
     val opCode: OpCode

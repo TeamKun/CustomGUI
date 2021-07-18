@@ -1,3 +1,3 @@
 rootProject.name = 'CustomGUI'
 
-include 'plugin', 'mod', 'mod-1'
+include 'plugin', 'mod'

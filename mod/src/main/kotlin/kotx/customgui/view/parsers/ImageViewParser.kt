@@ -1,9 +1,11 @@
 package kotx.customgui.view.parsers
 
-import kotlinx.serialization.json.*
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.views.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.util.getInt
+import kotx.customgui.util.getString
+import kotx.customgui.util.json
+import kotx.customgui.view.ViewParser
+import kotx.customgui.view.views.ImageView
 
 class ImageViewParser : ViewParser<ImageView> {
     override fun encode(view: ImageView) = json {

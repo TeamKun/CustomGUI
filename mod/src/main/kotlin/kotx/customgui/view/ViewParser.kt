@@ -1,6 +1,6 @@
 package kotx.customgui.view
 
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonObject
 
 interface ViewParser<T : View> {
     fun encode(view: T): JsonObject

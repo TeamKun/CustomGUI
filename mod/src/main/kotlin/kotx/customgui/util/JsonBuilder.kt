@@ -1,6 +1,9 @@
 package kotx.customgui.util
 
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 class JsonBuilder {
     private var content = mutableMapOf<String, JsonElement>()

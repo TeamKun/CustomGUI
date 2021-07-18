@@ -1,8 +1,12 @@
 package kotx.customgui.util
 
-import kotlinx.coroutines.*
-import kotlin.coroutines.*
-import kotlin.system.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.system.measureTimeMillis
 
 fun CoroutineScope.timer(
     interval: Long,

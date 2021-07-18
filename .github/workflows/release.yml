@@ -1,4 +1,4 @@
-name: Auto Release
+name: Release
 on:
   push:
     branches:
@@ -22,10 +22,10 @@ jobs:
         run: chmod +r ./build.gradle
 
       - name: Add permission to auto_release scripts.
-        run: chmod +x ./auto_release.sh
+        run: chmod +x ./release.sh
 
       - name: Gradle
-        run: ./auto_release.sh
+        run: ./release.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

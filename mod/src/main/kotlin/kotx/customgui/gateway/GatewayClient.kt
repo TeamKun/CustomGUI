@@ -2,19 +2,26 @@
 
 package kotx.customgui.gateway
 
-import kotlinx.serialization.json.*
-import kotx.customgui.*
-import kotx.customgui.gateway.handlers.*
-import kotx.customgui.util.*
-import net.minecraft.network.*
-import net.minecraft.util.*
-import net.minecraftforge.fml.network.*
-import org.apache.commons.lang3.*
-import java.util.function.*
+import kotlinx.serialization.json.JsonObject
+import kotx.customgui.CustomGUIMod
+import kotx.customgui.gateway.handlers.LoadGUIHandler
+import kotx.customgui.gateway.handlers.SaveGUIHandler
+import kotx.customgui.gateway.handlers.ShowGUIHandler
+import kotx.customgui.util.asJsonObject
+import kotx.customgui.util.getInt
+import kotx.customgui.util.getObject
+import kotx.customgui.util.json
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.fml.network.NetworkEvent
+import net.minecraftforge.fml.network.NetworkRegistry
+import org.apache.commons.lang3.ArrayUtils
+import java.util.function.BiConsumer
 import java.util.function.Function
+import java.util.function.Supplier
 
 class GatewayClient {
-    private val channel = NetworkRegistry.ChannelBuilder.named(ResourceLocation(CustomGUIMod.MOD_ID, "workspace"))
+    private val channel = NetworkRegistry.ChannelBuilder.named(ResourceLocation(CustomGUIMod.MOD_ID, "messenger"))
         .clientAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
         .serverAcceptedVersions(NetworkRegistry.ACCEPTVANILLA::equals)
         .networkProtocolVersion { NetworkRegistry.ACCEPTVANILLA }

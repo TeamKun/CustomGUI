@@ -1,8 +1,8 @@
 package kotx.customgui.view.views
 
-import kotx.customgui.view.*
-import kotx.customgui.view.renderers.*
-import java.awt.*
+import kotx.customgui.view.View
+import kotx.customgui.view.renderers.RectViewRenderer
+import java.awt.Color
 
 class RectView(
     val color: Color,

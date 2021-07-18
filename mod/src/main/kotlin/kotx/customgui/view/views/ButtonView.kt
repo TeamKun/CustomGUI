@@ -1,8 +1,8 @@
 package kotx.customgui.view.views
 
-import kotx.customgui.util.*
-import kotx.customgui.view.*
-import kotx.customgui.view.renderers.*
+import kotx.customgui.util.mc
+import kotx.customgui.view.View
+import kotx.customgui.view.renderers.ButtonViewRenderer
 
 class ButtonView(
     val command: String,

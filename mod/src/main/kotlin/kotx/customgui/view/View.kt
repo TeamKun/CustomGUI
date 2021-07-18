@@ -1,6 +1,7 @@
 package kotx.customgui.view
 
-import kotlin.math.*
+import kotlin.math.max
+import kotlin.math.min
 
 interface View {
     var x1: Int
