@@ -5,7 +5,6 @@ package kotx.customgui.gateway
 import kotlinx.serialization.json.JsonObject
 import kotx.customgui.CustomGUIMod
 import kotx.customgui.gateway.handlers.LoadGUIHandler
-import kotx.customgui.gateway.handlers.SaveGUIHandler
 import kotx.customgui.gateway.handlers.ShowGUIHandler
 import kotx.customgui.util.asJsonObject
 import kotx.customgui.util.getInt
@@ -51,7 +50,6 @@ class GatewayClient {
     }
 
     private val handlers = listOf(
-        SaveGUIHandler(),
         LoadGUIHandler(),
         ShowGUIHandler(),
     )
