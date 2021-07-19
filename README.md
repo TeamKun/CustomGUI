@@ -26,7 +26,7 @@ server.
     use <name>                       - Loads the GUI with the specified name into the workspace.
     list                             - Lists all GUIs and their authors.
     overlay <name> [user] [fix/flex] - Overlays the GUI with the specified name.
-    show <name> [user] [fix/flex]    - 指定した名前のGUIをGUIとして表示します。(As a clickable screen)
+    show <name> [user] [fix/flex]    - Displays the GUI with the specified name as a GUI. (As a clickable screen)
 ```
 
 ---
