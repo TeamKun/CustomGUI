@@ -13,7 +13,7 @@ class LoadGUIHandler : GatewayHandler {
     override val opCode: OpCode = OpCode.LOAD_GUI
 
     override fun handle(json: JsonObject) {
-        val guis = json.getObjectArray("guis").map {
+        val guis = json.getObjectArray("views").map {
             val type = ViewType.get(it.getInt("type"))
             val parser = CustomGUIMod.viewHandler.getParser(type)
             parser.decode(it)

@@ -4,8 +4,8 @@ enum class ViewType(
     val value: Int
 ) {
     TEXT(1),
-    RECT(2),
-    BUTTON(3),
+    BUTTON(2),
+    RECT(3),
     IMAGE(4),
     UNKNOWN(-1);
 
