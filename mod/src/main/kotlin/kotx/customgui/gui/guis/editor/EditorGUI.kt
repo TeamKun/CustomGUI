@@ -587,7 +587,7 @@ object EditorGUI : GUI() {
         }
 
         CustomGUIMod.gatewayClient.send(OpCode.SAVE_GUI, json {
-            "guis" array {
+            "views" array {
                 holders.forEach {
                     +CustomGUIMod.viewHandler.encode(it)
                 }
