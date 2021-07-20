@@ -23,6 +23,8 @@ class CustomGUIPlugin : JavaPlugin() {
 
         server.messenger.registerOutgoingPluginChannel(this, "customgui:messenger")
         server.messenger.registerIncomingPluginChannel(this, "customgui:messenger", GatewayClient(this))
+
+        Files.init(this)
     }
 
     override fun onDisable() {
