@@ -14,7 +14,7 @@ buildscript {
 apply plugin: "kotlin"
 apply plugin: 'net.minecraftforge.gradle'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '15'
 
 minecraft {
     mappings channel: 'snapshot', version: '20210309-1.16.5'
@@ -57,7 +57,7 @@ dependencies {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "15"
 }
 
 processResources {
