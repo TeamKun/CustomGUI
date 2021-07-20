@@ -1,4 +1,4 @@
-import org.apache.tools.ant.filters.ReplaceTokens
+import org.apache.tools.ant.filters.*
 
 plugins {
     id "de.undercouch.download"
@@ -7,6 +7,7 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     maven {
         name = "papermc-repo"
         url = "https://papermc.io/repo/repository/maven-public/"
@@ -18,36 +19,39 @@ repositories {
 
 configurations {
     embed
-    compile.extendsFrom(embed)
+    implementation.extendsFrom(embed)
 }
 
 dependencies {
-    implementation "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
-
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
     embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "1.5.20"
     embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.20"
     embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.20"
-
     embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
-    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
-    embed group: "ch.qos.logback", name: "logback-classic", version: "latest.release"
-    embed "dev.kotx:flylib-reloaded:latest.release"
+    embed "dev.kotx:flylib-reloaded:0.3.7"
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter(
-                ReplaceTokens,
-                tokens: [
-                        'version': project.version,
-                ]
-        )
-    }
+    filter ReplaceTokens, tokens: [
+            "version": parent.project.version
+    ]
 }
 
 jar {
     archiveName("${parent.project.name}-plugin-${parent.project.version}.jar")
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+task buildPlugin {
+    group("kotx_build")
+    dependsOn(jar)
+    doLast {
+        delete fileTree(dir: "${projectDir}/../server/plugins", include: "${parent.project.name}-plugin-*.jar")
+        copy {
+            from jar
+            into new File("${projectDir}/../server/plugins")
+        }
+    }
 }
 
 task shadow {

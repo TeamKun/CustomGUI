@@ -14,7 +14,7 @@ buildscript {
 apply plugin: "kotlin"
 apply plugin: 'net.minecraftforge.gradle'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '15'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: 'snapshot', version: '20210309-1.16.5'
@@ -57,18 +57,13 @@ dependencies {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "15"
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter(
-                ReplaceTokens,
-                tokens: [
-                        'version': project.version,
-                ]
-        )
-    }
+    filter ReplaceTokens, tokens: [
+            "version": parent.project.version
+    ]
 }
 
 jar {
@@ -77,8 +72,8 @@ jar {
                 "Specification-Title"     : "customgui",
                 "Specification-Vendor"    : "kotx__, kun_lab",
                 "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.version,
+                "Implementation-Title"    : parent.project.name,
+                "Implementation-Version"  : parent.project.version,
                 "Implementation-Vendor"   : "kotx__, kun_lab",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
