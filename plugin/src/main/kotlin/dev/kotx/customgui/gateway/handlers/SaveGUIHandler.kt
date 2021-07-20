@@ -15,10 +15,8 @@ class SaveGUIHandler : GatewayHandler {
         if (!workspaceDirectory.exists())
             workspaceDirectory.mkdirs()
 
-        if (playerWorkspaceFile.exists())
-            playerWorkspaceFile.delete()
-
-        playerWorkspaceFile.createNewFile()
+        if (!playerWorkspaceFile.exists())
+            playerWorkspaceFile.createNewFile()
 
         playerWorkspaceFile.writeText(json.toString())
     }
