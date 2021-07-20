@@ -13,7 +13,7 @@ object Files {
             guis = guiDirectory.allFiles().map {
                 GUI(it.parentFile.name, it.nameWithoutExtension, it.readText().asJsonArray())
             }
-        }, 0, 3000)
+        }, 0, 60)
     }
 
     fun save(gui: GUI) {
