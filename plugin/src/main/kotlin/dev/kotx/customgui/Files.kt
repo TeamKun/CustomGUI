@@ -4,14 +4,13 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 object Files {
-    var guis = listOf<GUI>()
-        private set
+    private var guis = listOf<GUI>()
 
     private val guiDirectory = File("./plugins/CustomGUI/guis/")
 
     fun init(plugin: JavaPlugin) {
         plugin.server.scheduler.scheduleSyncRepeatingTask(plugin, {
-            guiDirectory.allFiles().map {
+            guis = guiDirectory.allFiles().map {
                 GUI(it.parentFile.name, it.nameWithoutExtension, it.readText().asJsonArray())
             }
         }, 0, 3000)
@@ -27,9 +26,8 @@ object Files {
         guiFile.writeText(gui.views.toString())
     }
 
-    fun findByName(name: String) = guiDirectory.allFiles().find { it.nameWithoutExtension == name }?.let {
-        GUI(it.parentFile.name, it.nameWithoutExtension, it.readText().asJsonArray())
-    }
+    fun findByName(name: String) = guis.find { it.name == name }
 
-    private fun File.allFiles(): List<File> = listFiles().flatMap { if (it.isDirectory) it.allFiles() else listOf(it) }
+    private fun File.allFiles(): List<File> =
+        listFiles()?.flatMap { if (it.isDirectory) it.allFiles() else listOf(it) } ?: emptyList()
 }
