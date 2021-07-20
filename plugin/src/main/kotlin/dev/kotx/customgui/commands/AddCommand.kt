@@ -40,7 +40,7 @@ class AddCommand : Command("add") {
         if (!normalizer.matches(args.first())) {
             pluginMessage {
                 bold(args.first(), Color.RED)
-                append("は使用できない文字が含まれています。GUI名には半角英数字とハイフン、アンダースコアを使用することが出来ます。")
+                append("は使用できない文字が含まれています。GUI名には半角英数字とハイフン、アンダースコアを使用することが出来ます。", Color.RED)
             }
             return
         }
@@ -65,6 +65,7 @@ class AddCommand : Command("add") {
                 }
 
                 CustomGUIListener.wait(player!!) {
+                    it.isCancelled = true
                     val message = (it.message() as TextComponent).content()
                     when (message.lowercase()) {
                         "yes", "y", "はい" -> {
@@ -81,14 +82,14 @@ class AddCommand : Command("add") {
 
                             pluginMessage {
                                 bold(args.first(), Color.GREEN)
-                                append("を更新しました。")
+                                append("を更新しました。", Color.GREEN)
                             }
                         }
 
                         else -> {
                             pluginMessage {
                                 bold(args.first(), Color.RED)
-                                append("の更新をキャンセルしました。")
+                                append("の更新をキャンセルしました。", Color.RED)
                             }
                         }
                     }
@@ -110,14 +111,14 @@ class AddCommand : Command("add") {
         Files.save(
             GUI(
                 player!!.uniqueId.toString(),
-                player!!.name,
+                args.first(),
                 views
             )
         )
 
         pluginMessage {
             bold(args.first(), Color.GREEN)
-            append("という名前でGUIを保存しました。")
+            append("という名前でGUIを保存しました。", Color.GREEN)
         }
     }
 }
