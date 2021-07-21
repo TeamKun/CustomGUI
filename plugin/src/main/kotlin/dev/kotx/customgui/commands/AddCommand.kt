@@ -99,7 +99,9 @@ class AddCommand : Command("add") {
                     bold(args.first(), Color.RED)
                     append("という名前のGUIは", Color.RED)
                     bold(author.name ?: "<UnknownPlayer>", Color.RED)
-                    append("が既に作成しています。作成されていないGUI名を使用して下さい。", Color.RED)
+                    append("が既に作成しています。更新するには、", Color.RED)
+                    bold("customgui.gui.delete", Color.RED)
+                    append("の権限を所有している必要があります。", Color.RED)
                 }
             }
             return
