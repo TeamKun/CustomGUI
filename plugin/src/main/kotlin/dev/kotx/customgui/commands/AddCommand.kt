@@ -64,7 +64,7 @@ class AddCommand : Command("add") {
                     bold("No(N)", Color.RED)
                 }
 
-                CustomGUIListener.wait(player!!) {
+                CustomGUIListener.waitForChat(player!!) {
                     it.isCancelled = true
                     val message = (it.message() as TextComponent).content()
                     when (message.lowercase()) {

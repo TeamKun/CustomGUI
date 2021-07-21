@@ -40,16 +40,16 @@ class CustomGUIPlugin : JavaPlugin() {
 }
 
 object CustomGUIListener : Listener {
-    private var callbacks = mutableMapOf<Player, (AsyncChatEvent) -> Unit>()
+    private var chatCallbacks = mutableMapOf<Player, (AsyncChatEvent) -> Unit>()
 
-    fun wait(player: Player, callback: (AsyncChatEvent) -> Unit) {
-        callbacks[player] = callback
+    fun waitForChat(player: Player, callback: (AsyncChatEvent) -> Unit) {
+        chatCallbacks[player] = callback
     }
 
     @EventHandler
     fun onChat(event: AsyncChatEvent) {
-        callbacks[event.player]?.invoke(event)
-        callbacks.remove(event.player)
+        chatCallbacks[event.player]?.invoke(event)
+        chatCallbacks.remove(event.player)
     }
 }
 
