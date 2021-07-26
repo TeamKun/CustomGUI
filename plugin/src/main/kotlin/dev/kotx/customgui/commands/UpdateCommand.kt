@@ -3,7 +3,6 @@ package dev.kotx.customgui.commands
 import dev.kotx.customgui.Files
 import dev.kotx.customgui.GUI
 import dev.kotx.customgui.asJsonObject
-import dev.kotx.customgui.getArray
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandContext
 import org.bukkit.entity.Player
@@ -55,20 +54,17 @@ class UpdateCommand : Command("update") {
         }
 
         if (gui.author == player!!.uniqueId.toString() || player!!.hasPermission("customgui.gui.delete")) {
-            val playerWorkspaceJson = playerWorkspaceFile.readText().asJsonObject()
-            val views = playerWorkspaceJson.getArray("views")
-
             Files.save(
                 GUI(
                     player!!.uniqueId.toString(),
                     player!!.name,
-                    views
+                    playerWorkspaceFile.readText().asJsonObject()
                 )
             )
 
             pluginMessage {
                 bold(args.first(), Color.GREEN)
-                append("を更新しました。", Color.GREEN)
+                append("を現在のGUIで上書きしました。", Color.GREEN)
             }
         } else {
             val author = server.getOfflinePlayer(UUID.fromString(gui.author))
@@ -76,7 +72,7 @@ class UpdateCommand : Command("update") {
                 bold(args.first(), Color.RED)
                 append("という名前のGUIは", Color.RED)
                 bold(author.name ?: "<UnknownPlayer>", Color.RED)
-                append("が作成しています。更新するには、", Color.RED)
+                append("が作成しています。上書きするには、", Color.RED)
                 bold("customgui.gui.delete", Color.RED)
                 append("の権限を所有している必要があります。", Color.RED)
             }

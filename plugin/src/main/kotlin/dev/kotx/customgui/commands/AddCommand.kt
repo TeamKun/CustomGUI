@@ -4,7 +4,6 @@ import dev.kotx.customgui.CustomGUIListener
 import dev.kotx.customgui.Files
 import dev.kotx.customgui.GUI
 import dev.kotx.customgui.asJsonObject
-import dev.kotx.customgui.getArray
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandContext
 import net.kyori.adventure.text.TextComponent
@@ -69,27 +68,24 @@ class AddCommand : Command("add") {
                     val message = (it.message() as TextComponent).content()
                     when (message.lowercase()) {
                         "yes", "y", "はい" -> {
-                            val playerWorkspaceJson = playerWorkspaceFile.readText().asJsonObject()
-                            val views = playerWorkspaceJson.getArray("views")
-
                             Files.save(
                                 GUI(
                                     player!!.uniqueId.toString(),
                                     player!!.name,
-                                    views
+                                    playerWorkspaceFile.readText().asJsonObject()
                                 )
                             )
 
                             pluginMessage {
                                 bold(args.first(), Color.GREEN)
-                                append("を更新しました。", Color.GREEN)
+                                append("を現在のGUIで上書きしました。", Color.GREEN)
                             }
                         }
 
                         else -> {
                             pluginMessage {
                                 bold(args.first(), Color.RED)
-                                append("の更新をキャンセルしました。", Color.RED)
+                                append("の上書きをキャンセルしました。", Color.RED)
                             }
                         }
                     }
@@ -99,7 +95,7 @@ class AddCommand : Command("add") {
                     bold(args.first(), Color.RED)
                     append("という名前のGUIは", Color.RED)
                     bold(author.name ?: "<UnknownPlayer>", Color.RED)
-                    append("が既に作成しています。更新するには、", Color.RED)
+                    append("が既に作成しています。上書きするには、", Color.RED)
                     bold("customgui.gui.delete", Color.RED)
                     append("の権限を所有している必要があります。", Color.RED)
                 }
@@ -107,14 +103,11 @@ class AddCommand : Command("add") {
             return
         }
 
-        val playerWorkspaceJson = playerWorkspaceFile.readText().asJsonObject()
-        val views = playerWorkspaceJson.getArray("views")
-
         Files.save(
             GUI(
                 player!!.uniqueId.toString(),
                 args.first(),
-                views
+                playerWorkspaceFile.readText().asJsonObject()
             )
         )
 

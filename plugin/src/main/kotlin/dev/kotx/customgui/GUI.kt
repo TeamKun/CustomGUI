@@ -1,9 +1,9 @@
 package dev.kotx.customgui
 
-import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 
 data class GUI(
     val author: String,
     val name: String,
-    val views: JsonArray
+    val data: JsonObject
 )
