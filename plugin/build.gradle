@@ -28,7 +28,7 @@ dependencies {
     embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.20"
     embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.20"
     embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
-    embed "dev.kotx:flylib-reloaded:0.3.7"
+    embed "dev.kotx:flylib-reloaded:0.3.8"
 }
 
 processResources {
