@@ -1,22 +1,18 @@
 package dev.kotx.customgui
 
-import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.*
 
 object Files {
-    var guis = listOf<GUI>()
+    var guis = mutableListOf<GUI>()
         private set
-        get() = field.toList()
 
     private val guiDirectory = File("./plugins/CustomGUI/guis/")
 
-    fun init(plugin: JavaPlugin) {
-        plugin.server.scheduler.scheduleSyncRepeatingTask(plugin, {
-            guis = guiDirectory.allFiles().map {
-                GUI(it.parentFile.name, it.nameWithoutExtension, it.readText().asJsonObject())
-            }
-        }, 0, 60)
+    fun init() {
+        guis = guiDirectory.allFiles().map {
+            GUI(it.parentFile.name, it.nameWithoutExtension, it.readText().asJsonObject())
+        }.toMutableList()
     }
 
     fun save(gui: GUI) {
@@ -26,11 +22,21 @@ object Files {
         if (!guiFile.exists())
             guiFile.createNewFile()
 
+        guis.add(gui)
+
         guiFile.writeText(gui.data.toString())
     }
 
     fun findByName(name: String) = guis.find { it.name == name }
     fun filterByPlayer(uuid: UUID) = guis.filter { it.author == uuid.toString() }
+    fun deleteByName(name: String) {
+        val gui = guis.find { it.name == name } ?: return
+        guis.remove(gui)
+
+        val guiFile = File(guiDirectory, "${gui.author}/${gui.name}.json")
+        if (guiFile.exists())
+            guiFile.delete()
+    }
 
     private fun File.allFiles(): List<File> =
         listFiles()?.flatMap { if (it.isDirectory) it.allFiles() else listOf(it) } ?: emptyList()
