@@ -1,5 +1,6 @@
 package dev.kotx.customgui.commands
 
+import dev.kotx.customgui.Constants.workspaceDirectory
 import dev.kotx.customgui.Files
 import dev.kotx.customgui.GUI
 import dev.kotx.customgui.asJsonObject
@@ -20,7 +21,6 @@ class UpdateCommand : Command("update") {
         }
     }
 
-    private val workspaceDirectory = File("./plugins/CustomGUI/workspaces/")
     override fun CommandContext.execute() {
         if (sender !is Player) {
             pluginMessageFail("プレイヤーのみがこのコマンドを実行できます。")

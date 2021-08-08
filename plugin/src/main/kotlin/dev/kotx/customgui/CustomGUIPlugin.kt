@@ -12,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import java.io.File
 
 class CustomGUIPlugin : JavaPlugin() {
     override fun onEnable() {
@@ -40,6 +41,10 @@ class CustomGUIPlugin : JavaPlugin() {
         server.messenger.unregisterOutgoingPluginChannel(this)
         server.messenger.unregisterIncomingPluginChannel(this)
     }
+}
+
+object Constants {
+    val workspaceDirectory = File("./plugins/CustomGUI/workspaces/")
 }
 
 object CustomGUIListener : Listener {

@@ -1,5 +1,6 @@
 package dev.kotx.customgui.gateway.handlers
 
+import dev.kotx.customgui.Constants.workspaceDirectory
 import dev.kotx.customgui.gateway.GatewayHandler
 import dev.kotx.customgui.gateway.OpCode
 import kotlinx.serialization.json.JsonObject
@@ -8,7 +9,7 @@ import java.io.File
 
 class SaveGUIHandler : GatewayHandler {
     override val opCode: OpCode = OpCode.SAVE_GUI
-    private val workspaceDirectory = File("./plugins/CustomGUI/workspaces/")
+
 
     override fun handle(player: Player, json: JsonObject) {
         val playerWorkspaceFile = File(workspaceDirectory, "${player.uniqueId}.json")
