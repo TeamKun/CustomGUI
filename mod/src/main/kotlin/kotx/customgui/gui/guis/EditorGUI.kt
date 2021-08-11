@@ -31,7 +31,7 @@ import kotlin.math.min
 
 object EditorGUI : GUI() {
     val holders = mutableListOf<ViewHolder>()
-    val creators = listOf(
+    private val creators = listOf(
         TextViewCreator(),
         RectViewCreator(),
         ImageViewCreator(),
@@ -41,22 +41,22 @@ object EditorGUI : GUI() {
     const val editorWidth = 360
     const val editorHeight = 203
 
-    val left: Int
+    private val left: Int
         get() = (width / 2) - (editorWidth / 2)
 
-    val right: Int
+    private val right: Int
         get() = (width / 2) + (editorWidth / 2)
 
-    val top: Int
+    private val top: Int
         get() = (height / 2) - (editorHeight / 2)
 
-    val bottom: Int
+    private val bottom: Int
         get() = (height / 2) + (editorHeight / 2)
 
     var selectingCreator: Int = -1
     var creatorLastLocation: Pair<Int, Int>? = null
 
-    var scalingCorner = -1
+    private var scalingCorner = -1
 
     override fun initialize() {
         CustomGUIMod.gatewayClient.send(OpCode.LOAD_GUI, json { })
@@ -487,8 +487,8 @@ object EditorGUI : GUI() {
         }
     }
 
-    var lastClick: Int? = null
-    var lastRelease: Long? = null
+    private var lastClick: Int? = null
+    private var lastRelease: Long? = null
     override fun onMouseRelease(button: MouseButton, mouseX: Int, mouseY: Int) {
         holders.find { it.moving }?.moving = false
         holders.find { it.scaling }?.scaling = false
@@ -533,7 +533,7 @@ object EditorGUI : GUI() {
         lastClick = l
     }
 
-    var clipboard: String? = null
+    private var clipboard: String? = null
     override fun onKeyPress(key: Int, modifiers: Int): Boolean {
         when {
             key == GLFW.GLFW_KEY_DELETE -> holders.removeIf { it.selecting }
