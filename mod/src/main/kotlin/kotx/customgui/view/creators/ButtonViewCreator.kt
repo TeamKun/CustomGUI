@@ -55,6 +55,6 @@ class ButtonViewCreator : ViewCreator<ButtonView, ButtonViewHolder>() {
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
         rect(stack, 0, 0, width, height, Color(0, 0, 0, 100))
-        textCenter(stack, "コマンドを入力", width / 2, 30, Color.WHITE)
+        textCenter(stack, "送信するメッセージ・コマンドを入力", width / 2, 30, Color.WHITE)
     }
 }
