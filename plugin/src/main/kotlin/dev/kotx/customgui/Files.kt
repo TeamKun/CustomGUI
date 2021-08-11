@@ -22,6 +22,7 @@ object Files {
         if (!guiFile.exists())
             guiFile.createNewFile()
 
+        guis.removeIf { it.name == gui.name }
         guis.add(gui)
 
         guiFile.writeText(gui.data.toString())
