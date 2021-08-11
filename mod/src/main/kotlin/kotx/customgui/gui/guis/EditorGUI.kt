@@ -59,6 +59,7 @@ object EditorGUI : GUI() {
     var scalingCorner = -1
 
     override fun initialize() {
+        CustomGUIMod.gatewayClient.send(OpCode.LOAD_GUI, json { })
         val w = width / (creators.size + 1)
         creators.forEachIndexed { i, creator ->
             val x = w * (i + 1)
