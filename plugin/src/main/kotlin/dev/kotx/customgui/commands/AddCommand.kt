@@ -71,7 +71,7 @@ class AddCommand : Command("add") {
                             Files.save(
                                 GUI(
                                     player!!.uniqueId.toString(),
-                                    player!!.name,
+                                    args.first(),
                                     playerWorkspaceFile.readText().asJsonObject()
                                 )
                             )
