@@ -1,9 +1,6 @@
 package dev.kotx.customgui
 
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.*
 
 class JsonBuilder {
     private var content = mutableMapOf<String, JsonElement>()
@@ -20,8 +17,8 @@ class JsonBuilder {
         content[this] = JsonPrimitive(value)
     }
 
-    infix fun String.to(value: JsonElement) {
-        content[this] = value
+    infix fun String.to(value: JsonElement?) {
+        content[this] = value ?: JsonNull
     }
 
     infix fun String.to(values: Collection<JsonElement>) {

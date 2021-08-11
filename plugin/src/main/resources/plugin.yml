@@ -8,3 +8,6 @@ permissions:
   customgui.gui.delete:
     description: Permission to delete GUI other than yourself.
     default: op
+  customgui.gui.show:
+    description: Permission to show GUI to others.
+    default: op

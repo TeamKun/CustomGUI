@@ -31,7 +31,7 @@ dependencies {
     embed 'io.insert-koin:koin-core:3.1.2'
     embed 'io.insert-koin:koin-core-ext:3.0.2'
     embed 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2'
-    embed "dev.kotx:flylib-reloaded:0.3.9"
+    embed "dev.kotx:flylib-reloaded:0.3.10"
 }
 
 processResources {
