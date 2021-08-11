@@ -2,12 +2,22 @@ package kotx.customgui
 
 import kotx.customgui.gateway.GatewayClient
 import kotx.customgui.gui.GUI
-import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.gui.guis.EditorGUI
 import kotx.customgui.util.MainThreadExecutor
 import kotx.customgui.view.ViewHandler
+import kotx.customgui.view.ViewHolder
+import kotx.customgui.view.holders.ButtonViewHolder
+import kotx.customgui.view.holders.ImageViewHolder
+import kotx.customgui.view.holders.RectViewHolder
+import kotx.customgui.view.holders.TextViewHolder
+import kotx.customgui.view.renderers.ButtonViewRenderer
+import kotx.customgui.view.renderers.ImageViewRenderer
+import kotx.customgui.view.renderers.RectViewRenderer
+import kotx.customgui.view.renderers.TextViewRenderer
 import net.minecraft.client.settings.KeyBinding
 import net.minecraft.client.util.InputMappings
 import net.minecraftforge.client.event.InputEvent
+import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.settings.KeyConflictContext
 import net.minecraftforge.client.settings.KeyModifier
 import net.minecraftforge.common.MinecraftForge
@@ -32,6 +42,8 @@ class CustomGUIMod {
         )
         val gatewayClient = GatewayClient()
         val viewHandler = ViewHandler()
+        val holders = mutableListOf<ViewHolder>()
+        var opacity = 0.0
     }
 
     init {
@@ -47,7 +59,29 @@ class CustomGUIMod {
     }
 
     @SubscribeEvent
-    fun onRender(event: TickEvent.RenderTickEvent) {
+    fun onRenderTick(event: TickEvent.RenderTickEvent) {
         MainThreadExecutor.consume()
+    }
+
+    @SubscribeEvent
+    fun onRenderOverlay(event: RenderGameOverlayEvent) {
+        if (opacity <= 0.0) return
+
+        val stack = event.matrixStack
+        holders.sortedBy { it.index }.forEach {
+            val renderer = it.content.renderer
+
+            val x1 = EditorGUI.width / 2 + it.content.x1
+            val y1 = EditorGUI.height / 2 + it.content.y1
+            val x2 = EditorGUI.width / 2 + it.content.x2
+            val y2 = EditorGUI.height / 2 + it.content.y2
+
+            when (it) {
+                is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+                is RectViewHolder -> (renderer as RectViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+                is ImageViewHolder -> (renderer as ImageViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+            }
+        }
     }
 }
