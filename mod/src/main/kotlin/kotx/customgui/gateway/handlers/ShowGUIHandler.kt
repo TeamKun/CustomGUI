@@ -1,9 +1,6 @@
 package kotx.customgui.gateway.handlers
 
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.plus
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.JsonObject
 import kotx.customgui.CustomGUIMod
 import kotx.customgui.gateway.GatewayHandler
@@ -37,6 +34,10 @@ class ShowGUIHandler : GatewayHandler {
                 ClickableGUI.holders.clear()
                 ClickableGUI.holders.addAll(guis)
                 var frame = 1
+                try {
+                    scope.cancel()
+                } catch (e: Exception) {
+                }
                 scope.timer(17, true) {
                     val tick = frame / 3
                     ClickableGUI.opacity = when {
@@ -59,6 +60,10 @@ class ShowGUIHandler : GatewayHandler {
                 CustomGUIMod.holders.addAll(guis)
 
                 var frame = 1
+                try {
+                    scope.cancel()
+                } catch (e: Exception) {
+                }
                 scope.timer(17, true) {
                     val tick = frame / 3
                     CustomGUIMod.opacity = when {
