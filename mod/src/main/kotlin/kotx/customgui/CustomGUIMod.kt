@@ -27,6 +27,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import org.lwjgl.glfw.GLFW
 import org.slf4j.LoggerFactory
+import java.io.File
 
 @Mod(CustomGUIMod.MOD_ID)
 class CustomGUIMod {
@@ -50,6 +51,8 @@ class CustomGUIMod {
         MinecraftForge.EVENT_BUS.register(this)
 
         ClientRegistry.registerKeyBinding(openEditorKeyBind)
+
+        File("./mods/CustomGUI/caches/").listFiles().forEach { it.delete() }
     }
 
     @SubscribeEvent
