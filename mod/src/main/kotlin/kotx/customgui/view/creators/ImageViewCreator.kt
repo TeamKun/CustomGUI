@@ -10,7 +10,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.gui.guis.EditorGUI
+
 import kotx.customgui.util.component
 import kotx.customgui.util.fontRenderer
 import kotx.customgui.view.ViewCreator

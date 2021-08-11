@@ -1,4 +1,4 @@
-package kotx.customgui.gui.guis.editor
+package kotx.customgui.gui.guis
 
 import com.mojang.blaze3d.matrix.MatrixStack
 import kotx.customgui.CustomGUIMod

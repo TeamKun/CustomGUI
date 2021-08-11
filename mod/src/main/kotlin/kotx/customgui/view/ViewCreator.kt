@@ -1,7 +1,8 @@
 package kotx.customgui.view
 
 import kotx.customgui.gui.GUI
-import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.gui.guis.EditorGUI
+
 import kotx.customgui.view.holders.ButtonViewHolder
 import kotx.customgui.view.holders.ImageViewHolder
 import kotx.customgui.view.holders.RectViewHolder

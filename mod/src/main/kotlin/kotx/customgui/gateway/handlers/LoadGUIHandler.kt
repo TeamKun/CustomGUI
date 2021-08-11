@@ -4,7 +4,7 @@ import kotlinx.serialization.json.JsonObject
 import kotx.customgui.CustomGUIMod
 import kotx.customgui.gateway.GatewayHandler
 import kotx.customgui.gateway.OpCode
-import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.gui.guis.EditorGUI
 import kotx.customgui.util.getInt
 import kotx.customgui.util.getObjectArray
 import kotx.customgui.view.ViewType

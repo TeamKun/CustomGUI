@@ -1,7 +1,8 @@
 package kotx.customgui.view.creators
 
 import com.mojang.blaze3d.matrix.MatrixStack
-import kotx.customgui.gui.guis.editor.EditorGUI
+import kotx.customgui.gui.guis.EditorGUI
+
 import kotx.customgui.util.component
 import kotx.customgui.view.ViewCreator
 import kotx.customgui.view.ViewType
