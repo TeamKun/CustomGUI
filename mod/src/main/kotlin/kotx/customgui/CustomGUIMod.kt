@@ -68,13 +68,15 @@ class CustomGUIMod {
         if (opacity <= 0.0) return
 
         val stack = event.matrixStack
+        val width = event.window.scaledWidth
+        val height = event.window.scaledHeight
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
-            val x1 = EditorGUI.width / 2 + it.content.x1
-            val y1 = EditorGUI.height / 2 + it.content.y1
-            val x2 = EditorGUI.width / 2 + it.content.x2
-            val y2 = EditorGUI.height / 2 + it.content.y2
+            val x1 = width / 2 + it.content.x1
+            val y1 = height / 2 + it.content.y1
+            val x2 = width / 2 + it.content.x2
+            val y2 = height / 2 + it.content.y2
 
             when (it) {
                 is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)

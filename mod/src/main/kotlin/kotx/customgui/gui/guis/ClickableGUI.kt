@@ -1,7 +1,6 @@
 package kotx.customgui.gui.guis
 
 import com.mojang.blaze3d.matrix.MatrixStack
-import kotx.customgui.CustomGUIMod
 import kotx.customgui.gui.GUI
 import kotx.customgui.gui.MouseButton
 import kotx.customgui.view.View
@@ -20,15 +19,15 @@ object ClickableGUI : GUI() {
     var opacity = 0.0
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
-        if (CustomGUIMod.opacity <= 0.0) return
+        if (opacity <= 0.0) return
 
-        CustomGUIMod.holders.sortedBy { it.index }.forEach {
+        holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
-            val x1 = EditorGUI.width / 2 + it.content.x1
-            val y1 = EditorGUI.height / 2 + it.content.y1
-            val x2 = EditorGUI.width / 2 + it.content.x2
-            val y2 = EditorGUI.height / 2 + it.content.y2
+            val x1 = width / 2 + it.content.x1
+            val y1 = height / 2 + it.content.y1
+            val x2 = width / 2 + it.content.x2
+            val y2 = height / 2 + it.content.y2
 
             when (it) {
                 is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
