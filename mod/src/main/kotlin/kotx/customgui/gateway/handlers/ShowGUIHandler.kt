@@ -5,6 +5,7 @@ import kotlinx.serialization.json.JsonObject
 import kotx.customgui.CustomGUIMod
 import kotx.customgui.gateway.GatewayHandler
 import kotx.customgui.gateway.OpCode
+import kotx.customgui.gui.GUI
 import kotx.customgui.gui.guis.ClickableGUI
 import kotx.customgui.util.getInt
 import kotx.customgui.util.getObjectArray
@@ -15,6 +16,7 @@ class ShowGUIHandler : GatewayHandler {
     override val opCode: OpCode = OpCode.SHOW_GUI
 
     private val scope = CoroutineScope(Dispatchers.Default) + CoroutineName("Animator")
+    private var timer: Job? = null
     override fun handle(json: JsonObject) {
         val mode = json.getInt("mode")
         val fadeinTicks = json.getInt("fadeinTicks")
@@ -33,12 +35,10 @@ class ShowGUIHandler : GatewayHandler {
                 ClickableGUI.opacity = 0.0
                 ClickableGUI.holders.clear()
                 ClickableGUI.holders.addAll(guis)
+                GUI.display(ClickableGUI)
                 var frame = 1
-                try {
-                    scope.cancel()
-                } catch (e: Exception) {
-                }
-                scope.timer(17, true) {
+                timer?.cancel()
+                timer = scope.timer(17, true) {
                     val tick = frame / 3
                     ClickableGUI.opacity = when {
                         tick < fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
@@ -56,15 +56,13 @@ class ShowGUIHandler : GatewayHandler {
 
             //overlay gui
             2 -> {
+                CustomGUIMod.opacity = 0.0
                 CustomGUIMod.holders.clear()
                 CustomGUIMod.holders.addAll(guis)
 
                 var frame = 1
-                try {
-                    scope.cancel()
-                } catch (e: Exception) {
-                }
-                scope.timer(17, true) {
+                timer?.cancel()
+                timer = scope.timer(17, true) {
                     val tick = frame / 3
                     CustomGUIMod.opacity = when {
                         tick < fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
