@@ -22,7 +22,6 @@ class ButtonView(
     }
 
     override fun onClick() {
-        val cmd = command.replaceFirst("^/".toRegex(), "")
-        mc.player?.sendChatMessage("/$cmd")
+        mc.player?.sendChatMessage(command)
     }
 }
