@@ -4,6 +4,7 @@ import kotx.customgui.gateway.GatewayClient
 import kotx.customgui.gui.GUI
 import kotx.customgui.gui.guis.EditorGUI
 import kotx.customgui.util.MainThreadExecutor
+import kotx.customgui.util.mc
 import kotx.customgui.view.ViewHandler
 import kotx.customgui.view.ViewHolder
 import kotx.customgui.view.holders.ButtonViewHolder
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import org.lwjgl.glfw.GLFW
 import org.slf4j.LoggerFactory
+import java.awt.Color
 import java.io.File
 
 @Mod(CustomGUIMod.MOD_ID)
@@ -68,12 +70,23 @@ class CustomGUIMod {
     }
 
     @SubscribeEvent
-    fun onRenderOverlay(event: RenderGameOverlayEvent) {
+    fun onRenderOverlay(event: RenderGameOverlayEvent.Post) {
+        if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE) return
+        if (event.isCancelable) return
+        if (mc.currentServerData == null || mc.currentServerData?.isOnLAN == true) return
+        if (mc.currentScreen != null) return
+
         if (opacity <= 0.0) return
 
         val stack = event.matrixStack
         val width = event.window.scaledWidth
         val height = event.window.scaledHeight
+
+        val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
+        val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
+
+        GUI.text(stack, "X: $xFactor, Y: $yFactor", 30, 30, Color.WHITE, true)
+
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
@@ -83,9 +96,6 @@ class CustomGUIMod {
             var y2 = height / 2 + it.content.y2
 
             if (isFlex) {
-                val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
-                val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
-
                 x1 = (x1 * xFactor).toInt()
                 y1 = (y1 * yFactor).toInt()
                 x2 = (x2 * xFactor).toInt()
@@ -93,10 +103,42 @@ class CustomGUIMod {
             }
 
             when (it) {
-                is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is RectViewHolder -> (renderer as RectViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is ImageViewHolder -> (renderer as ImageViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+                is TextViewHolder -> (renderer as TextViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is RectViewHolder -> (renderer as RectViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is ImageViewHolder -> (renderer as ImageViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
             }
         }
     }
