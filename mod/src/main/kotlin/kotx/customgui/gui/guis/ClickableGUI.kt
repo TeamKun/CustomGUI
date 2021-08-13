@@ -13,6 +13,7 @@ import kotx.customgui.view.renderers.ButtonViewRenderer
 import kotx.customgui.view.renderers.ImageViewRenderer
 import kotx.customgui.view.renderers.RectViewRenderer
 import kotx.customgui.view.renderers.TextViewRenderer
+import java.awt.Color
 
 object ClickableGUI : GUI() {
     val holders = mutableListOf<ViewHolder>()
@@ -20,6 +21,8 @@ object ClickableGUI : GUI() {
     var isFlex = false
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
+        text(stack, "Opacity: $opacity", 30, 30, Color.WHITE, true)
+
         if (opacity <= 0.0) return
 
         holders.sortedBy { it.index }.forEach {
@@ -41,10 +44,42 @@ object ClickableGUI : GUI() {
             }
 
             when (it) {
-                is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is RectViewHolder -> (renderer as RectViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
-                is ImageViewHolder -> (renderer as ImageViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)
+                is TextViewHolder -> (renderer as TextViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is RectViewHolder -> (renderer as RectViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
+                is ImageViewHolder -> (renderer as ImageViewRenderer).renderFull(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    opacity,
+                    it.content
+                )
             }
         }
     }
