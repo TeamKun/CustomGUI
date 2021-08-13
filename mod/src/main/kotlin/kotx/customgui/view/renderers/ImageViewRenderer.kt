@@ -16,18 +16,26 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 class ImageViewRenderer : ViewRenderer<ImageView> {
-    override fun renderPreview(stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, view: ImageView) {
-        renderImage(view, stack, x1, y1, x2, y2)
+    override fun renderPreview(
+        stack: MatrixStack,
+        x1: Int,
+        y1: Int,
+        x2: Int,
+        y2: Int,
+        opacity: Double,
+        view: ImageView
+    ) {
+        renderImage(view, stack, x1, y1, x2, y2, opacity)
     }
 
-    override fun renderFull(stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, view: ImageView) {
-        renderImage(view, stack, x1, y1, x2, y2)
+    override fun renderFull(stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, opacity: Double, view: ImageView) {
+        renderImage(view, stack, x1, y1, x2, y2, opacity)
     }
 
-    private fun renderImage(view: ImageView, stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int) {
+    private fun renderImage(view: ImageView, stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, opacity: Double) {
         load(view)
         if (view.isLoading) {
-            GUI.rect(stack, x1, y1, x2, y2, Color(255, 255, 255, 100))
+            GUI.rect(stack, x1, y1, x2, y2, Color(255, 255, 255, opacity.toInt()))
         }
 
         if (view.isLoaded) {
@@ -46,7 +54,7 @@ class ImageViewRenderer : ViewRenderer<ImageView> {
             RenderSystem.enableBlend()
             RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
             RenderSystem.alphaFunc(516, 0.01f)
-            RenderSystem.color4f(1f, 1f, 1f, 1f)
+            RenderSystem.color4f(1f, 1f, 1f, (opacity / 255).toFloat())
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX)
             bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex()
             bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex()
