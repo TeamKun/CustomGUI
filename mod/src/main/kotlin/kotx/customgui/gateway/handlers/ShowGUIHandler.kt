@@ -45,14 +45,19 @@ class ShowGUIHandler : GatewayHandler {
                 timer = scope.timer(17, true) {
                     val tick = frame / 3
                     ClickableGUI.opacity = when {
-                        tick < fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
-                        tick >= fadeinTicks && tick < fadeinTicks + stayTicks -> 255.0
-                        tick >= (fadeinTicks + stayTicks) -> 255.0 - 255.0 / (fadeoutTicks * 3) * frame
+                        tick in 0..fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
+                        tick in fadeinTicks..(fadeinTicks + stayTicks) -> 255.0
+                        tick in (fadeinTicks + stayTicks)..Int.MAX_VALUE -> 255.0 - 255.0 / (fadeinTicks * 3) * (frame - (fadeinTicks + stayTicks) * 3)
+
                         else -> 255.0
                     }.coerceAtLeast(0.0).coerceAtMost(255.0)
 
-                    if (tick > fadeinTicks + stayTicks + fadeoutTicks)
+                    if (tick > fadeinTicks + stayTicks + fadeoutTicks) {
+                        ClickableGUI.opacity = 0.0
+                        ClickableGUI.holders.clear()
+                        GUI.display()
                         cancel()
+                    }
 
                     frame++
                 }
@@ -67,17 +72,21 @@ class ShowGUIHandler : GatewayHandler {
 
                 var frame = 1
                 timer?.cancel()
-                timer = scope.timer(17, true) {
+                timer = scope.timer(17) {
                     val tick = frame / 3
                     CustomGUIMod.opacity = when {
-                        tick < fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
-                        tick >= fadeinTicks && tick < fadeinTicks + stayTicks -> 255.0
-                        tick >= (fadeinTicks + stayTicks) -> 255.0 - 255.0 / (fadeoutTicks * 3) * frame
+                        tick in 0..fadeinTicks -> 255.0 / (fadeinTicks * 3) * frame
+                        tick in fadeinTicks..(fadeinTicks + stayTicks) -> 255.0
+                        tick in (fadeinTicks + stayTicks)..Int.MAX_VALUE -> 255.0 - 255.0 / (fadeinTicks * 3) * (frame - (fadeinTicks + stayTicks) * 3)
+
                         else -> 255.0
                     }.coerceAtLeast(0.0).coerceAtMost(255.0)
 
-                    if (tick > fadeinTicks + stayTicks + fadeoutTicks)
+                    if (tick > fadeinTicks + stayTicks + fadeoutTicks) {
+                        CustomGUIMod.opacity = 0.0
+                        CustomGUIMod.holders.clear()
                         cancel()
+                    }
 
                     frame++
                 }
