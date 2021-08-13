@@ -45,6 +45,7 @@ class CustomGUIMod {
         val viewHandler = ViewHandler()
         val holders = mutableListOf<ViewHolder>()
         var opacity = 0.0
+        var isFlex = false
     }
 
     init {
@@ -76,10 +77,20 @@ class CustomGUIMod {
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
-            val x1 = width / 2 + it.content.x1
-            val y1 = height / 2 + it.content.y1
-            val x2 = width / 2 + it.content.x2
-            val y2 = height / 2 + it.content.y2
+            var x1 = width / 2 + it.content.x1
+            var y1 = height / 2 + it.content.y1
+            var x2 = width / 2 + it.content.x2
+            var y2 = height / 2 + it.content.y2
+
+            if (isFlex) {
+                val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
+                val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
+
+                x1 = (x1 * xFactor).toInt()
+                y1 = (y1 * yFactor).toInt()
+                x2 = (x2 * xFactor).toInt()
+                y2 = (y2 * yFactor).toInt()
+            }
 
             when (it) {
                 is TextViewHolder -> (renderer as TextViewRenderer).renderFull(stack, x1, y1, x2, y2, it.content)

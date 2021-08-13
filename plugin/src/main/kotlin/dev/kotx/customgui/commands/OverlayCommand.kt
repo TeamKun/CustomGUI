@@ -123,6 +123,7 @@ class OverlayCommand : Command("overlay"), KoinComponent {
         targets.forEach {
             gatewayClient.send(it, OpCode.SHOW_GUI, json {
                 "mode" to 2
+                "flex" to (mode == "flex")
                 "fadeinTicks" to fadeinTicks
                 "stayTicks" to stayTicks
                 "fadeoutTicks" to fadeoutTicks

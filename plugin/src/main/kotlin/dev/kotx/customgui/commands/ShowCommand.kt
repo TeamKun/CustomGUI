@@ -122,6 +122,7 @@ class ShowCommand : Command("show"), KoinComponent {
         targets.forEach {
             gatewayClient.send(it, OpCode.SHOW_GUI, json {
                 "mode" to 1
+                "flex" to (mode == "flex")
                 "fadeinTicks" to fadeinTicks
                 "stayTicks" to stayTicks
                 "fadeoutTicks" to fadeoutTicks

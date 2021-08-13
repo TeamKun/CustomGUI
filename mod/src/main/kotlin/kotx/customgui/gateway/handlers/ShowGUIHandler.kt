@@ -7,6 +7,7 @@ import kotx.customgui.gateway.GatewayHandler
 import kotx.customgui.gateway.OpCode
 import kotx.customgui.gui.GUI
 import kotx.customgui.gui.guis.ClickableGUI
+import kotx.customgui.util.getBoolean
 import kotx.customgui.util.getInt
 import kotx.customgui.util.getObjectArray
 import kotx.customgui.util.timer
@@ -19,6 +20,7 @@ class ShowGUIHandler : GatewayHandler {
     private var timer: Job? = null
     override fun handle(json: JsonObject) {
         val mode = json.getInt("mode")
+        val isFlex = json.getBoolean("flex")
         val fadeinTicks = json.getInt("fadeinTicks")
         val stayTicks = json.getInt("stayTicks")
         val fadeoutTicks = json.getInt("fadeoutTicks")
@@ -35,6 +37,8 @@ class ShowGUIHandler : GatewayHandler {
                 ClickableGUI.opacity = 0.0
                 ClickableGUI.holders.clear()
                 ClickableGUI.holders.addAll(guis)
+                ClickableGUI.isFlex = isFlex
+
                 GUI.display(ClickableGUI)
                 var frame = 1
                 timer?.cancel()
@@ -59,6 +63,7 @@ class ShowGUIHandler : GatewayHandler {
                 CustomGUIMod.opacity = 0.0
                 CustomGUIMod.holders.clear()
                 CustomGUIMod.holders.addAll(guis)
+                CustomGUIMod.isFlex = isFlex
 
                 var frame = 1
                 timer?.cancel()
