@@ -60,6 +60,11 @@ class ShowCommand : Command("show"), KoinComponent {
     }
 
     override fun CommandContext.execute() {
+        if (args.size != 3 && args.size != 6) {
+            sendHelp()
+            return
+        }
+
         val gui = Files.findByName(args[0])
         val targets = Bukkit.selectEntities(sender, args[1]).filterIsInstance<Player>()
         val mode = args[2].lowercase()

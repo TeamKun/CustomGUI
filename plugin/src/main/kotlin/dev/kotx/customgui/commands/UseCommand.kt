@@ -32,6 +32,11 @@ class UseCommand : Command("use"), KoinComponent {
     }
 
     override fun CommandContext.execute() {
+        if (args.isEmpty()) {
+            sendHelp()
+            return
+        }
+
         if (sender !is Player) {
             pluginMessageFail("プレイヤーのみがこのコマンドを実行できます。")
             return

@@ -26,6 +26,11 @@ class CopyCommand : Command("copy") {
     }
 
     override fun CommandContext.execute() {
+        if (args.size != 2) {
+            sendHelp()
+            return
+        }
+
         val fromGui = args[0].let { Files.findByName(it) }
         val toGui = args[1].let { Files.findByName(it) }
 
