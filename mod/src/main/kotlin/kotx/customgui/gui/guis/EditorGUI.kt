@@ -88,10 +88,42 @@ object EditorGUI : GUI() {
             val y2 = height / 2 + it.content.y2
 
             when (it) {
-                is TextViewHolder -> (renderer as TextViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
-                is RectViewHolder -> (renderer as RectViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
-                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
-                is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(stack, x1, y1, x2, y2, it.content)
+                is TextViewHolder -> (renderer as TextViewRenderer).renderPreview(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    255.0,
+                    it.content
+                )
+                is RectViewHolder -> (renderer as RectViewRenderer).renderPreview(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    255.0,
+                    it.content
+                )
+                is ButtonViewHolder -> (renderer as ButtonViewRenderer).renderPreview(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    255.0,
+                    it.content
+                )
+                is ImageViewHolder -> (renderer as ImageViewRenderer).renderPreview(
+                    stack,
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    255.0,
+                    it.content
+                )
             }
         }
 
