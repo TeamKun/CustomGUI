@@ -1,6 +1,7 @@
 package dev.kotx.customgui.gateway
 
 import dev.kotx.customgui.asJsonObject
+import dev.kotx.customgui.gateway.handlers.LoadGUIHandler
 import dev.kotx.customgui.gateway.handlers.SaveGUIHandler
 import dev.kotx.customgui.getInt
 import dev.kotx.customgui.getObject
@@ -16,7 +17,8 @@ class GatewayClient(
     private val plugin: JavaPlugin
 ) : PluginMessageListener {
     private val handlers = mutableListOf(
-        SaveGUIHandler()
+        SaveGUIHandler(),
+        LoadGUIHandler()
     )
 
     override fun onPluginMessageReceived(channel: String, player: Player, message: ByteArray) {
