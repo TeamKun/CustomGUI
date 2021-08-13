@@ -28,6 +28,11 @@ class RemoveCommand : Command("remove") {
     }
 
     override fun CommandContext.execute() {
+        if (args.isEmpty()) {
+            sendHelp()
+            return
+        }
+
         val gui = Files.findByName(args[0])
 
         if (gui == null) {
