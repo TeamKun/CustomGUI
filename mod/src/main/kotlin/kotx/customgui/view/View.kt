@@ -22,4 +22,10 @@ interface View {
 
     val height: Int
         get() = max(y1, y2) - min(y1, y2)
+
+    val centerX: Int
+        get() = (x1 + x2) / 2
+
+    val centerY: Int
+        get() = (y1 + y2) / 2
 }
