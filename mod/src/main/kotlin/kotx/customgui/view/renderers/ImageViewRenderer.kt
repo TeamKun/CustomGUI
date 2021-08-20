@@ -35,7 +35,7 @@ class ImageViewRenderer : ViewRenderer<ImageView> {
     private fun renderImage(view: ImageView, stack: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, opacity: Double) {
         load(view)
         if (view.isLoading) {
-            GUI.rect(stack, x1, y1, x2, y2, Color(255, 255, 255, opacity.toInt()))
+            GUI.rect(stack, x1, y1, x2, y2, Color(255, 255, 255, 100))
         }
 
         if (view.isLoaded) {
