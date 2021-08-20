@@ -13,7 +13,6 @@ import kotx.customgui.view.renderers.ButtonViewRenderer
 import kotx.customgui.view.renderers.ImageViewRenderer
 import kotx.customgui.view.renderers.RectViewRenderer
 import kotx.customgui.view.renderers.TextViewRenderer
-import java.awt.Color
 
 object ClickableGUI : GUI() {
     val holders = mutableListOf<ViewHolder>()
@@ -21,27 +20,30 @@ object ClickableGUI : GUI() {
     var isFlex = false
 
     override fun draw(stack: MatrixStack, mouseX: Int, mouseY: Int) {
-        text(stack, "Opacity: $opacity", 30, 30, Color.WHITE, true)
-
         if (opacity <= 0.0) return
+
+        val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
+        val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
 
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
-            var x1 = width / 2 + it.content.x1
-            var y1 = height / 2 + it.content.y1
-            var x2 = width / 2 + it.content.x2
-            var y2 = height / 2 + it.content.y2
+            var x1 = it.content.x1
+            var y1 = it.content.y1
+            var x2 = it.content.x2
+            var y2 = it.content.y2
 
             if (isFlex) {
-                val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
-                val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
-
                 x1 = (x1 * xFactor).toInt()
                 y1 = (y1 * yFactor).toInt()
                 x2 = (x2 * xFactor).toInt()
                 y2 = (y2 * yFactor).toInt()
             }
+
+            x1 += width / 2
+            y1 += height / 2
+            x2 += width / 2
+            y2 += height / 2
 
             when (it) {
                 is TextViewHolder -> (renderer as TextViewRenderer).renderFull(
@@ -85,13 +87,26 @@ object ClickableGUI : GUI() {
     }
 
     override fun onMousePress(button: MouseButton, mouseX: Int, mouseY: Int) {
-        holders.filter { it.content.isHovering(mouseX, mouseY) }.forEach {
+        val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
+        val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
+
+        holders.filter {
+            if (isFlex)
+                it.content.isHovering(mouseX, mouseY, xFactor, yFactor)
+            else
+                it.content.isHovering(mouseX, mouseY, 1.0, 1.0)
+        }.forEach {
             it.content.onClick()
         }
     }
 
-    private fun View.isHovering(mouseX: Int, mouseY: Int): Boolean {
-        return mouseX in (x1 + this@ClickableGUI.width / 2)..(x2 + this@ClickableGUI.width / 2)
-                && mouseY in (y1 + this@ClickableGUI.height / 2)..(y2 + this@ClickableGUI.height / 2)
+    private fun View.isHovering(
+        mouseX: Int,
+        mouseY: Int,
+        xFactor: Double,
+        yFactor: Double
+    ): Boolean {
+        return mouseX.toDouble() in ((x1 * xFactor) + this@ClickableGUI.width / 2)..((x2 * xFactor) + this@ClickableGUI.width / 2)
+                && mouseY.toDouble() in ((y1 * yFactor) + this@ClickableGUI.height / 2)..((y2 * yFactor) + this@ClickableGUI.height / 2)
     }
 }
