@@ -38,6 +38,8 @@ object EditorGUI : GUI() {
         ButtonViewCreator(),
     )
 
+    var canLoad = false
+
     const val editorWidth = 360
     const val editorHeight = 203
 
@@ -59,7 +61,11 @@ object EditorGUI : GUI() {
     private var scalingCorner = -1
 
     override fun initialize() {
-        CustomGUIMod.gatewayClient.send(OpCode.LOAD_GUI, json { })
+        if (canLoad) {
+            CustomGUIMod.gatewayClient.send(OpCode.LOAD_GUI, json { })
+            canLoad = false
+        }
+
         val w = width / (creators.size + 1)
         creators.forEachIndexed { i, creator ->
             val x = w * (i + 1)
@@ -278,13 +284,24 @@ object EditorGUI : GUI() {
                     Color(255, 255, 255, 100)
                 )
 
+                holders.filter { !it.moving }.forEach {
+                    rectCenter(
+                        stack,
+                        it.content.centerX + (width / 2),
+                        it.content.centerY + (height / 2),
+                        2,
+                        2,
+                        Color(255, 0, 0)
+                    )
+                }
+
                 rect(stack, x1, y1, x2, y1 + 1, Color(255, 0, 0))
                 rect(stack, x1, y1, x1 + 1, y2, Color(255, 0, 0))
                 rect(stack, x1, y2, x2, y2 - 1, Color(255, 0, 0))
                 rect(stack, x2, y1, x2 - 1, y2, Color(255, 0, 0))
 
                 val text =
-                    "${moveContent.content.x1 + (moveContent.content.width / 2)}, ${moveContent.content.y1 + (moveContent.content.height / 2)}"
+                    "X:${moveContent.content.x1 + (moveContent.content.width / 2)}, Y:${moveContent.content.y1 + (moveContent.content.height / 2)}"
                 rect(
                     stack,
                     mouseX,
@@ -298,7 +315,24 @@ object EditorGUI : GUI() {
 
             val scaleContent = holders.find { it.scaling }
             if (scaleContent != null) {
-                val text = "${scaleContent.content.width}, ${scaleContent.content.height}"
+                rect(
+                    stack,
+                    width / 2 - 1,
+                    height / 2 - editorHeight / 2,
+                    width / 2 + 1,
+                    height / 2 + editorHeight / 2,
+                    Color(255, 255, 255, 100)
+                )
+                rect(
+                    stack,
+                    width / 2 - editorWidth / 2,
+                    height / 2 - 1,
+                    width / 2 + editorWidth / 2,
+                    height / 2 + 1,
+                    Color(255, 255, 255, 100)
+                )
+
+                val text = "W:${scaleContent.content.width}, H:${scaleContent.content.height}"
                 rect(
                     stack,
                     mouseX,
@@ -563,6 +597,7 @@ object EditorGUI : GUI() {
         }
 
         lastClick = l
+        saveGUI()
     }
 
     private var clipboard: String? = null
@@ -592,6 +627,7 @@ object EditorGUI : GUI() {
                     .toString()
 
                 holders.removeIf { it.selecting }
+                saveGUI()
             }
 
             key == GLFW.GLFW_KEY_V && modifiers == GLFW.GLFW_MOD_CONTROL -> {
@@ -605,6 +641,7 @@ object EditorGUI : GUI() {
                 val parsed = clipboard?.let { CustomGUIMod.viewHandler.decode(it) }?.also { it.index = targetIndex }
 
                 if (parsed != null) holders.add(parsed)
+                saveGUI()
             }
         }
 
@@ -619,6 +656,10 @@ object EditorGUI : GUI() {
             it.selecting = false
         }
 
+        saveGUI()
+    }
+
+    private fun saveGUI() {
         CustomGUIMod.gatewayClient.send(OpCode.SAVE_GUI, json {
             "views" array {
                 holders.forEach {
