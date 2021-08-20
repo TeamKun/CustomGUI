@@ -90,7 +90,7 @@ class ShowCommand : Command("show"), KoinComponent {
             return
         }
 
-        if (!player!!.hasPermission("customgui.gui.show") && targets.any { it.uniqueId != player!!.uniqueId }) {
+        if (sender is Player && !player!!.hasPermission("customgui.gui.show") && targets.any { it.uniqueId != player!!.uniqueId }) {
             pluginMessage {
                 append("他のプレイヤーにGUIを表示させるには、", Color.RED)
                 bold("customgui.gui.show", Color.RED)
