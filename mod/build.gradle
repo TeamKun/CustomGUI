@@ -49,11 +49,11 @@ dependencies {
     embed group: "org.jetbrains.kotlin", name: "kotlin-stdlib-jdk8", version: "1.5.21"
     embed group: "org.jetbrains.kotlin", name: "kotlin-reflect", version: "1.5.21"
 
-    embed "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
-    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    embed 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2'
+    embed 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
-    embed "io.ktor:ktor-client-core:1.6.1"
-    embed "io.ktor:ktor-client-okhttp:1.6.1"
+    embed 'io.ktor:ktor-client-core:1.6.2'
+    embed 'io.ktor:ktor-client-okhttp:1.6.2'
 }
 
 compileKotlin {

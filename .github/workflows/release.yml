@@ -18,16 +18,19 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Grant execute permission for gradlew
+      - name: Grant read permission for build script
         run: chmod +r ./build.gradle
 
-      - name: Add permission to auto_release scripts.
+      - name: Grant execute permission for release script
         run: chmod +x ./release.sh
 
       - name: Gradle
         run: ./release.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: ./gradlew shadow
 
       - name: Release
         uses: softprops/action-gh-release@v1
