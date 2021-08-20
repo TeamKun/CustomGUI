@@ -27,15 +27,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import org.lwjgl.glfw.GLFW
-import org.slf4j.LoggerFactory
-import java.awt.Color
 import java.io.File
 
 @Mod(CustomGUIMod.MOD_ID)
 class CustomGUIMod {
     companion object {
         const val MOD_ID = "customgui"
-        val LOGGER = LoggerFactory.getLogger("CustomGUI")!!
         val openEditorKeyBind = KeyBinding(
             "Open CustomGUI Editor",
             KeyConflictContext.IN_GAME,
@@ -60,8 +57,10 @@ class CustomGUIMod {
 
     @SubscribeEvent
     fun onKeyboard(event: InputEvent.KeyInputEvent) {
-        if (openEditorKeyBind.isPressed)
+        if (openEditorKeyBind.isPressed) {
+            EditorGUI.canLoad = true
             GUI.display(EditorGUI)
+        }
     }
 
     @SubscribeEvent
@@ -85,15 +84,13 @@ class CustomGUIMod {
         val xFactor = width.toDouble() / EditorGUI.editorWidth.toDouble()
         val yFactor = height.toDouble() / EditorGUI.editorHeight.toDouble()
 
-        GUI.text(stack, "X: $xFactor, Y: $yFactor", 30, 30, Color.WHITE, true)
-
         holders.sortedBy { it.index }.forEach {
             val renderer = it.content.renderer
 
-            var x1 = width / 2 + it.content.x1
-            var y1 = height / 2 + it.content.y1
-            var x2 = width / 2 + it.content.x2
-            var y2 = height / 2 + it.content.y2
+            var x1 = it.content.x1
+            var y1 = it.content.y1
+            var x2 = it.content.x2
+            var y2 = it.content.y2
 
             if (isFlex) {
                 x1 = (x1 * xFactor).toInt()
@@ -101,6 +98,11 @@ class CustomGUIMod {
                 x2 = (x2 * xFactor).toInt()
                 y2 = (y2 * yFactor).toInt()
             }
+
+            x1 += width / 2
+            y1 += height / 2
+            x2 += width / 2
+            y2 += height / 2
 
             when (it) {
                 is TextViewHolder -> (renderer as TextViewRenderer).renderFull(
